@@ -36,6 +36,8 @@ public:
 
 
 private:
+    UPROPERTY()
     class USpringArmComponent* SpringArmComponent;
+    UPROPERTY()
     class UCameraComponent* Camera;
 };

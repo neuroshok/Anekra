@@ -21,8 +21,8 @@ void APCell::SetType(EPCellType CellType)
     switch (Type)
     {
     case EPCellType::Heal:
-        Color = FColor{0, 255, 0};
         OnColorUpdate();
+        TypeEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, BP_TypeEffect, GetActorLocation());
         break;
     };
 }

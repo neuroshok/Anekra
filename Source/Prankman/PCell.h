@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "NiagaraFunctionLibrary.h"
 #include "PCell.generated.h"
 
 UCLASS()
@@ -27,6 +28,9 @@ public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Cell")
     class UMaterial* BP_Material;
 
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Cell")
+    class UNiagaraSystem* BP_TypeEffect;
+
     class UMaterialInstanceDynamic* MaterialInstanceDynamic;
 
 protected:
@@ -42,6 +46,11 @@ private:
     UPROPERTY(Replicated)
     EPCellType Type;
 
+    UPROPERTY()
     class UStaticMeshComponent* MeshComponent;
+
+    UPROPERTY()
+    class UNiagaraComponent* TypeEffect;
+
     FBox CellBox;
 };

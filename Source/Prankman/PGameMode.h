@@ -6,15 +6,12 @@
 #include "GameFramework/GameModeBase.h"
 #include "PGameMode.generated.h"
 
-class APCell;
-
 UCLASS()
 class PRANKMAN_API APGameMode final : public AGameModeBase
 {
     GENERATED_BODY()
 
 public:
-    virtual void StartPlay() override;
     virtual void BeginPlay() override;
     void MakeMap();
     void OnEventTimer();
@@ -25,9 +22,14 @@ public:
     void Logout(AController*);
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
-    TSubclassOf<APCell> BP_Cell;
+    TSubclassOf<class APCell> BP_Cell;
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
+    TSubclassOf<class APHero> BP_Hero;
 
 private:
+    TArray<class APCell*> CellsView;
+
     FTimerHandle EventTimer;
     EPEventType EventType;
 };

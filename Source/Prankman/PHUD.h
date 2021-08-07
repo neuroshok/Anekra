@@ -27,6 +27,6 @@ private:
     UFUNCTION()
     void OnEvent(EPEventType Type);
 
-	UPROPERTY()
+    UPROPERTY()
     class UWEvent* WEvent;
 };
