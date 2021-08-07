@@ -16,6 +16,8 @@ void APHUD::BeginPlay()
 	check(WEvent);
     WEvent->SetVisibility(ESlateVisibility::Hidden);
     WEvent->AddToViewport();
+    FInputModeGameOnly Mode;
+    GetOwningPlayerController()->SetInputMode(Mode);
 }
 
 void APHUD::OnEvent(EPEventType Type/*, EventData*/)
