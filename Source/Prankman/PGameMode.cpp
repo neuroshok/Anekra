@@ -1,19 +1,14 @@
 #include "PGameMode.h"
+
 #include "PCell.h"
 #include "PHero.h"
 #include "log.h"
 #include "PGameState.h"
+#include "GameFramework/PlayerState.h"
 
 void APGameMode::BeginPlay()
 {
     PM_LOG("BeginPlay")
-
-    //MakeMap();
-    // spawn local player
-    //auto PlayerPawn = GetWorld()->SpawnActor<APHero>(BP_Hero, {}, FRotator{ 0, 0, 0 });
-    //GetWorld()->GetFirstPlayerController()->Possess(PlayerPawn);
-
-    //GetWorldTimerManager().SetTimer(EventTimer, this, &APGameMode::OnEventTimer, 5.f, true, 5.f);
 }
 
 void APGameMode::MakeMap()
@@ -21,15 +16,15 @@ void APGameMode::MakeMap()
     if (!BP_Cell) PM_LOG("bp_cell not found")
     else
     {
-        int Size = 8;
+        int Size = MapSizeX;
         FVector Position;
 
         for (int x = 0; x < Size; ++x)
         {
             for (int y = 0; y < Size; ++y)
             {
-                Position.X = x * 410;
-                Position.Y = y * 410;
+                Position.X = x * CellSize;
+                Position.Y = y * CellSize;
                 FActorSpawnParameters params;
                 params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
                 auto Cell = GetWorld()->SpawnActor<APCell>(BP_Cell, Position, FRotator{0, 0, 0}, params);
@@ -58,10 +53,18 @@ void APGameMode::PreLogin(const FString& Options, const FString& Address, const 
     //FString id = UGameplayStatics::ParseOption(Options, TEXT("id"));
 }
 
-void APGameMode::PostLogin(APlayerController* PC)
+void APGameMode::PostLogin(APlayerController* PlayerController)
 {
-    Super::PostLogin(PC);
+    Super::PostLogin(PlayerController);
     PM_LOG("PostLogin");
+
+    const int32 CellIndex = FMath::RandRange(0, CellsView.Num() - 1);
+    FVector SpawnLocation = CellsView[CellIndex]->GetActorLocation();
+    SpawnLocation.Z = 1000;
+    FActorSpawnParameters Params;
+    Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+    const auto PlayerPawn = GetWorld()->SpawnActor<APHero>(BP_Hero, SpawnLocation, FRotator{ 0, 0, 0 }, Params);
+    PlayerController->Possess(PlayerPawn);
 }
 
 FString APGameMode::InitNewPlayer(APlayerController* PlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)
@@ -76,20 +79,17 @@ FString APGameMode::InitNewPlayer(APlayerController* PlayerController, const FUn
         //GetWorldTimerManager().SetTimer(EventTimer, this, &APGameMode::OnEventTimer, 5.f, true, 5.f);
     }
 
-    const int32 CellIndex = FMath::RandRange(0, CellsView.Num() - 1);
-    FVector SpawnLocation = CellsView[CellIndex]->GetActorLocation();
-    SpawnLocation.Z = 1000;
-    FActorSpawnParameters Params;
-    Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-    const auto PlayerPawn = GetWorld()->SpawnActor<APHero>(BP_Hero, SpawnLocation, FRotator{ 0, 0, 0 }, Params);
-    PlayerController->Possess(PlayerPawn);
 
     return init;
 }
 
-
 void APGameMode::Logout(AController* Controller)
 {
-
+    Super::Logout(Controller);
     UE_LOG(LogTemp, Warning, TEXT("Logout"));
 }
+
+float APGameMode::GetMapWidth() const { return MapSizeX * CellSize; }
+float APGameMode::GetCellSize() const { return CellSize; }
+
+APCell* APGameMode::GetCell(int X, int Y) const { return CellsView[X * (Y + 1) + Y]; }
