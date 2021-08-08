@@ -18,7 +18,7 @@ class PRANKMAN_API APHUD : public AHUD
 
 public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
-    TSubclassOf<class UUserWidget> BP_WEvent;
+    TSubclassOf<class UUserWidget> BP_WMain;
 
 protected:
     virtual void BeginPlay() override;
@@ -28,5 +28,5 @@ private:
     void OnEvent(EPEventType Type);
 
     UPROPERTY()
-    class UWEvent* WEvent;
+    class UWMain* WMain;
 };
