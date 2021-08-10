@@ -20,16 +20,18 @@ protected:
     virtual void Tick(float DeltaTime) override;
     virtual void BeginPlay() override;
 
-    UFUNCTION()
-    void OnColorUpdate();
-
 public:	
     APCell();
 
-    UFUNCTION(NetMulticast, Reliable)
     void SetColor(FLinearColor NewColor);
+    void SetType(EPCellType CellType);
 
-    void SetType(EPCellType);
+    UFUNCTION()
+    void OnColorUpdate();
+    UFUNCTION()
+    void OnTypeUpdate();
+
+
     void AddPlayerOver(class APPlayerState*);
 
 public:
@@ -45,9 +47,10 @@ public:
     class UMaterialInstanceDynamic* MaterialInstanceDynamic;
 
 private:
+    UPROPERTY(Replicated, ReplicatedUsing = OnColorUpdate)
     FLinearColor Color;
 
-    UPROPERTY(Replicated)
+    UPROPERTY(Replicated, ReplicatedUsing = OnTypeUpdate)
     EPCellType Type;
 
     UPROPERTY()

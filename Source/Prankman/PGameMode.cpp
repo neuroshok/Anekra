@@ -35,7 +35,8 @@ void APGameMode::MakeMap()
                     break;
                 }
                 auto CellType = FMath::RandRange(0, static_cast<int8>(EPCellType::Count));
-                Cell->SetType(static_cast<EPCellType>(CellType));
+                //Cell->SetType(static_cast<EPCellType>(CellType));
+                if (x == 0 && y == 0) Cell->SetType(EPCellType::Heal);
                 CellsView.Add(Cell);
             }
         }

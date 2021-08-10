@@ -10,34 +10,9 @@ APCell::APCell()
     MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("MeshComponent");
     RootComponent = MeshComponent;
 
-    //PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = true;
     bReplicates = true;
     bAlwaysRelevant = true;
-    //ColorDelegate.AddDynamic(this, &APCell::OnEvent);
-}
-
-void APCell::SetColor_Implementation(FLinearColor NewColor)
-{
-    if (Color == NewColor) return;
-    Color = NewColor;
-    OnColorUpdate();
-}
-
-void APCell::SetType(EPCellType CellType)
-{
-    Type = CellType;
-
-    switch (Type)
-    {
-    case EPCellType::Heal:
-        TypeEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, BP_TypeEffect, GetActorLocation());
-        break;
-    };
-}
-
-void APCell::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-    DOREPLIFETIME(APCell, Type);
 }
 
 void APCell::BeginPlay()
@@ -49,16 +24,46 @@ void APCell::BeginPlay()
     CellBox = CellBox.MoveTo(GetActorLocation());
 
     MaterialInstanceDynamic = MeshComponent->CreateAndSetMaterialInstanceDynamicFromMaterial(0, BP_Material);
-    Color = {0, 0, 0};
-    OnColorUpdate();
     Super::BeginPlay();
+
+    OnColorUpdate();
+    OnTypeUpdate();
+}
+
+void APCell::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    DOREPLIFETIME(APCell, Color);
+    DOREPLIFETIME(APCell, Type);
+}
+
+void APCell::SetColor(FLinearColor NewColor)
+{
+    if (Color == NewColor) return;
+    Color = NewColor;
+    OnColorUpdate();
+}
+
+void APCell::SetType(EPCellType CellType)
+{
+    Type = CellType;
+    OnTypeUpdate();
 }
 
 void APCell::OnColorUpdate()
 {
     if (!HasActorBegunPlay()) return;
-    PM_LOG("COLOR UPDATE %d - %d | %f %f", this->GetUniqueID(), GetWorld()->GetFirstPlayerController()->GetUniqueID(), Color.R, Color.G)
     MaterialInstanceDynamic->SetVectorParameterValue("Color", Color);
+}
+
+void APCell::OnTypeUpdate()
+{
+    if (!HasActorBegunPlay()) return;
+    switch (Type)
+    {
+    case EPCellType::Heal:
+        TypeEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, BP_TypeEffect, GetActorLocation());
+        break;
+    };
 }
 
 void APCell::Tick(float DeltaTime)
@@ -67,6 +72,9 @@ void APCell::Tick(float DeltaTime)
 
     switch (Type)
     {
+        case EPCellType::Heal:
+            //SetColor({0, 0, 0});
+        break;
         case EPCellType::Ghost:
             //SetActorEnableCollision(false);
         break;
