@@ -15,14 +15,20 @@ class PRANKMAN_API APGameState : public AGameStateBase
 
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEventDelegate, EPEventType, EventType);
 
-public:
-    UFUNCTION(NetMulticast, Reliable)
-    void ClientStartEvent(EPEventType EventType);
-
 protected:
     virtual void BeginPlay() override;
+    virtual void Tick(float DeltaSeconds) override;
     void OnEvent();
 
 public:
+    APGameState();
+    void OnUpdateIndexLocation();
+
+    UFUNCTION(NetMulticast, Reliable)
+    void ClientStartEvent(EPEventType EventType);
+
     FEventDelegate EventDelegate;
+
+private:
+    FTimerHandle UpdateIndexLocation;
 };

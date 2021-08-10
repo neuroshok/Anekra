@@ -3,6 +3,8 @@
 - Collect cell : get a chance to obtain an ability
 - trap a cell :
 - drain : steal hp from a player on the same cell
+- bomb : give a bomb, X seconds before explosion
+- dumble jump
 
 # World
 ## Event

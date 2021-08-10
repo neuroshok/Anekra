@@ -6,6 +6,7 @@
 
 void APHUD::BeginPlay()
 {
+    Super::BeginPlay();
     check(BP_WMain);
 
     auto gameState = Cast<APGameState>(GetWorld()->GetGameState());

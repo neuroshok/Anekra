@@ -1,8 +1,10 @@
 #include "PHero.h"
 #include "log.h"
+#include "PCell.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 APHero::APHero()
 {

@@ -8,6 +8,7 @@
 
 void APGameMode::BeginPlay()
 {
+    Super::BeginPlay();
     PM_LOG("BeginPlay")
 }
 
@@ -28,7 +29,11 @@ void APGameMode::MakeMap()
                 FActorSpawnParameters params;
                 params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
                 auto Cell = GetWorld()->SpawnActor<APCell>(BP_Cell, Position, FRotator{0, 0, 0}, params);
-                if (!Cell) break;
+                if (!Cell)
+                {
+                    PM_ERROR("unable to make map")
+                    break;
+                }
                 auto CellType = FMath::RandRange(0, static_cast<int8>(EPCellType::Count));
                 Cell->SetType(static_cast<EPCellType>(CellType));
                 CellsView.Add(Cell);
@@ -76,7 +81,6 @@ FString APGameMode::InitNewPlayer(APlayerController* PlayerController, const FUn
     if (PlayerController->IsLocalPlayerController())
     {
         MakeMap();
-        //GetWorldTimerManager().SetTimer(EventTimer, this, &APGameMode::OnEventTimer, 5.f, true, 5.f);
     }
 
 
@@ -92,4 +96,4 @@ void APGameMode::Logout(AController* Controller)
 float APGameMode::GetMapWidth() const { return MapSizeX * CellSize; }
 float APGameMode::GetCellSize() const { return CellSize; }
 
-APCell* APGameMode::GetCell(int X, int Y) const { return CellsView[X * (Y + 1) + Y]; }
+APCell* APGameMode::GetCell(int X, int Y) const { return CellsView[X * MapSizeX + Y]; }

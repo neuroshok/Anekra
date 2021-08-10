@@ -2,5 +2,5 @@
 
 void APPlayerController::BeginPlay()
 {
-
+    Super::BeginPlay();
 }

@@ -7,6 +7,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "NiagaraFunctionLibrary.h"
+#include "PPlayerState.h"
+
 #include "PCell.generated.h"
 
 UCLASS()
@@ -14,14 +16,23 @@ class PRANKMAN_API APCell : public AActor
 {
     GENERATED_BODY()
 
+protected:
+    virtual void Tick(float DeltaTime) override;
+    virtual void BeginPlay() override;
+
+    UFUNCTION()
+    void OnColorUpdate();
+
 public:	
     APCell();
 
+    UFUNCTION(NetMulticast, Reliable)
+    void SetColor(FLinearColor NewColor);
+
     void SetType(EPCellType);
+    void AddPlayerOver(class APPlayerState*);
 
-    virtual void Tick(float DeltaTime) override;
-    void PlayersOver();
-
+public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Cell")
     class UStaticMesh* BP_Mesh;
 
@@ -33,14 +44,7 @@ public:
 
     class UMaterialInstanceDynamic* MaterialInstanceDynamic;
 
-protected:
-    virtual void BeginPlay() override;
-
-    UFUNCTION()
-    void OnColorUpdate();
-
 private:
-    UPROPERTY(Replicated, ReplicatedUsing = OnColorUpdate)
     FLinearColor Color;
 
     UPROPERTY(Replicated)
