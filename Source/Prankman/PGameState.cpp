@@ -33,17 +33,26 @@ void APGameState::OnEvent()
 // server
 void APGameState::OnUpdateIndexLocation()
 {
+    /// server
     int i = 0;
     for (const auto& Player : PlayerArray)
     {
         auto PPlayer = Cast<APPlayerState>(Player);
-        auto PreviousCell = Cast<APGameMode>(GetWorld()->GetAuthGameMode())->GetCell(PPlayer->CellPosition.X, PPlayer->CellPosition.Y);
-
+        auto PreviousCellPosition = PPlayer->GetCellPosition();
         PPlayer->ComputeCellPosition();
 
-        auto Cell = Cast<APGameMode>(GetWorld()->GetAuthGameMode())->GetCell(PPlayer->CellPosition.X, PPlayer->CellPosition.Y);
-        PreviousCell->PlayersOver.Reset();
-        Cell->AddPlayerOver(PPlayer);
+        // player cell position changed
+        if (PPlayer->GetCellPosition() != PreviousCellPosition)
+        {
+            auto PreviousCell = Cast<APGameMode>(GetWorld()->GetAuthGameMode())->GetCell(PreviousCellPosition.X, PreviousCellPosition.Y);
+            PreviousCell->Leave(PPlayer);
+            // PreviousCell->PlayersOver.Reset();
+
+            auto Cell = Cast<APGameMode>(GetWorld()->GetAuthGameMode())->GetCell(PPlayer->GetCellPosition().X, PPlayer->GetCellPosition().Y);
+            Cell->Enter(PPlayer)
+            Cell->AddPlayerOver(PPlayer);
+        }
+
 
         //if (i == 0) Cell->SetColor({0, 255, 0});
         //else Cell->SetColor({255, 0, 0});
@@ -52,7 +61,7 @@ void APGameState::OnUpdateIndexLocation()
     }
 }
 
-void APGameState::ClientStartEvent_Implementation(EPEventType EventType)
+void APGameState::ClientStartEvent_Implementation(const EPEventType EventType)
 {
-    EventDelegate.Broadcast(EventType);
+    UpdateEventDelegate.Broadcast(EventType);
 }

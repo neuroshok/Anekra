@@ -4,6 +4,10 @@
 #include "Engine/StaticMesh.h"
 #include "GameFramework/GameStateBase.h"
 #include "Net/UnrealNetwork.h"
+#include "NiagaraComponent.h"
+#include "PHero.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/GameSession.h"
 
 APCell::APCell()
 {
@@ -20,21 +24,30 @@ void APCell::BeginPlay()
     check(BP_Mesh);
     MeshComponent->SetStaticMesh(BP_Mesh);
 
-    CellBox = MeshComponent->GetStaticMesh()->GetBoundingBox();
-    CellBox = CellBox.MoveTo(GetActorLocation());
+    //CellBox = MeshComponent->GetStaticMesh()->GetBoundingBox();
+    //CellBox = CellBox.MoveTo(GetActorLocation());
 
     MaterialInstanceDynamic = MeshComponent->CreateAndSetMaterialInstanceDynamicFromMaterial(0, BP_Material);
     Super::BeginPlay();
 
+    Color = { 0.2, 0.2, 0.8 };
     OnColorUpdate();
     OnTypeUpdate();
+    OnStateUpdate();
 }
 
-void APCell::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+void APCell::SetActive(bool bState)
 {
-    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-    DOREPLIFETIME(APCell, Color);
-    DOREPLIFETIME(APCell, Type);
+    if (bState) State |= static_cast<int32>(EPCellState::Active);
+    else State &= ~static_cast<int32>(EPCellState::Active);
+}
+
+void APCell::SetEffectVisible(bool bState)
+{
+    auto PrevState = State;
+    if (bState) State |= static_cast<int32>(EPCellState::EffectVisible);
+    else State &= ~static_cast<int32>(EPCellState::EffectVisible);
+    if (State != PrevState) OnStateUpdate();
 }
 
 void APCell::SetColor(FLinearColor NewColor)
@@ -46,8 +59,17 @@ void APCell::SetColor(FLinearColor NewColor)
 
 void APCell::SetType(EPCellType CellType)
 {
+    if (Type == CellType) return;
     Type = CellType;
     OnTypeUpdate();
+}
+
+void APCell::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+    DOREPLIFETIME(APCell, Color);
+    DOREPLIFETIME(APCell, Type);
+    DOREPLIFETIME(APCell, State);
 }
 
 void APCell::OnColorUpdate()
@@ -58,43 +80,89 @@ void APCell::OnColorUpdate()
 
 void APCell::OnTypeUpdate()
 {
-    if (!HasActorBegunPlay()) return;
+    PM_LOG("Update Cell Type %d", (int)Type)
     switch (Type)
     {
-    case EPCellType::Heal:
+        case EPCellType::Heal: break;
+            /*
+            if (TypeEffect) TypeEffect->DestroyComponent();
+            TypeEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, BP_TypeEffect, GetActorLocation());
+            TypeEffect->SetRenderingEnabled(false);*/
+        case EPCellType::Burn: SetColor({1, 0, 0}) ; break;
+        case EPCellType::Slow: SetColor({0.2, 0.2, 0}) ; break;
+    }
+}
+
+void APCell::OnStateUpdate()
+{
+    PM_LOG("Update State %d", State)
+
+    if (State & static_cast<int32>(EPCellState::EffectVisible))
+    {
         TypeEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, BP_TypeEffect, GetActorLocation());
-        break;
-    };
+    }
+    else
+    {
+        if (TypeEffect) TypeEffect->DestroyInstance();
+    }
+
 }
 
 void APCell::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    switch (Type)
+    /// server
+    if (GetWorld()->IsServer())
     {
+        switch (Type)
+        {
         case EPCellType::Heal:
-            for (auto PPlayerState : PlayersOver)
+            if (PlayersOver.Num())
             {
-                SetColor({0, 200, 0});
-                PPlayerState->AddHealth(0.0005f);
+                for (auto PPlayerState : PlayersOver)
+                {
+                    PPlayerState->AddHealth(0.0005f);
+                }
+                SetEffectVisible(true);
             }
-        break;
+            else SetEffectVisible(false);
+            break;
+        case EPCellType::Burn:
+            if (PlayersOver.Num())
+            {
+                for (auto PPlayerState : PlayersOver)
+                {
+                    PPlayerState->AddHealth(-0.0005f);
+                }
+            }
+            break;
+        case EPCellType::Slow: {
+            auto Hero = Cast<APHero>(GetWorld()->GetFirstPlayerController()->GetPawn());
+            if (PlayersOver.Num())
+            {
+                for (auto PPlayerState : PlayersOver)
+                {
+                    Hero->GetCharacterMovement()->MaxWalkSpeed = 200;
+                }
+            }
+            else Hero->GetCharacterMovement()->MaxWalkSpeed = 600;
+        }
+            break;
+
         case EPCellType::Ghost:
             //SetActorEnableCollision(false);
-        break;
+            break;
         case EPCellType::Rotating: {
             auto Rotator = RootComponent->GetRelativeRotation();
             //RootComponent->AddLocalRotation(FRotator{ 0.5, 0, 0 });
         }
-        break;
+            break;
         case EPCellType::Boom:
             break;
-        case EPCellType::Slow:
-            // foreach player, player.speed--
-        break;
         case EPCellType::Basic:
         default:;
+        }
     }
 }
 

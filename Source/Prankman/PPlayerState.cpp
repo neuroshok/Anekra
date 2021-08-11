@@ -2,6 +2,8 @@
 
 #include "log.h"
 #include "PGameMode.h"
+#include "PGameState.h"
+#include "PHUD.h"
 #include "Net/UnrealNetwork.h"
 
 void APPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -42,7 +44,12 @@ void APPlayerState::AddHealth(float Value)
     OnUpdateHealth();
 }
 
+FIntVector APPlayerState::GetCellPosition() const
+{
+    return CellPosition;
+}
+
 void APPlayerState::OnUpdateHealth()
 {
-    UpdateHealDelegate.Broadcast();
+    Cast<APGameState>(GetWorld()->GetGameState())->UpdateHealthDelegate.Broadcast();
 }

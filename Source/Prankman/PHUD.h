@@ -25,7 +25,7 @@ protected:
 
 private:
     UFUNCTION()
-    void OnEvent(EPEventType Type);
+    void OnUpdateEvent(EPEventType Type);
 
     UPROPERTY()
     class UWMain* WMain;

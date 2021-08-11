@@ -1,11 +1,12 @@
 # Hero
-## Ability
 - Collect cell : get a chance to obtain an ability
-- trap a cell :
-- drain : steal hp from a player on the same cell
-- bomb : give a bomb, X seconds before explosion
+## Ability
+### Active ability
+- trap a cell : Display an effect on the cell according to the trap
+  - drain : steal hp from a player on the same cell
+  - bomb : give a bomb, X seconds before explosion
 
-## Passive (during X seconds)
+### Passive ability (during X seconds)
 - double jump
 
 # World
@@ -15,5 +16,11 @@ Triggers every X secondes
 - Player must change cell every 2sec, without reusing the same cell of any player
 
 ## Cell
+### Property
+- Passive : trigger when the player is over
+- Cyclic : trigger every X seconds
+- Delay : trigger after X seconds
+
+### Type
 - Rotating cell
 - Ghost cell : Cell disappear when someone stay over, then the player fall, reappear when someoneleft

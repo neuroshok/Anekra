@@ -40,6 +40,6 @@ private:
     FTimerHandle EventTimer;
     EPEventType EventType;
 
-    const int MapSizeX = 4;
+    const int MapSizeX = 10;
     const float CellSize = 400.f;
 };

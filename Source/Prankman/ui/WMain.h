@@ -23,5 +23,8 @@ public:
     class UTextBlock* WEventText;
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
+    class UProgressBar* WCastBar;
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
     class UProgressBar* WHealth;
 };

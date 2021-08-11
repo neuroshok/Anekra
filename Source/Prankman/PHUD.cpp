@@ -3,6 +3,7 @@
 #include "PGameState.h"
 #include "PPlayerState.h"
 #include "Components/TextBlock.h"
+#include "Components/ProgressBar.h"
 #include "ui/WMain.h"
 
 void APHUD::BeginPlay()
@@ -12,20 +13,22 @@ void APHUD::BeginPlay()
 
     auto gameState = Cast<APGameState>(GetWorld()->GetGameState());
     check(gameState);
-    gameState->EventDelegate.AddDynamic(this, &APHUD::OnEvent);
 
     WMain = CreateWidget<UWMain>(GetWorld(), BP_WMain);
     check(WMain);
     WMain->AddToViewport();
+
+    gameState->UpdateEventDelegate.AddDynamic(this, &APHUD::OnUpdateEvent);
+    gameState->UpdateHealthDelegate.AddDynamic(WMain, &UWMain::OnUpdateHeal);
+
     FInputModeGameOnly Mode;
     GetOwningPlayerController()->SetInputMode(Mode);
 
     WMain->WEventText->SetVisibility(ESlateVisibility::Hidden);
-
-    GetOwningPlayerController()->GetPlayerState<APPlayerState>()->UpdateHealDelegate.AddDynamic(WMain, &UWMain::OnUpdateHeal);
+    WMain->WCastBar->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void APHUD::OnEvent(EPEventType Type/*, EventData*/)
+void APHUD::OnUpdateEvent(EPEventType Type/*, EventData*/)
 {
     UE_LOG(LogTemp, Warning, TEXT("OnEvent"))
     FText EventText;

@@ -9,20 +9,20 @@ class PRANKMAN_API APPlayerState : public APlayerState
 {
     GENERATED_BODY()
 
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FUpdateHealDelegate);
-
 public:
     void ComputeCellPosition();
 
     void AddHealth(float Value);
+    FIntVector GetCellPosition() const;
 
+public:
     UFUNCTION()
     void OnUpdateHealth();
 
     UPROPERTY(Replicated, ReplicatedUsing = OnUpdateHealth)
     float Health = .1f;
 
-    FUpdateHealDelegate UpdateHealDelegate;
+private:
     FIntVector CellPosition;
     bool bIsOut = false;
 };

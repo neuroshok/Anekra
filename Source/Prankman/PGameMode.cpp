@@ -37,6 +37,8 @@ void APGameMode::MakeMap()
                 auto CellType = FMath::RandRange(0, static_cast<int8>(EPCellType::Count));
                 //Cell->SetType(static_cast<EPCellType>(CellType));
                 if (x == 0 && y == 0) Cell->SetType(EPCellType::Heal);
+                if (x == 2 && y == 2) Cell->SetType(EPCellType::Burn);
+                if (x == 1 && y == 0) Cell->SetType(EPCellType::Slow);
                 CellsView.Add(Cell);
             }
         }
@@ -71,6 +73,8 @@ void APGameMode::PostLogin(APlayerController* PlayerController)
     Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
     const auto PlayerPawn = GetWorld()->SpawnActor<APHero>(BP_Hero, SpawnLocation, FRotator{ 0, 0, 0 }, Params);
     PlayerController->Possess(PlayerPawn);
+    //PlayerController->Initialize();
+    //FEventOnConnect.Broadcast()
 }
 
 FString APGameMode::InitNewPlayer(APlayerController* PlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)
