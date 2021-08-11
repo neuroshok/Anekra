@@ -32,6 +32,7 @@ void APCell::BeginPlay()
 
 void APCell::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(APCell, Color);
     DOREPLIFETIME(APCell, Type);
 }
@@ -73,7 +74,11 @@ void APCell::Tick(float DeltaTime)
     switch (Type)
     {
         case EPCellType::Heal:
-            //SetColor({0, 0, 0});
+            for (auto PPlayerState : PlayersOver)
+            {
+                SetColor({0, 200, 0});
+                PPlayerState->AddHealth(0.0005f);
+            }
         break;
         case EPCellType::Ghost:
             //SetActorEnableCollision(false);
@@ -95,7 +100,7 @@ void APCell::Tick(float DeltaTime)
 
 void APCell::AddPlayerOver(APPlayerState* PPlayer)
 {
-
+    PlayersOver.Add(PPlayer);
 }
 
 /*

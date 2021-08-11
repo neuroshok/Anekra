@@ -1,6 +1,7 @@
 #include "PHUD.h"
 
 #include "PGameState.h"
+#include "PPlayerState.h"
 #include "Components/TextBlock.h"
 #include "ui/WMain.h"
 
@@ -20,6 +21,8 @@ void APHUD::BeginPlay()
     GetOwningPlayerController()->SetInputMode(Mode);
 
     WMain->WEventText->SetVisibility(ESlateVisibility::Hidden);
+
+    GetOwningPlayerController()->GetPlayerState<APPlayerState>()->UpdateHealDelegate.AddDynamic(WMain, &UWMain::OnUpdateHeal);
 }
 
 void APHUD::OnEvent(EPEventType Type/*, EventData*/)

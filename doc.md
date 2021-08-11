@@ -4,7 +4,9 @@
 - trap a cell :
 - drain : steal hp from a player on the same cell
 - bomb : give a bomb, X seconds before explosion
-- dumble jump
+
+## Passive (during X seconds)
+- double jump
 
 # World
 ## Event

@@ -31,7 +31,6 @@ public:
     UFUNCTION()
     void OnTypeUpdate();
 
-
     void AddPlayerOver(class APPlayerState*);
 
 public:
@@ -45,6 +44,9 @@ public:
     class UNiagaraSystem* BP_TypeEffect;
 
     class UMaterialInstanceDynamic* MaterialInstanceDynamic;
+
+    // server
+    TArray<class APPlayerState*> PlayersOver;
 
 private:
     UPROPERTY(Replicated, ReplicatedUsing = OnColorUpdate)
