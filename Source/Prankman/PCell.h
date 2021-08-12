@@ -38,6 +38,9 @@ public:
     void SetColor(FLinearColor NewColor);
     void SetType(EPCellType CellType);
 
+    void Enter(class APPlayerState*);
+    void Leave(class APPlayerState*);
+
     UFUNCTION()
     void OnColorUpdate();
     UFUNCTION()
@@ -60,7 +63,7 @@ public:
     class UMaterialInstanceDynamic* MaterialInstanceDynamic = nullptr;
 
     /// server
-    TArray<class APPlayerState*> PlayersOver;
+    TSet<class APPlayerState*> PlayersOver;
 
 private:
     UPROPERTY(Replicated, ReplicatedUsing = OnColorUpdate)

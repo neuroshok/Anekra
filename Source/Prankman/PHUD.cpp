@@ -18,14 +18,14 @@ void APHUD::BeginPlay()
     check(WMain);
     WMain->AddToViewport();
 
-    gameState->UpdateEventDelegate.AddDynamic(this, &APHUD::OnUpdateEvent);
-    gameState->UpdateHealthDelegate.AddDynamic(WMain, &UWMain::OnUpdateHeal);
-
     FInputModeGameOnly Mode;
     GetOwningPlayerController()->SetInputMode(Mode);
 
     WMain->WEventText->SetVisibility(ESlateVisibility::Hidden);
     WMain->WCastBar->SetVisibility(ESlateVisibility::Hidden);
+
+    gameState->UpdateEventDelegate.AddDynamic(this, &APHUD::OnUpdateEvent);
+    gameState->UpdateHealthDelegate.AddDynamic(WMain, &UWMain::OnUpdateHeal);
 }
 
 void APHUD::OnUpdateEvent(EPEventType Type/*, EventData*/)

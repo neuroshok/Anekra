@@ -6,6 +6,7 @@
 #include "Net/UnrealNetwork.h"
 #include "NiagaraComponent.h"
 #include "PHero.h"
+#include "PPlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/GameSession.h"
 
@@ -62,6 +63,36 @@ void APCell::SetType(EPCellType CellType)
     if (Type == CellType) return;
     Type = CellType;
     OnTypeUpdate();
+}
+
+void APCell::Enter(APPlayerState* PlayerState)
+{
+    PlayersOver.Add(PlayerState);
+
+    if (GetWorld()->IsServer())
+    {
+        switch (Type)
+        {
+        case EPCellType::Slow:
+            Cast<APHero>(PlayerState->GetPawn())->GetCharacterMovement()->MaxWalkSpeed = 200;
+
+        break;
+        }
+    }
+}
+
+void APCell::Leave(APPlayerState* PlayerState)
+{
+    PlayersOver.Remove(PlayerState);
+    if (GetWorld()->IsServer())
+    {
+        switch (Type)
+        {
+        case EPCellType::Slow:
+            Cast<APHero>(PlayerState->GetPawn())->GetCharacterMovement()->MaxWalkSpeed = 600;
+            break;
+        }
+    }
 }
 
 void APCell::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -136,18 +167,6 @@ void APCell::Tick(float DeltaTime)
                     PPlayerState->AddHealth(-0.0005f);
                 }
             }
-            break;
-        case EPCellType::Slow: {
-            auto Hero = Cast<APHero>(GetWorld()->GetFirstPlayerController()->GetPawn());
-            if (PlayersOver.Num())
-            {
-                for (auto PPlayerState : PlayersOver)
-                {
-                    Hero->GetCharacterMovement()->MaxWalkSpeed = 200;
-                }
-            }
-            else Hero->GetCharacterMovement()->MaxWalkSpeed = 600;
-        }
             break;
 
         case EPCellType::Ghost:

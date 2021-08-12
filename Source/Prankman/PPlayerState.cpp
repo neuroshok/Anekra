@@ -1,9 +1,7 @@
 #include "PPlayerState.h"
 
-#include "log.h"
 #include "PGameMode.h"
 #include "PGameState.h"
-#include "PHUD.h"
 #include "Net/UnrealNetwork.h"
 
 void APPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -41,7 +39,11 @@ void APPlayerState::ComputeCellPosition()
 void APPlayerState::AddHealth(float Value)
 {
     Health += Value;
+    Health = FMath::Clamp(Health, 0.f, 100.f);
     OnUpdateHealth();
+
+    //if (Health < 0.0001f) PlayerDie();
+
 }
 
 FIntVector APPlayerState::GetCellPosition() const

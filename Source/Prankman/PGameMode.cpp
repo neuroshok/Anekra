@@ -73,8 +73,6 @@ void APGameMode::PostLogin(APlayerController* PlayerController)
     Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
     const auto PlayerPawn = GetWorld()->SpawnActor<APHero>(BP_Hero, SpawnLocation, FRotator{ 0, 0, 0 }, Params);
     PlayerController->Possess(PlayerPawn);
-    //PlayerController->Initialize();
-    //FEventOnConnect.Broadcast()
 }
 
 FString APGameMode::InitNewPlayer(APlayerController* PlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)

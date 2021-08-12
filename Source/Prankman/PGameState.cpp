@@ -13,10 +13,6 @@ APGameState::APGameState()
 void APGameState::BeginPlay()
 {
     Super::BeginPlay();
-    if (GetWorld()->IsServer())
-    {
-        //GetWorldTimerManager().SetTimer(UpdateIndexLocation, this, &APGameState::OnUpdateIndexLocation, 0.1f, true);
-    }
 }
 
 void APGameState::Tick(float DeltaSeconds)
@@ -46,11 +42,9 @@ void APGameState::OnUpdateIndexLocation()
         {
             auto PreviousCell = Cast<APGameMode>(GetWorld()->GetAuthGameMode())->GetCell(PreviousCellPosition.X, PreviousCellPosition.Y);
             PreviousCell->Leave(PPlayer);
-            // PreviousCell->PlayersOver.Reset();
 
             auto Cell = Cast<APGameMode>(GetWorld()->GetAuthGameMode())->GetCell(PPlayer->GetCellPosition().X, PPlayer->GetCellPosition().Y);
-            Cell->Enter(PPlayer)
-            Cell->AddPlayerOver(PPlayer);
+            Cell->Enter(PPlayer);
         }
 
 
