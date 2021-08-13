@@ -1,6 +1,7 @@
-#include "PHero.h"
-#include "log.h"
-#include "PCell.h"
+#include "Prankman/Player/PHero.h"
+
+#include "Prankman/World/PCell.h"
+
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"

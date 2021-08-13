@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "PCellType.h"
+#include "Prankman/PCellType.h"
+#include "Prankman/Player/PPlayerState.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "NiagaraFunctionLibrary.h"
-#include "PPlayerState.h"
 
 #include "PCell.generated.h"
 

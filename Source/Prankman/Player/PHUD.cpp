@@ -1,10 +1,10 @@
 #include "PHUD.h"
 
-#include "PGameState.h"
-#include "PPlayerState.h"
+#include "Prankman/Game/PGameState.h"
+#include "Prankman/Player/PPlayerState.h"
 #include "Components/TextBlock.h"
 #include "Components/ProgressBar.h"
-#include "ui/WMain.h"
+#include "Prankman/UI/WMain.h"
 
 void APHUD::BeginPlay()
 {

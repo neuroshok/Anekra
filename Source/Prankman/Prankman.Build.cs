@@ -8,7 +8,7 @@ public class Prankman : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "Niagara" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "OnlineSubsystem", "Niagara", "GameplayAbilities", "GameplayAbilitiesEditor" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

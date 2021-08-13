@@ -1,9 +1,9 @@
-#include "PGameState.h"
+#include "Prankman/Game/PGameState.h"
 
-#include "PPlayerState.h"
-#include "PGameMode.h"
-#include "PCell.h"
-#include "log.h"
+#include "Prankman/Player/PPlayerState.h"
+#include "Prankman/Game/PGameMode.h"
+#include "Prankman/World/PCell.h"
+#include "Prankman/log.h"
 
 APGameState::APGameState()
 {

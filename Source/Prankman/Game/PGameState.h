@@ -1,8 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
-#include "PEventType.h"
+#include "Prankman/PEventType.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"

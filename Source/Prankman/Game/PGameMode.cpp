@@ -1,9 +1,9 @@
-#include "PGameMode.h"
+#include "Prankman/Game/PGameMode.h"
 
-#include "PCell.h"
-#include "PHero.h"
-#include "log.h"
-#include "PGameState.h"
+#include "Prankman/World/PCell.h"
+#include "Prankman/Player/PHero.h"
+#include "Prankman/log.h"
+#include "Prankman/Game/PGameState.h"
 #include "GameFramework/PlayerState.h"
 
 void APGameMode::BeginPlay()
