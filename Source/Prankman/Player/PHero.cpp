@@ -1,5 +1,7 @@
 #include "Prankman/Player/PHero.h"
 
+#include "PHUD.h"
+#include "PPlayerController.h"
 #include "Prankman/World/PCell.h"
 #include "Prankman/Player/Ability/PCollect.h"
 #include "Prankman/Game/PAbilitySystemComponent.h"
@@ -9,6 +11,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Prankman/log.h"
 
 APHero::APHero()
 {
@@ -45,6 +48,10 @@ void APHero::OnRep_PlayerState()
     PAbilitySystemComponent = Cast<UPAbilitySystemComponent>(PPlayerState->GetAbilitySystemComponent());
     PAbilitySystemComponent->InitAbilityActorInfo(PPlayerState, this);
     TryBindAbilities();
+
+    auto PPlayerController = Cast<APPlayerController>(GetOwner());
+    if (!PPlayerController) return;
+    Cast<APHUD>(PPlayerController->GetHUD())->Initialize();
 }
 
 /// server

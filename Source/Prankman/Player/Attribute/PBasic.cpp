@@ -17,13 +17,13 @@ void UPAttributeBasic::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 void UPAttributeBasic::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
+    Super::PreAttributeChange(Attribute, NewValue);
     if (Attribute == GetHealthAttribute())
     {
         NewValue = FMath::Clamp<float>(NewValue, 0, 100);
-        GetOwningAbilitySystemComponent()->ApplyModToAttributeUnsafe(GetHealthAttribute(), EGameplayModOp::Additive, NewValue);
+        //GetOwningAbilitySystemComponent()->ApplyModToAttributeUnsafe(GetHealthAttribute(), EGameplayModOp::Additive, NewValue);
     }
 
-    Super::PreAttributeChange(Attribute, NewValue);
 }
 
 void UPAttributeBasic::OnRep_Health(const FGameplayAttributeData& PreviousHealth)

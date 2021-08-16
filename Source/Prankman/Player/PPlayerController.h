@@ -9,10 +9,8 @@ class PRANKMAN_API APPlayerController : public APlayerController
 {
     GENERATED_BODY()
 
-    DECLARE_MULTICAST_DELEGATE_OneParam(FOnCastingDelegate, float);
-
 public:
-    FOnCastingDelegate OnCastingDelegate;
+    void InitializeHUD();
 
 protected:
     virtual void BeginPlay() override;

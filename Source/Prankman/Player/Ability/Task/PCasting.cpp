@@ -15,9 +15,9 @@ void UPCasting::Activate()
     GetWorld()->GetTimerManager().SetTimer(CastingTimer, this, &UPCasting::OnEndCasting, 1, false, Duration);
     SetWaitingOnRemotePlayerData();
 
-    auto PPlayerController = Cast<APPlayerController>(GetAvatarActor()->GetOwner());
-    check(PPlayerController);
-    PPlayerController->OnCastingDelegate.Broadcast(Duration);
+    auto PPlayerState = Cast<APPlayerState>(GetOwnerActor());
+    check(PPlayerState);
+    PPlayerState->OnCastingDelegate.Broadcast(Duration);
 }
 
 void UPCasting::OnEndCasting()
@@ -33,6 +33,6 @@ UPCasting* UPCasting::Create(UGameplayAbility* OwningAbility, FName TaskInstance
 {
     UPCasting* Task = NewAbilityTask<UPCasting>(OwningAbility, TaskInstanceName);
     Task->Duration = Duration;
-    OwningAbility->AbilityTags.AddTag(FGameplayTag::RequestGameplayTag("State.Casting"));
+    //OwningAbility->AbilityTags.AddTag(FGameplayTag::RequestGameplayTag("State.Casting"));
     return Task;
 }

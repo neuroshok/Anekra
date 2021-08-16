@@ -10,14 +10,17 @@ class PRANKMAN_API APPlayerState : public APlayerState, public IAbilitySystemInt
 {
     GENERATED_BODY()
 
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnCastingDelegate, float);
+
 public:
     APPlayerState();
-    void ComputeCellPosition();
-
-    void AddHealth(float Value);
-    FIntVector GetCellPosition() const;
 
     virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+    void ComputeCellPosition();
+    FIntVector GetCellPosition() const;
+
+    FOnCastingDelegate OnCastingDelegate;
 
     //
     UPROPERTY()
@@ -25,13 +28,6 @@ public:
     UPROPERTY()
     class UPAttributeBasic* PAttributeBasic;
 
-    UFUNCTION()
-    void OnUpdateHealth();
-
-    UPROPERTY(Replicated, ReplicatedUsing = OnUpdateHealth)
-    float Health = .1f;
-
 private:
     FIntVector CellPosition;
-    bool bIsOut = false;
 };

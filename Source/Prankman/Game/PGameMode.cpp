@@ -6,6 +6,7 @@
 #include "Prankman/Game/PGameState.h"
 #include "GameFramework/PlayerState.h"
 #include "Prankman/Player/PHUD.h"
+#include "Prankman/Player/PPlayerController.h"
 
 void APGameMode::BeginPlay()
 {
@@ -73,7 +74,9 @@ void APGameMode::PostLogin(APlayerController* PlayerController)
     FActorSpawnParameters Params;
     Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
     const auto PlayerPawn = GetWorld()->SpawnActor<APHero>(BP_Hero, SpawnLocation, FRotator{ 0, 0, 0 }, Params);
+
     PlayerController->Possess(PlayerPawn);
+    Cast<APPlayerController>(PlayerController)->InitializeHUD();
 }
 
 FString APGameMode::InitNewPlayer(APlayerController* PlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)

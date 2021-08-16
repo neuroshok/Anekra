@@ -14,7 +14,16 @@
 void APHUD::Initialize()
 {
     // wait for replication
+    auto PPlayerState = GetOwningPlayerController()->GetPlayerState<APPlayerState>();
+    if (PPlayerState)
+    {
+        PPlayerState->GetAbilitySystemComponent()
+            ->GetGameplayAttributeValueChangeDelegate(PPlayerState->PAttributeBasic->GetHealthAttribute())
+            .AddUObject(WMain, &UWMain::OnUpdateHealth);
 
+        PPlayerState->OnCastingDelegate.AddUObject(WMain, &UWMain::OnStartCasting);
+        bInitialized = true;
+    }
 }
 
 void APHUD::BeginPlay()
@@ -22,7 +31,6 @@ void APHUD::BeginPlay()
     Super::BeginPlay();
 
     check(BP_WMain);
-    auto PPlayerController = Cast<APPlayerController>(GetOwningPlayerController());
 
     WMain = CreateWidget<UWMain>(GetWorld(), BP_WMain);
     check(WMain);
@@ -34,14 +42,7 @@ void APHUD::BeginPlay()
     WMain->WEventText->SetVisibility(ESlateVisibility::Hidden);
     WMain->WCastBar->SetVisibility(ESlateVisibility::Hidden);
 
-    PPlayerController->OnCastingDelegate.AddUObject(WMain, &UWMain::OnStartCasting);
-
-    // fix: wait valid playerstate
-    auto PPlayerState = GetOwningPlayerController()->GetPlayerState<APPlayerState>();
-    check(PPlayerState);
-    PPlayerState->GetAbilitySystemComponent()
-        ->GetGameplayAttributeValueChangeDelegate(PPlayerState->PAttributeBasic->GetHealthAttribute())
-        .AddUObject(WMain, &UWMain::OnUpdateHealth);
+    Initialize();
 }
 
 void APHUD::Tick(float DeltaSeconds)
