@@ -1,14 +1,11 @@
 #include "Prankman/World/PCell.h"
-#include "Prankman/log.h"
-#include "Prankman/Game/PGameState.h"
-#include "Engine/StaticMesh.h"
-#include "GameFramework/GameStateBase.h"
+
+#include "AbilitySystemComponent.h"
+
 #include "Net/UnrealNetwork.h"
 #include "NiagaraComponent.h"
 #include "Prankman/Player/PHero.h"
-#include "Prankman/Player/PPlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/GameSession.h"
 
 APCell::APCell()
 {
@@ -65,33 +62,23 @@ void APCell::SetType(EPCellType CellType)
     OnTypeUpdate();
 }
 
-void APCell::Enter(APPlayerState* PlayerState)
+void APCell::Enter(APPlayerState* PPlayerState)
 {
-    PlayersOver.Add(PlayerState);
-
-    if (GetWorld()->IsServer())
+    switch (Type)
     {
-        switch (Type)
-        {
-        case EPCellType::Slow:
-            Cast<APHero>(PlayerState->GetPawn())->GetCharacterMovement()->MaxWalkSpeed = 200;
-
-        break;
-        }
+        case EPCellType::Slow:break;
+        case EPCellType::Heal:ApplyEffect(PPlayerState, HealingEffect); break;
+        case EPCellType::Burn:ApplyEffect(PPlayerState, BurningEffect); break;
     }
 }
 
-void APCell::Leave(APPlayerState* PlayerState)
+void APCell::Leave(APPlayerState* PPlayerState)
 {
-    PlayersOver.Remove(PlayerState);
-    if (GetWorld()->IsServer())
+    switch (Type)
     {
-        switch (Type)
-        {
-        case EPCellType::Slow:
-            Cast<APHero>(PlayerState->GetPawn())->GetCharacterMovement()->MaxWalkSpeed = 600;
-            break;
-        }
+        case EPCellType::Slow:break;
+        case EPCellType::Heal:RemoveEffect(PPlayerState, HealingEffect); break;
+        case EPCellType::Burn:RemoveEffect(PPlayerState, BurningEffect); break;
     }
 }
 
@@ -111,7 +98,6 @@ void APCell::OnColorUpdate()
 
 void APCell::OnTypeUpdate()
 {
-    PM_LOG("Update Cell Type %d", (int)Type)
     switch (Type)
     {
         case EPCellType::Heal: break;
@@ -126,8 +112,6 @@ void APCell::OnTypeUpdate()
 
 void APCell::OnStateUpdate()
 {
-    PM_LOG("Update State %d", State)
-
     if (State & static_cast<int32>(EPCellState::EffectVisible))
     {
         TypeEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, BP_TypeEffect, GetActorLocation());
@@ -137,6 +121,23 @@ void APCell::OnStateUpdate()
         if (TypeEffect) TypeEffect->DestroyInstance();
     }
 
+}
+
+void APCell::ApplyEffect(APPlayerState* PPlayerState, TSubclassOf<UGameplayEffect> Effect)
+{
+    auto PHero = Cast<APHero>(PPlayerState->GetPawn());
+    FGameplayEffectContextHandle EffectContext = PHero->GetAbilitySystemComponent()->MakeEffectContext();
+    EffectContext.AddSourceObject(this);
+
+    FGameplayEffectSpecHandle EffectHandle = PHero->GetAbilitySystemComponent()->MakeOutgoingSpec(Effect, 1, EffectContext);
+    check(EffectHandle.IsValid());
+    PHero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*EffectHandle.Data.Get(), PHero->GetAbilitySystemComponent());
+}
+
+void APCell::RemoveEffect(APPlayerState* PPlayerState, TSubclassOf<UGameplayEffect> Effect)
+{
+    auto PHero = Cast<APHero>(PPlayerState->GetPawn());
+    PHero->GetAbilitySystemComponent()->RemoveActiveGameplayEffectBySourceEffect(Effect, PHero->GetAbilitySystemComponent());
 }
 
 void APCell::Tick(float DeltaTime)
@@ -149,24 +150,10 @@ void APCell::Tick(float DeltaTime)
         switch (Type)
         {
         case EPCellType::Heal:
-            if (PlayersOver.Num())
-            {
-                for (auto PPlayerState : PlayersOver)
-                {
-                    PPlayerState->AddHealth(0.0005f);
-                }
-                SetEffectVisible(true);
-            }
-            else SetEffectVisible(false);
+
             break;
         case EPCellType::Burn:
-            if (PlayersOver.Num())
-            {
-                for (auto PPlayerState : PlayersOver)
-                {
-                    PPlayerState->AddHealth(-0.0005f);
-                }
-            }
+
             break;
 
         case EPCellType::Ghost:
@@ -183,11 +170,6 @@ void APCell::Tick(float DeltaTime)
         default:;
         }
     }
-}
-
-void APCell::AddPlayerOver(APPlayerState* PPlayer)
-{
-    PlayersOver.Add(PPlayer);
 }
 
 /*

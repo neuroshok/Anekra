@@ -1,14 +1,18 @@
 #include "Prankman/Player/PHero.h"
 
 #include "Prankman/World/PCell.h"
+#include "Prankman/Player/Ability/PCollect.h"
+#include "Prankman/Game/PAbilitySystemComponent.h"
+#include "Prankman/Player/Ability/PBinding.h"
 
+#include "Abilities/GameplayAbilityTypes.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Kismet/GameplayStatics.h"
 
 APHero::APHero()
 {
+    bReplicates = true;
 
     // springarm
     SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
@@ -16,18 +20,12 @@ APHero::APHero()
     SpringArmComponent->TargetArmLength = 400.f;
     //SpringArmComponent->bEnableCameraLag = true;
     SpringArmComponent->CameraLagSpeed = 30.0f;
-
     SpringArmComponent->SetupAttachment(GetMesh());
 
     // camera
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     Camera->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
 
-    bReplicates = true;
-    //bReplicateMovement = true;
-
-    //SetActorEnableCollision(false);
-    PrimaryActorTick.bCanEverTick = true;
 
     SpringArmComponent->bUsePawnControlRotation = true;
 
@@ -35,6 +33,30 @@ APHero::APHero()
     GetCharacterMovement()->bUseControllerDesiredRotation = true;
     GetCharacterMovement()->bIgnoreBaseRotation = true;
 
+}
+
+void APHero::OnRep_PlayerState()
+{
+    Super::OnRep_PlayerState();
+
+    APPlayerState* PPlayerState = Cast<APPlayerState>(GetPlayerState());
+    check(PPlayerState);
+
+    PAbilitySystemComponent = Cast<UPAbilitySystemComponent>(PPlayerState->GetAbilitySystemComponent());
+    PAbilitySystemComponent->InitAbilityActorInfo(PPlayerState, this);
+    TryBindAbilities();
+}
+
+/// server
+void APHero::PossessedBy(AController* PlayerController)
+{
+    Super::PossessedBy(PlayerController);
+    APPlayerState* PPlayerState = Cast<APPlayerState>(GetPlayerState());
+    check(PPlayerState);
+
+    PAbilitySystemComponent = Cast<UPAbilitySystemComponent>(PPlayerState->GetAbilitySystemComponent());
+    PAbilitySystemComponent->InitAbilityActorInfo(PPlayerState, this);
+    PAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UPCollectAbility::StaticClass(), 1, static_cast<int32>(EPBinding::Collect), this));
 }
 
 // Called when the game starts or when spawned
@@ -91,12 +113,6 @@ void APHero::MovePitch(float Value)
     Controller->SetControlRotation(Rotation);
 }
 
-// Called every frame
-void APHero::Tick(float DeltaTime)
-{
-    Super::Tick(DeltaTime);
-}
-
 void APHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -108,4 +124,22 @@ void APHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
     InputComponent->BindAxis("RotateY", this, &APHero::MovePitch);
 
     InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+
+    TryBindAbilities();
+}
+
+void APHero::TryBindAbilities()
+{
+    if (!PAbilitySystemComponent.IsValid()) return;
+
+    PAbilitySystemComponent->BindAbilityActivationToInputComponent(InputComponent,
+                                                                   FGameplayAbilityInputBinds(
+                                                                   FString("ConfirmTarget"),
+                                                                   FString("CancelTarget"),
+                                                                   FString("EPBinding"), static_cast<int32>(EPBinding::Confirm), static_cast<int32>(EPBinding::Cancel)));
+}
+
+UAbilitySystemComponent* APHero::GetAbilitySystemComponent() const
+{
+    return PAbilitySystemComponent.Get();
 }

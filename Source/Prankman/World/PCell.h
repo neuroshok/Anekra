@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "Prankman/PCellType.h"
@@ -48,7 +46,10 @@ public:
     UFUNCTION()
     void OnStateUpdate();
 
-    void AddPlayerOver(class APPlayerState*);
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
+    TSubclassOf<class UGameplayEffect> HealingEffect;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
+    TSubclassOf<class UGameplayEffect> BurningEffect;
 
 public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Cell")
@@ -62,10 +63,11 @@ public:
 
     class UMaterialInstanceDynamic* MaterialInstanceDynamic = nullptr;
 
-    /// server
-    TSet<class APPlayerState*> PlayersOver;
-
 private:
+    void TypeApply();
+    void ApplyEffect(APPlayerState*, TSubclassOf<UGameplayEffect>);
+    void RemoveEffect(APPlayerState*, TSubclassOf<UGameplayEffect>);
+
     UPROPERTY(Replicated, ReplicatedUsing = OnColorUpdate)
     FLinearColor Color;
     UPROPERTY(Replicated, ReplicatedUsing = OnTypeUpdate)

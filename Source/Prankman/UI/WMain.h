@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
 #include "Blueprint/UserWidget.h"
 #include "WMain.generated.h"
 
@@ -16,15 +17,25 @@ class PRANKMAN_API UWMain : public UUserWidget
 
 public:
     UFUNCTION()
-    void OnUpdateHeal();
+    void OnStartCasting(float Duration);
 
-public:
+
+    void OnUpdateHealth(const FOnAttributeChangeData&);
+
+    //
+
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
     class UTextBlock* WEventText;
-
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
     class UProgressBar* WCastBar;
-
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
     class UProgressBar* WHealth;
+
+protected:
+    virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
+private:
+    bool bCasting = false;
+    float CastProgress;
+    float CastDuration;
 };

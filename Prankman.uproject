@@ -10,8 +10,15 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"UMG",
-				"Engine"
+				"Engine",
+				"GameplayAbilities"
 			]
 		}
+	],
+	"Plugins": [
+	{
+		"Name": "GameplayAbilities",
+		"Enabled": true
+	}
 	]
 }

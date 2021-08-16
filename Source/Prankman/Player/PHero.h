@@ -2,20 +2,27 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-
+#include "AbilitySystemInterface.h"
 #include "Camera/CameraComponent.h"
+
+#include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "PHero.generated.h"
 
 class USpringArmComponent;
+
 UCLASS()
-class PRANKMAN_API APHero final : public ACharacter
+class PRANKMAN_API APHero final : public ACharacter, public IAbilitySystemInterface
 {
     GENERATED_BODY()
 
 public:
     APHero();
+
+    virtual void OnRep_PlayerState() override;
+    virtual void PossessedBy(AController*) override;
+    virtual void SetupPlayerInputComponent(UInputComponent*) override;
+    virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 protected:
     virtual void BeginPlay() override;
@@ -27,15 +34,10 @@ protected:
     void MoveYaw(float);
     void MovePitch(float);
 
-public:
-    // Called every frame
-    virtual void Tick(float DeltaTime) override;
-
-    // Called to bind functionality to input
-    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-
 private:
+    TWeakObjectPtr<class UPAbilitySystemComponent> PAbilitySystemComponent;
+    void TryBindAbilities();
+
     UPROPERTY()
     class USpringArmComponent* SpringArmComponent;
     UPROPERTY()

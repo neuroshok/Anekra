@@ -10,20 +10,21 @@ class PRANKMAN_API APPlayerState : public APlayerState, public IAbilitySystemInt
 {
     GENERATED_BODY()
 
-    APPlayerState();
-    virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-
 public:
+    APPlayerState();
     void ComputeCellPosition();
 
     void AddHealth(float Value);
     FIntVector GetCellPosition() const;
 
-    //
-    UPROPERTY()
-    class UAbilitySystemComponent* AbilitySystemComponent;
+    virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
     //
+    UPROPERTY()
+    class UPAbilitySystemComponent* PAbilitySystemComponent;
+    UPROPERTY()
+    class UPAttributeBasic* PAttributeBasic;
+
     UFUNCTION()
     void OnUpdateHealth();
 

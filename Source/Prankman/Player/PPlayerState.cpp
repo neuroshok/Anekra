@@ -1,17 +1,20 @@
 #include "Prankman/Player/PPlayerState.h"
 
+#include "Prankman/Player/Attribute/PBasic.h"
 #include "Prankman/Game/PGameMode.h"
 #include "Prankman/Game/PGameState.h"
+#include "Prankman/Game/PAbilitySystemComponent.h"
 
-#include "AbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
 
 APPlayerState::APPlayerState()
 {
     NetUpdateFrequency = 100.0f;
-    AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(FName("Ability System Component"));
-    AbilitySystemComponent->SetIsReplicated(true);
-    AbilitySystemComponent->ReplicationMode = EGameplayEffectReplicationMode::Full;
+    PAbilitySystemComponent = CreateDefaultSubobject<UPAbilitySystemComponent>(FName("Ability System Component"));
+    PAbilitySystemComponent->SetIsReplicated(true);
+    PAbilitySystemComponent->ReplicationMode = EGameplayEffectReplicationMode::Full;
+
+    PAttributeBasic = CreateDefaultSubobject<UPAttributeBasic>(TEXT("AttributeBasic"));
 }
 
 void APPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -23,7 +26,7 @@ void APPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 
 UAbilitySystemComponent* APPlayerState::GetAbilitySystemComponent() const
 {
-    return AbilitySystemComponent;
+    return PAbilitySystemComponent;
 }
 
 void APPlayerState::ComputeCellPosition()

@@ -5,11 +5,12 @@
 #include "Prankman/log.h"
 #include "Prankman/Game/PGameState.h"
 #include "GameFramework/PlayerState.h"
+#include "Prankman/Player/PHUD.h"
 
 void APGameMode::BeginPlay()
 {
     Super::BeginPlay();
-    PM_LOG("BeginPlay")
+    PM_LOG("APGameMode::BeginPlay")
 }
 
 void APGameMode::MakeMap()

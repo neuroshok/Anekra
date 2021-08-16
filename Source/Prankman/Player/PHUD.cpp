@@ -1,18 +1,28 @@
 #include "PHUD.h"
 
+#include "AbilitySystemComponent.h"
+#include "PPlayerController.h"
+#include "Attribute/PBasic.h"
 #include "Prankman/Game/PGameState.h"
 #include "Prankman/Player/PPlayerState.h"
 #include "Components/TextBlock.h"
 #include "Components/ProgressBar.h"
+#include "Prankman/log.h"
 #include "Prankman/UI/WMain.h"
+
+
+void APHUD::Initialize()
+{
+    // wait for replication
+
+}
 
 void APHUD::BeginPlay()
 {
     Super::BeginPlay();
-    check(BP_WMain);
 
-    auto gameState = Cast<APGameState>(GetWorld()->GetGameState());
-    check(gameState);
+    check(BP_WMain);
+    auto PPlayerController = Cast<APPlayerController>(GetOwningPlayerController());
 
     WMain = CreateWidget<UWMain>(GetWorld(), BP_WMain);
     check(WMain);
@@ -24,9 +34,26 @@ void APHUD::BeginPlay()
     WMain->WEventText->SetVisibility(ESlateVisibility::Hidden);
     WMain->WCastBar->SetVisibility(ESlateVisibility::Hidden);
 
-    gameState->UpdateEventDelegate.AddDynamic(this, &APHUD::OnUpdateEvent);
-    gameState->UpdateHealthDelegate.AddDynamic(WMain, &UWMain::OnUpdateHeal);
+    PPlayerController->OnCastingDelegate.AddUObject(WMain, &UWMain::OnStartCasting);
+
+    // fix: wait valid playerstate
+    auto PPlayerState = GetOwningPlayerController()->GetPlayerState<APPlayerState>();
+    check(PPlayerState);
+    PPlayerState->GetAbilitySystemComponent()
+        ->GetGameplayAttributeValueChangeDelegate(PPlayerState->PAttributeBasic->GetHealthAttribute())
+        .AddUObject(WMain, &UWMain::OnUpdateHealth);
 }
+
+void APHUD::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
+    if (!bInitialized)
+    {
+        Initialize();
+        bInitialized = true;
+    }
+}
+
 
 void APHUD::OnUpdateEvent(EPEventType Type/*, EventData*/)
 {

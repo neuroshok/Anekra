@@ -17,11 +17,14 @@ class PRANKMAN_API APHUD : public AHUD
     GENERATED_BODY()
 
 public:
+    void Initialize();
+
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
     TSubclassOf<class UUserWidget> BP_WMain;
 
 protected:
     virtual void BeginPlay() override;
+    virtual void Tick(float DeltaSeconds) override;
 
 private:
     UFUNCTION()
@@ -29,4 +32,6 @@ private:
 
     UPROPERTY()
     class UWMain* WMain;
+
+    bool bInitialized = false;
 };
