@@ -6,6 +6,7 @@
 #include "NiagaraComponent.h"
 #include "Prankman/Player/PHero.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Prankman/Game/PEventSystem.h"
 
 APCell::APCell()
 {
@@ -17,21 +18,22 @@ APCell::APCell()
     bAlwaysRelevant = true;
 }
 
+void APCell::AddState(EPEventType PEventType)
+{
+    State |= static_cast<int32>(PEventType);
+}
+
 void APCell::BeginPlay()
 {
     check(BP_Mesh);
     MeshComponent->SetStaticMesh(BP_Mesh);
 
-    //CellBox = MeshComponent->GetStaticMesh()->GetBoundingBox();
-    //CellBox = CellBox.MoveTo(GetActorLocation());
-
     MaterialInstanceDynamic = MeshComponent->CreateAndSetMaterialInstanceDynamicFromMaterial(0, BP_Material);
     Super::BeginPlay();
 
     Color = { 0.2, 0.2, 0.8 };
-    OnColorUpdate();
-    OnTypeUpdate();
-    OnStateUpdate();
+    OnTypeUpdated();
+    OnStateUpdated();
 }
 
 void APCell::SetActive(bool bState)
@@ -45,25 +47,28 @@ void APCell::SetEffectVisible(bool bState)
     auto PrevState = State;
     if (bState) State |= static_cast<int32>(EPCellState::EffectVisible);
     else State &= ~static_cast<int32>(EPCellState::EffectVisible);
-    if (State != PrevState) OnStateUpdate();
+    if (State != PrevState) OnStateUpdated();
 }
 
 void APCell::SetColor(FLinearColor NewColor)
 {
     if (Color == NewColor) return;
     Color = NewColor;
-    OnColorUpdate();
+    if (!MaterialInstanceDynamic) return;
+    MaterialInstanceDynamic->SetVectorParameterValue("Color", Color);
 }
 
 void APCell::SetType(EPCellType CellType)
 {
     if (Type == CellType) return;
     Type = CellType;
-    OnTypeUpdate();
+    OnTypeUpdated();
 }
 
 void APCell::Enter(APPlayerState* PPlayerState)
 {
+    auto PHero = Cast<APHero>(PPlayerState->GetPawn());
+
     switch (Type)
     {
         case EPCellType::Slow:break;
@@ -74,29 +79,34 @@ void APCell::Enter(APPlayerState* PPlayerState)
 
 void APCell::Leave(APPlayerState* PPlayerState)
 {
-    switch (Type)
+    auto PHero = Cast<APHero>(PPlayerState->GetPawn());
+    FGameplayTagContainer EventTags;
+    PHero->GetAbilitySystemComponent()->GetOwnedGameplayTags(EventTags);
+
+    if (EventTags.HasTagExact(FGameplayTag::RequestGameplayTag("Event.Snake")))
     {
+        SetType(EPCellType::Burn);
+        OnTypeUpdated();
+    }
+    else
+    {
+        switch (Type)
+        {
         case EPCellType::Slow:break;
         case EPCellType::Heal:RemoveEffect(PPlayerState, HealingEffect); break;
         case EPCellType::Burn:RemoveEffect(PPlayerState, BurningEffect); break;
+        }
     }
 }
 
 void APCell::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-    DOREPLIFETIME(APCell, Color);
     DOREPLIFETIME(APCell, Type);
     DOREPLIFETIME(APCell, State);
 }
 
-void APCell::OnColorUpdate()
-{
-    if (!HasActorBegunPlay()) return;
-    MaterialInstanceDynamic->SetVectorParameterValue("Color", Color);
-}
-
-void APCell::OnTypeUpdate()
+void APCell::OnTypeUpdated()
 {
     switch (Type)
     {
@@ -110,8 +120,13 @@ void APCell::OnTypeUpdate()
     }
 }
 
-void APCell::OnStateUpdate()
+void APCell::OnStateUpdated()
 {
+    if (State & static_cast<int32>(EPEventType::Snake))
+    {
+        SetColor({0.1, 0.7, 0.1});
+    }
+    /*
     if (State & static_cast<int32>(EPCellState::EffectVisible))
     {
         TypeEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, BP_TypeEffect, GetActorLocation());
@@ -119,7 +134,7 @@ void APCell::OnStateUpdate()
     else
     {
         if (TypeEffect) TypeEffect->DestroyInstance();
-    }
+    }*/
 
 }
 
@@ -171,20 +186,3 @@ void APCell::Tick(float DeltaTime)
         }
     }
 }
-
-/*
-void APCell::PlayersOver()
-{
-    auto playerPosition = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
-
-    if (CellBox.IsInsideXY(playerPosition))
-    {
-        Color = FLinearColor{ 90, 0, 0 };
-        MaterialInstanceDynamic->SetVectorParameterValue("Color", FLinearColor{ 90, 0, 0 });
-    }
-    else
-    {
-        //Color = FLinearColor{ 0, 0, 200 };
-        //MaterialInstanceDynamic->SetVectorParameterValue("Color", FLinearColor{ 0, 0, 200 });
-    }
-}*/

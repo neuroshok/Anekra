@@ -135,6 +135,11 @@ void APHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
     TryBindAbilities();
 }
 
+UAbilitySystemComponent* APHero::GetAbilitySystemComponent() const
+{
+    return PAbilitySystemComponent.Get();
+}
+
 void APHero::TryBindAbilities()
 {
     if (!PAbilitySystemComponent.IsValid()) return;
@@ -146,7 +151,8 @@ void APHero::TryBindAbilities()
                                                                    FString("EPBinding"), static_cast<int32>(EPBinding::Confirm), static_cast<int32>(EPBinding::Cancel)));
 }
 
-UAbilitySystemComponent* APHero::GetAbilitySystemComponent() const
+
+void APHero::Collect()
 {
-    return PAbilitySystemComponent.Get();
+    Cast<APPlayerController>(GetController())->ServerCollect();
 }

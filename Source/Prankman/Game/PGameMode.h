@@ -11,6 +11,19 @@ class PRANKMAN_API APGameMode final : public AGameModeBase
 {
     GENERATED_BODY()
 
+public:
+    float GetMapWidth() const;
+    float GetCellSize() const;
+    class APCell* GetCell(int X, int Y) const;
+    TArray<class APCell*> GetCells() const;
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
+    TSubclassOf<class APCell> BP_Cell;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
+    TSubclassOf<class APHero> BP_Hero;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
+    TSubclassOf<class UPEventSystem> BP_EventSystem;
+
 protected:
     virtual void BeginPlay() override;
 
@@ -20,25 +33,13 @@ protected:
     virtual void Logout(AController*) override;
 
     void MakeMap();
-    void OnEventTimer();
-
-public:
-    float GetMapWidth() const;
-    float GetCellSize() const;
-    class APCell* GetCell(int X, int Y) const ;
-
-public:
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
-    TSubclassOf<class APCell> BP_Cell;
-
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
-    TSubclassOf<class APHero> BP_Hero;
 
 private:
+    // todo use weakptr ?
     TArray<class APCell*> CellsView;
 
-    FTimerHandle EventTimer;
-    EPEventType EventType;
+    UPROPERTY()
+    class UPEventSystem* EventSystem;
 
     const int MapSizeX = 10;
     const float CellSize = 400.f;

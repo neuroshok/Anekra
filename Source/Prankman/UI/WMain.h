@@ -1,9 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
-#include "CoreMinimal.h"
 #include "GameplayEffectTypes.h"
+#include "Prankman/PEventType.h"
+
+#include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "WMain.generated.h"
 
@@ -17,22 +17,32 @@ class PRANKMAN_API UWMain : public UUserWidget
 
 public:
     UFUNCTION()
-    void OnStartCasting(float Duration);
+    void OnCasting(float Duration);
 
 
-    void OnUpdateHealth(const FOnAttributeChangeData&);
+    void OnAbilitiesUpdated();
+    void OnEventUpdated(EPEventType Type/*, EventData*/);
+    void OnHealthUpdated(const FOnAttributeChangeData&);
 
     //
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
     class UTextBlock* WEventText;
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
+    class UTextBlock* WMessage;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
     class UProgressBar* WCastBar;
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
     class UProgressBar* WHealth;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
+    class UHorizontalBox* WAbilityBox;
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere)
+    TSubclassOf<UUserWidget> BP_WAbility;
 
 protected:
     virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+    virtual void NativeOnInitialized() override;
 
 private:
     bool bCasting = false;

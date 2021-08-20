@@ -24,6 +24,8 @@ public:
     virtual void SetupPlayerInputComponent(UInputComponent*) override;
     virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+    void Collect();
+
 protected:
     virtual void BeginPlay() override;
 
@@ -35,8 +37,9 @@ protected:
     void MovePitch(float);
 
 private:
-    TWeakObjectPtr<class UPAbilitySystemComponent> PAbilitySystemComponent;
     void TryBindAbilities();
+
+    TWeakObjectPtr<class UPAbilitySystemComponent> PAbilitySystemComponent;
 
     UPROPERTY()
     class USpringArmComponent* SpringArmComponent;

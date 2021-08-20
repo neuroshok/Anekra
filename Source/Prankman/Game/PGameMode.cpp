@@ -1,17 +1,16 @@
 #include "Prankman/Game/PGameMode.h"
 
+#include "PEventSystem.h"
 #include "Prankman/World/PCell.h"
 #include "Prankman/Player/PHero.h"
 #include "Prankman/log.h"
 #include "Prankman/Game/PGameState.h"
-#include "GameFramework/PlayerState.h"
-#include "Prankman/Player/PHUD.h"
 #include "Prankman/Player/PPlayerController.h"
+#include "GameFramework/PlayerState.h"
 
 void APGameMode::BeginPlay()
 {
     Super::BeginPlay();
-    PM_LOG("APGameMode::BeginPlay")
 }
 
 void APGameMode::MakeMap()
@@ -48,14 +47,6 @@ void APGameMode::MakeMap()
     }
 }
 
-void APGameMode::OnEventTimer()
-{
-    PM_LOG("TIMER")
-    auto randomType = FMath::RandRange(static_cast<int32>(EPEventType::None), static_cast<int32>(EPEventType::Count) - 1);
-    EventType = static_cast<EPEventType>(randomType);
-    GetGameState<APGameState>()->ClientStartEvent(EventType);
-}
-
 void APGameMode::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
 {
     Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
@@ -77,6 +68,8 @@ void APGameMode::PostLogin(APlayerController* PlayerController)
 
     PlayerController->Possess(PlayerPawn);
     Cast<APPlayerController>(PlayerController)->InitializeHUD();
+
+    // if players.count == gamestate.players_count, start_game
 }
 
 FString APGameMode::InitNewPlayer(APlayerController* PlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)
@@ -84,12 +77,15 @@ FString APGameMode::InitNewPlayer(APlayerController* PlayerController, const FUn
     FString init = Super::InitNewPlayer(PlayerController, UniqueId, Options, Portal);
     check(BP_Hero);
 
+    //todo find a better place for init
     // make map when host join the game
     if (PlayerController->IsLocalPlayerController())
     {
         MakeMap();
+        EventSystem = NewObject<UPEventSystem>(this, BP_EventSystem, "Event System");
+        check(EventSystem);
+        EventSystem->Start();
     }
-
 
     return init;
 }
@@ -100,7 +96,18 @@ void APGameMode::Logout(AController* Controller)
     UE_LOG(LogTemp, Warning, TEXT("Logout"));
 }
 
+
 float APGameMode::GetMapWidth() const { return MapSizeX * CellSize; }
 float APGameMode::GetCellSize() const { return CellSize; }
 
-APCell* APGameMode::GetCell(int X, int Y) const { return CellsView[X * MapSizeX + Y]; }
+APCell* APGameMode::GetCell(int X, int Y) const
+{
+    auto index = X * MapSizeX + Y;
+    if (index >= CellsView.Num()) return nullptr;
+    return CellsView[X * MapSizeX + Y];
+}
+
+TArray<APCell*> APGameMode::GetCells() const
+{
+    return CellsView;
+}

@@ -18,6 +18,7 @@ class PRANKMAN_API APHUD : public AHUD
 
 public:
     void Initialize();
+    void Error(FString);
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
     TSubclassOf<class UUserWidget> BP_WMain;
@@ -27,11 +28,9 @@ protected:
     virtual void Tick(float DeltaSeconds) override;
 
 private:
-    UFUNCTION()
-    void OnUpdateEvent(EPEventType Type);
-
     UPROPERTY()
     class UWMain* WMain;
+    FTimerHandle MessageTimer;
 
     bool bInitialized = false;
 };

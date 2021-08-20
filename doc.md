@@ -26,7 +26,7 @@ de recherche, les premiers mages firent leur apparition après avoir trouvé com
 ## Event
 Triggers every X secondes
 - Player has X second to find & stay on a specific color cell or symbol
-- Player must change cell every 2sec, without reusing the same cell of any player
+- Snake: Player must change cell every 2sec, without reusing the same cell of any player
 
 ## Cell
 ### Property
@@ -35,5 +35,7 @@ Triggers every X secondes
 - Delay : trigger after X seconds
 
 ### Type
-- Rotating cell
-- Ghost cell : Cell disappear when someone stay over, then the player fall, reappear when someoneleft
+- Heal
+- Burn
+- Slow
+- Ghost: Cell disappear when someone stay over, then the player fall, reappear when someoneleft

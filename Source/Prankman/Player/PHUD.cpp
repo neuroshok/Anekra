@@ -15,15 +15,29 @@ void APHUD::Initialize()
 {
     // wait for replication
     auto PPlayerState = GetOwningPlayerController()->GetPlayerState<APPlayerState>();
-    if (PPlayerState)
+    auto GameState = Cast<APGameState>(GetWorld()->GetGameState());
+
+    if (PPlayerState && GameState)
     {
+        GameState->OnEventDelegate.AddUObject(WMain, &UWMain::OnEventUpdated);
+
         PPlayerState->GetAbilitySystemComponent()
             ->GetGameplayAttributeValueChangeDelegate(PPlayerState->PAttributeBasic->GetHealthAttribute())
-            .AddUObject(WMain, &UWMain::OnUpdateHealth);
+            .AddUObject(WMain, &UWMain::OnHealthUpdated);
 
-        PPlayerState->OnCastingDelegate.AddUObject(WMain, &UWMain::OnStartCasting);
+        PPlayerState->OnCastingDelegate.AddUObject(WMain, &UWMain::OnCasting);
+
+        Cast<APPlayerController>(GetOwningPlayerController())->OnAbilitiesUpdateDelegate.AddUObject(WMain, &UWMain::OnAbilitiesUpdated);
+
         bInitialized = true;
     }
+}
+
+void APHUD::Error(FString Message)
+{
+    WMain->WMessage->SetText(FText::FromString(Message));
+    WMain->WMessage->SetVisibility(ESlateVisibility::Visible);
+    GetWorld()->GetTimerManager().SetTimer(MessageTimer, [this]{ WMain->WMessage->SetVisibility(ESlateVisibility::Hidden); }, 1, false);
 }
 
 void APHUD::BeginPlay()
@@ -41,6 +55,7 @@ void APHUD::BeginPlay()
 
     WMain->WEventText->SetVisibility(ESlateVisibility::Hidden);
     WMain->WCastBar->SetVisibility(ESlateVisibility::Hidden);
+    WMain->WMessage->SetVisibility(ESlateVisibility::Hidden);
 
     Initialize();
 }
@@ -53,27 +68,4 @@ void APHUD::Tick(float DeltaSeconds)
         Initialize();
         bInitialized = true;
     }
-}
-
-
-void APHUD::OnUpdateEvent(EPEventType Type/*, EventData*/)
-{
-    UE_LOG(LogTemp, Warning, TEXT("OnEvent"))
-    FText EventText;
-    switch (Type)
-    {
-        case EPEventType::FindColor:
-            EventText = FText::Format(FText::FromString("Find a {} cell !"), (int)Type);
-        break;
-        case EPEventType::StopMove:
-            EventText = FText::FromString("Stop move !");
-        break;
-        default: {
-            WMain->WEventText->SetVisibility(ESlateVisibility::Hidden);
-            return;
-        };
-    }
-
-    WMain->WEventText->SetText(EventText);
-    WMain->WEventText->SetVisibility(ESlateVisibility::Visible);
 }

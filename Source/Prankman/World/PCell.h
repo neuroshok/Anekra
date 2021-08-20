@@ -6,11 +6,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Prankman/PEventType.h"
 
 #include "PCell.generated.h"
 
 UENUM(meta = (Bitflags))
-enum class EPCellState: uint8
+enum class EPCellState : int32
 {
     None = 0 UMETA(Hidden),
     Active = 1 << 0,
@@ -31,6 +32,7 @@ protected:
 public:	
     APCell();
 
+    void AddState(EPEventType);
     void SetActive(bool);
     void SetEffectVisible(bool);
     void SetColor(FLinearColor NewColor);
@@ -40,11 +42,9 @@ public:
     void Leave(class APPlayerState*);
 
     UFUNCTION()
-    void OnColorUpdate();
+    void OnTypeUpdated();
     UFUNCTION()
-    void OnTypeUpdate();
-    UFUNCTION()
-    void OnStateUpdate();
+    void OnStateUpdated();
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
     TSubclassOf<class UGameplayEffect> HealingEffect;
@@ -61,24 +61,25 @@ public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Cell")
     class UNiagaraSystem* BP_TypeEffect;
 
-    class UMaterialInstanceDynamic* MaterialInstanceDynamic = nullptr;
+    UPROPERTY()
+    class UMaterialInstanceDynamic* MaterialInstanceDynamic;
 
 private:
-    void TypeApply();
     void ApplyEffect(APPlayerState*, TSubclassOf<UGameplayEffect>);
     void RemoveEffect(APPlayerState*, TSubclassOf<UGameplayEffect>);
 
-    UPROPERTY(Replicated, ReplicatedUsing = OnColorUpdate)
-    FLinearColor Color;
-    UPROPERTY(Replicated, ReplicatedUsing = OnTypeUpdate)
+    UPROPERTY(Replicated, ReplicatedUsing = OnTypeUpdated)
     EPCellType Type;
-    UPROPERTY(Replicated, ReplicatedUsing = OnStateUpdate)
+    UPROPERTY(Replicated, ReplicatedUsing = OnStateUpdated)
     int32 State;
 
-    UPROPERTY()
-    class UStaticMeshComponent* MeshComponent = nullptr;
+    FLinearColor Color;
+    int32 VisualState;
 
-    class UNiagaraComponent* TypeEffect = nullptr;
+    UPROPERTY()
+    class UStaticMeshComponent* MeshComponent;
+    UPROPERTY()
+    class UNiagaraComponent* TypeEffect;
 
     FBox CellBox;
 };

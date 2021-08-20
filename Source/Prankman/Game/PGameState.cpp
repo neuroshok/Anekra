@@ -20,17 +20,9 @@ void APGameState::Tick(float DeltaSeconds)
     if (GetWorld()->IsServer()) OnUpdateIndexLocation();
 }
 
-void APGameState::OnEvent()
-{
-
-}
-
-
-// server
+/// server
 void APGameState::OnUpdateIndexLocation()
 {
-    /// server
-    int i = 0;
     for (const auto& Player : PlayerArray)
     {
         auto PPlayer = Cast<APPlayerState>(Player);
@@ -44,18 +36,13 @@ void APGameState::OnUpdateIndexLocation()
             PreviousCell->Leave(PPlayer);
 
             auto Cell = Cast<APGameMode>(GetWorld()->GetAuthGameMode())->GetCell(PPlayer->GetCellPosition().X, PPlayer->GetCellPosition().Y);
-            Cell->Enter(PPlayer);
+            if (Cell) Cell->Enter(PPlayer);
+            // else player out
         }
-
-
-        //if (i == 0) Cell->SetColor({0, 255, 0});
-        //else Cell->SetColor({255, 0, 0});
-
-        ++i;
     }
 }
 
 void APGameState::ClientStartEvent_Implementation(const EPEventType EventType)
 {
-    UpdateEventDelegate.Broadcast(EventType);
+    OnEventDelegate.Broadcast(EventType);
 }

@@ -5,6 +5,7 @@ enum class EPEventType : uint8
 {
     None,
     StopMove,
-    FindColor,
+    //FindColor,
+    Snake,
     Count
 };
