@@ -13,8 +13,6 @@ class PRANKMAN_API UPAbilitySystemComponent : public UAbilitySystemComponent
 public:
     virtual void BindAbilityActivationToInputComponent(UInputComponent* InputComponent, FGameplayAbilityInputBinds BindInfo) override;
 
-    virtual void InternalServerTryActivateAbility(FGameplayAbilitySpecHandle AbilityToActivate, bool InputPressed, const FPredictionKey& PredictionKey, const FGameplayEventData* TriggerEventData) override;
-
 private:
     bool BoundAbilities = false;
 };

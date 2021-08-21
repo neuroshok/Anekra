@@ -8,10 +8,3 @@ void UPAbilitySystemComponent::BindAbilityActivationToInputComponent(UInputCompo
     Super::BindAbilityActivationToInputComponent(InputComponent, BindInfo);
     BoundAbilities = true;
 }
-
-void UPAbilitySystemComponent::InternalServerTryActivateAbility(FGameplayAbilitySpecHandle AbilityToActivate, bool bInputPressed,
-const FPredictionKey& PredictionKey, const FGameplayEventData* TriggerEventData)
-{
-    PM_LOG("activate ab")
-    Super::InternalServerTryActivateAbility(AbilityToActivate, bInputPressed, PredictionKey, TriggerEventData);
-}
