@@ -12,7 +12,7 @@ de recherche, les premiers mages firent leur apparition après avoir trouvé com
 être au flux d'énergie magique de l'univers.
 
 # Hero
-- Collect cell : get a chance to obtain an ability
+- Unlock cell : get a chance to obtain an ability
 ## Ability
 ### Active ability
 - trap a cell : Display an effect on the cell according to the trap

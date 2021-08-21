@@ -6,7 +6,7 @@ enum class EPBinding : uint8
     None	UMETA(DisplayName = "None"),
     Confirm	UMETA(DisplayName = "Confirm"),
     Cancel	UMETA(DisplayName = "Cancel"),
-    Collect	UMETA(DisplayName = "Collect"),
+    Unlock	UMETA(DisplayName = "Unlock"),
     Ability1	UMETA(DisplayName = "Ability1"),
     Ability2	UMETA(DisplayName = "Ability2"),
     Ability3	UMETA(DisplayName = "Ability3"),

@@ -24,7 +24,10 @@ public:
     virtual void SetupPlayerInputComponent(UInputComponent*) override;
     virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-    void Collect();
+    void Unlock();
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
+    TSubclassOf<class UGameplayEffect> UnlockEffect;
 
 protected:
     virtual void BeginPlay() override;

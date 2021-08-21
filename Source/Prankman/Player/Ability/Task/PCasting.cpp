@@ -1,7 +1,5 @@
 #include "PCasting.h"
 
-#include "Prankman/log.h"
-#include "Prankman/Player/PPlayerController.h"
 #include "Prankman/Player/PPlayerState.h"
 
 UPCasting::UPCasting()
@@ -12,7 +10,7 @@ UPCasting::UPCasting()
 void UPCasting::Activate()
 {
 
-    GetWorld()->GetTimerManager().SetTimer(CastingTimer, this, &UPCasting::OnEndCasting, 1, false, Duration);
+    GetWorld()->GetTimerManager().SetTimer(CastingTimer, this, &UPCasting::OnEndCasting, Duration);
     SetWaitingOnRemotePlayerData();
 
     auto PPlayerState = Cast<APPlayerState>(GetOwnerActor());
@@ -33,6 +31,5 @@ UPCasting* UPCasting::Create(UGameplayAbility* OwningAbility, FName TaskInstance
 {
     UPCasting* Task = NewAbilityTask<UPCasting>(OwningAbility, TaskInstanceName);
     Task->Duration = Duration;
-    //OwningAbility->AbilityTags.AddTag(FGameplayTag::RequestGameplayTag("State.Casting"));
     return Task;
 }

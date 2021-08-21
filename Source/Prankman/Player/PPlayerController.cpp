@@ -50,7 +50,7 @@ void APPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
     DOREPLIFETIME(APPlayerController, Abilities);
 }
 
-void APPlayerController::ServerCollect_Implementation()
+void APPlayerController::ServerUnlock_Implementation()
 {
     auto AbilityID = FMath::RandRange(0, static_cast<int8>(EPAbilityType::Count) - 1);
     AddAbility(static_cast<EPAbilityType>(AbilityID));

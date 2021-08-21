@@ -60,7 +60,7 @@ void APGameMode::PostLogin(APlayerController* PlayerController)
     PM_LOG("PostLogin");
 
     const int32 CellIndex = FMath::RandRange(0, CellsView.Num() - 1);
-    FVector SpawnLocation = CellsView[CellIndex]->GetActorLocation();
+    FVector SpawnLocation =  CellsView[CellIndex]->GetActorLocation();
     SpawnLocation.Z = 1000;
     FActorSpawnParameters Params;
     Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;

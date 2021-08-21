@@ -19,7 +19,7 @@ public:
     void NotifyError(FString);
 
     UFUNCTION(Server, Reliable)
-    void ServerCollect();
+    void ServerUnlock();
 
     UFUNCTION()
     void OnAbilitiesUpdated();

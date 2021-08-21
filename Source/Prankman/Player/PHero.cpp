@@ -3,7 +3,7 @@
 #include "PHUD.h"
 #include "PPlayerController.h"
 #include "Prankman/World/PCell.h"
-#include "Prankman/Player/Ability/PCollect.h"
+#include "Prankman/Player/Ability/PUnlock.h"
 #include "Prankman/Game/PAbilitySystemComponent.h"
 #include "Prankman/Player/Ability/PBinding.h"
 
@@ -63,7 +63,7 @@ void APHero::PossessedBy(AController* PlayerController)
 
     PAbilitySystemComponent = Cast<UPAbilitySystemComponent>(PPlayerState->GetAbilitySystemComponent());
     PAbilitySystemComponent->InitAbilityActorInfo(PPlayerState, this);
-    PAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UPCollectAbility::StaticClass(), 1, static_cast<int32>(EPBinding::Collect), this));
+    PAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UPUnlockAbility::StaticClass(), 1, static_cast<int32>(EPBinding::Unlock), this));
 }
 
 // Called when the game starts or when spawned
@@ -152,7 +152,7 @@ void APHero::TryBindAbilities()
 }
 
 
-void APHero::Collect()
+void APHero::Unlock()
 {
-    Cast<APPlayerController>(GetController())->ServerCollect();
+    Cast<APPlayerController>(GetController())->ServerUnlock();
 }
