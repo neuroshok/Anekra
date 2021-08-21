@@ -67,7 +67,6 @@ void APGameMode::PostLogin(APlayerController* PlayerController)
     const auto PlayerPawn = GetWorld()->SpawnActor<APHero>(BP_Hero, SpawnLocation, FRotator{ 0, 0, 0 }, Params);
 
     PlayerController->Possess(PlayerPawn);
-    Cast<APPlayerController>(PlayerController)->InitializeHUD();
 
     // if players.count == gamestate.players_count, start_game
 }

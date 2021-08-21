@@ -29,7 +29,6 @@ APHero::APHero()
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     Camera->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
 
-
     SpringArmComponent->bUsePawnControlRotation = true;
 
     GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -63,6 +62,7 @@ void APHero::PossessedBy(AController* PlayerController)
 
     PAbilitySystemComponent = Cast<UPAbilitySystemComponent>(PPlayerState->GetAbilitySystemComponent());
     PAbilitySystemComponent->InitAbilityActorInfo(PPlayerState, this);
+
     PAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UPUnlockAbility::StaticClass(), 1, static_cast<int32>(EPBinding::Unlock), this));
 }
 
@@ -70,7 +70,6 @@ void APHero::PossessedBy(AController* PlayerController)
 void APHero::BeginPlay()
 {
     Super::BeginPlay();
-
 }
 
 void APHero::MoveForward(float Value)
@@ -120,6 +119,7 @@ void APHero::MovePitch(float Value)
     Controller->SetControlRotation(Rotation);
 }
 
+
 void APHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -149,10 +149,4 @@ void APHero::TryBindAbilities()
                                                                    FString("ConfirmTarget"),
                                                                    FString("CancelTarget"),
                                                                    FString("EPBinding"), static_cast<int32>(EPBinding::Confirm), static_cast<int32>(EPBinding::Cancel)));
-}
-
-
-void APHero::Unlock()
-{
-    Cast<APPlayerController>(GetController())->ServerUnlock();
 }

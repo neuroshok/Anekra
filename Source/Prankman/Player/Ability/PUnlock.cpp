@@ -55,7 +55,9 @@ void UPUnlockAbility::InputReleased(const FGameplayAbilitySpecHandle Handle, con
 
 void UPUnlockAbility::OnCastingComplete(FGameplayTag EventTag, FGameplayEventData EventData)
 {
-    auto Hero = Cast<APHero>(GetAvatarActorFromActorInfo());
-    Hero->Unlock();
-    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+    auto PPlayerController = Cast<APPlayerController>(GetAvatarActorFromActorInfo()->GetInstigatorController());
+    check(PPlayerController);
+    // unlock server side
+    if (GetOwningActorFromActorInfo()->GetLocalRole() == ROLE_Authority) PPlayerController->Unlock();
+    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
 }

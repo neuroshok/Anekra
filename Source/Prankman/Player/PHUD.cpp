@@ -63,9 +63,10 @@ void APHUD::BeginPlay()
 void APHUD::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+    /*
     if (!bInitialized)
     {
         Initialize();
         bInitialized = true;
-    }
+    }*/
 }

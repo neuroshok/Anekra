@@ -11,13 +11,17 @@
 
 void APPlayerController::InitializeHUD()
 {
+    /*
     if (GetHUD() || !IsLocalPlayerController()) return;
     SpawnDefaultHUD();
-    Cast<APHUD>(GetHUD())->Initialize();
+    Cast<APHUD>(GetHUD())->Initialize();*/
 }
 
+// server
 void APPlayerController::AddAbility(EPAbilityType AbilityID)
 {
+    check(GetLocalRole() == ROLE_Authority);
+
     TSubclassOf<UGameplayAbility> AbilityClass;
 
     switch (AbilityID)
@@ -30,8 +34,9 @@ void APPlayerController::AddAbility(EPAbilityType AbilityID)
     FGameplayAbilitySpec AbilitySpec{ AbilityClass, 1, static_cast<int32>(EPBinding::Ability1) };
     GetPlayerState<APPlayerState>()->GetAbilitySystemComponent()->GiveAbility(AbilitySpec);
 
+    PM_LOG("AddAbility")
     Abilities.Add(AbilityID);
-    if (GetWorld()->IsServer()) OnAbilitiesUpdated();
+    OnAbilitiesUpdated();
 }
 
 void APPlayerController::NotifyError(FString Message)
@@ -50,14 +55,16 @@ void APPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
     DOREPLIFETIME(APPlayerController, Abilities);
 }
 
-void APPlayerController::ServerUnlock_Implementation()
+// server
+void APPlayerController::Unlock()
 {
+    PM_LOG("Unlock")
+    check(GetLocalRole() == ROLE_Authority);
     auto AbilityID = FMath::RandRange(0, static_cast<int8>(EPAbilityType::Count) - 1);
     AddAbility(static_cast<EPAbilityType>(AbilityID));
 }
 
 void APPlayerController::OnAbilitiesUpdated()
 {
-    PM_LOG("ability update %d", Abilities.Num())
     OnAbilitiesUpdateDelegate.Broadcast();
 }

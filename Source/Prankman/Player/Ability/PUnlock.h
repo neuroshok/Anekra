@@ -26,5 +26,5 @@ private:
     UFUNCTION()
     void OnCastingComplete(FGameplayTag EventTag, FGameplayEventData EventData);
 
-    float CastingDuration = 2;
+    float CastingDuration = 0.5;
 };

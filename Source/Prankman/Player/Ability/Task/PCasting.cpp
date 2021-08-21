@@ -9,7 +9,6 @@ UPCasting::UPCasting()
 
 void UPCasting::Activate()
 {
-
     GetWorld()->GetTimerManager().SetTimer(CastingTimer, this, &UPCasting::OnEndCasting, Duration);
     SetWaitingOnRemotePlayerData();
 

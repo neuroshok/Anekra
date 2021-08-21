@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 
 #include "CoreMinimal.h"
+#include "GameplayAbilitySpec.h"
 #include "GameFramework/Character.h"
 #include "PHero.generated.h"
 
@@ -23,8 +24,6 @@ public:
     virtual void PossessedBy(AController*) override;
     virtual void SetupPlayerInputComponent(UInputComponent*) override;
     virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-
-    void Unlock();
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
     TSubclassOf<class UGameplayEffect> UnlockEffect;

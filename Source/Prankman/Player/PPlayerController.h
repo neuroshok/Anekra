@@ -18,8 +18,7 @@ public:
     void AddAbility(EPAbilityType);
     void NotifyError(FString);
 
-    UFUNCTION(Server, Reliable)
-    void ServerUnlock();
+    void Unlock();
 
     UFUNCTION()
     void OnAbilitiesUpdated();

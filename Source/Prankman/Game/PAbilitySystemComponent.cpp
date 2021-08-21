@@ -4,7 +4,7 @@
 
 void UPAbilitySystemComponent::BindAbilityActivationToInputComponent(UInputComponent* InputComponent, FGameplayAbilityInputBinds BindInfo)
 {
-    if (BoundAbilities || !InputComponent) return;
+    if (!InputComponent || BoundAbilities) return;
     Super::BindAbilityActivationToInputComponent(InputComponent, BindInfo);
     BoundAbilities = true;
 }
