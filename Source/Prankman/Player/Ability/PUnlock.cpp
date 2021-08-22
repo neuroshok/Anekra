@@ -31,16 +31,19 @@ void UPUnlockAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
             return;
         }
 
-        FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponentFromActorInfo()->MakeEffectContext();
+        auto PHero = Cast<APHero>(GetAvatarActorFromActorInfo());
+
+        FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
         EffectContext.AddSourceObject(this);
 
-        auto PHero = Cast<APHero>(GetAvatarActorFromActorInfo());
         FGameplayEffectSpecHandle EffectHandle = GetAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(PHero->UnlockEffect, 1, EffectContext);
         check(EffectHandle.IsValid())
-        PHero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*EffectHandle.Data.Get(), PHero->GetAbilitySystemComponent());
+        GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*EffectHandle.Data.Get(), GetAbilitySystemComponent());
         auto Task = UPCasting::Create(this, NAME_None, EffectHandle.Data->Duration);
         Task->OnComplete.AddUObject(this, &UPUnlockAbility::OnCastingComplete);
         Task->ReadyForActivation();
+
+        GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, PHero->UnlockMontage, 1);
     }
 }
 
@@ -53,6 +56,8 @@ void UPUnlockAbility::InputReleased(const FGameplayAbilitySpecHandle Handle, con
 
 void UPUnlockAbility::OnCastingComplete(FGameplayTag EventTag, FGameplayEventData EventData)
 {
+    GetAbilitySystemComponent()->CurrentMontageStop();
+
     auto PPlayerController = Cast<APPlayerController>(GetAvatarActorFromActorInfo()->GetInstigatorController());
     check(PPlayerController);
     // unlock server side

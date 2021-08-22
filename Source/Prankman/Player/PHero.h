@@ -28,6 +28,9 @@ public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
     TSubclassOf<class UGameplayEffect> UnlockEffect;
 
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Prankman")
+    class UAnimMontage* UnlockMontage;
+
 protected:
     virtual void BeginPlay() override;
 

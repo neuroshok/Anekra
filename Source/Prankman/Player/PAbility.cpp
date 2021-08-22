@@ -7,3 +7,8 @@ UPAbility::UPAbility()
     // Default tags that block this ability from activating
     ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Dead")));
 }
+
+UPAbilitySystemComponent* UPAbility::GetAbilitySystemComponent()
+{
+    return Cast<UPAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo());
+}

@@ -53,7 +53,7 @@ void APHero::OnRep_PlayerState()
     Cast<APHUD>(PPlayerController->GetHUD())->Initialize();
 }
 
-/// server
+// server
 void APHero::PossessedBy(AController* PlayerController)
 {
     Super::PossessedBy(PlayerController);
