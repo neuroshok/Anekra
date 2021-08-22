@@ -37,10 +37,8 @@ void UPUnlockAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
         auto PHero = Cast<APHero>(GetAvatarActorFromActorInfo());
         FGameplayEffectSpecHandle EffectHandle = GetAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(PHero->UnlockEffect, 1, EffectContext);
         check(EffectHandle.IsValid())
-        EffectHandle.Data->SetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag("Ability.Unlock"), CastingDuration);;
         PHero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*EffectHandle.Data.Get(), PHero->GetAbilitySystemComponent());
-
-        auto Task = UPCasting::Create(this, NAME_None, CastingDuration);
+        auto Task = UPCasting::Create(this, NAME_None, EffectHandle.Data->Duration);
         Task->OnComplete.AddUObject(this, &UPUnlockAbility::OnCastingComplete);
         Task->ReadyForActivation();
     }
