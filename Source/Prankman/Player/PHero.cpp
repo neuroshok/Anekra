@@ -20,7 +20,7 @@ APHero::APHero()
     // springarm
     SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
     SpringArmComponent->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, 90.0f), FRotator(-30, 0.0f, 0.0f));
-    SpringArmComponent->TargetArmLength = 400.f;
+    SpringArmComponent->TargetArmLength = 800.f;
     //SpringArmComponent->bEnableCameraLag = true;
     SpringArmComponent->CameraLagSpeed = 30.0f;
     SpringArmComponent->SetupAttachment(GetMesh());

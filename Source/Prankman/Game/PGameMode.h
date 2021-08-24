@@ -42,5 +42,5 @@ private:
     class UPEventSystem* EventSystem;
 
     const int MapSizeX = 10;
-    const float CellSize = 400.f;
+    const float CellSize = 800.f;
 };

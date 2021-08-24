@@ -11,6 +11,13 @@ que les phénomènes magiques étaient directement liés à l'univers. Après de
 de recherche, les premiers mages firent leur apparition après avoir trouvé comment lier leur
 être au flux d'énergie magique de l'univers.
 
+## Matter state
+Liquid
+Solid
+Gaz
+Plasma
+Time crystal
+
 # Hero
 - Unlock cell : get a chance to obtain an ability
 ## Ability
