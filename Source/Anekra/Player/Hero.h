@@ -1,0 +1,53 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "AbilitySystemInterface.h"
+#include "Camera/CameraComponent.h"
+
+#include "CoreMinimal.h"
+#include "GameplayAbilitySpec.h"
+#include "GameFramework/Character.h"
+#include "Hero.generated.h"
+
+class USpringArmComponent;
+
+UCLASS()
+class ANEKRA_API AHero final : public ACharacter, public IAbilitySystemInterface
+{
+    GENERATED_BODY()
+
+public:
+    AHero();
+
+    virtual void OnRep_PlayerState() override;
+    virtual void PossessedBy(AController*) override;
+    virtual void SetupPlayerInputComponent(UInputComponent*) override;
+    virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
+    TSubclassOf<class UGameplayEffect> UnlockEffect;
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
+    class UAnimMontage* UnlockMontage;
+
+protected:
+    virtual void BeginPlay() override;
+
+    void MoveForward(float);
+    void MoveBackward(float);
+    void MoveLeft(float);
+    void MoveRight(float);
+    void MoveYaw(float);
+    void MovePitch(float);
+
+private:
+    void TryBindAbilities();
+
+    TWeakObjectPtr<class UANKAbilitySystemComponent> ANKAbilitySystemComponent;
+
+    UPROPERTY()
+    class USpringArmComponent* SpringArmComponent;
+    UPROPERTY()
+    class UCameraComponent* Camera;
+};
