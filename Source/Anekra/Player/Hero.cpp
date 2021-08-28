@@ -42,7 +42,7 @@ void AHero::OnRep_PlayerState()
     Super::OnRep_PlayerState();
 
     AANKPlayerState* ANKPlayerState = Cast<AANKPlayerState>(GetPlayerState());
-    check(ANKPlayerState);
+    if (!ANKPlayerState) return;
 
     ANKAbilitySystemComponent = ANKPlayerState->GetAbilitySystemComponent();
     ANKAbilitySystemComponent->InitAbilityActorInfo(ANKPlayerState, this);

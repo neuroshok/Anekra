@@ -26,7 +26,7 @@ void AANKGameState::OnUpdateIndexLocation()
     for (const auto& Player : PlayerArray)
     {
         auto ANKPlayer = Cast<AANKPlayerState>(Player);
-        if (ANKPlayer->IsDead()) return;
+        if (ANKPlayer->IsDead()) continue;
 
         auto PreviousCellPosition = ANKPlayer->GetCellPosition();
         ANKPlayer->ComputeCellPosition();

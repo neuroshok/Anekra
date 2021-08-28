@@ -62,12 +62,16 @@ bool AANKPlayerState::IsDead() const
 void AANKPlayerState::Die()
 {
     GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->DeadEffect);
-    //bIsDead = true;
-    //ClientDie();
+    bIsDead = true;
+
+    GetPawn()->Destroy();
+
+    auto Spectator = GetWorld()->SpawnActor(ASpectatorPawn::StaticClass());
+    Cast<APlayerController>(GetOwner())->Possess(Cast<APawn>(Spectator));
 }
 
 void AANKPlayerState::ClientDie_Implementation()
 {
-    //auto Spectator = GetWorld()->SpawnActor(ASpectatorPawn::StaticClass());
-    //Cast<APlayerController>(GetOwner())->Possess(Cast<APawn>(Spectator));
+    auto Spectator = GetWorld()->SpawnActor(ASpectatorPawn::StaticClass());
+    Cast<APlayerController>(GetOwner())->Possess(Cast<APawn>(Spectator));
 }
