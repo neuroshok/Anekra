@@ -3,6 +3,7 @@
 #include "Anekra/EventType.h"
 
 #include "CoreMinimal.h"
+#include "Anekra/Asset/EffectAsset.h"
 #include "UObject/Object.h"
 #include "EventSystem.generated.h"
 
@@ -12,6 +13,8 @@ class ANEKRA_API UEventSystem : public UObject
     GENERATED_BODY()
 
 public:
+    void Initialize();
+
     void Start();
     void Stop();
 
@@ -20,10 +23,10 @@ public:
     UFUNCTION()
     void ClearEvent();
 
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    TSubclassOf<class UGameplayEffect> SnakeEffect;
-
 private:
+    UPROPERTY()
+    UEffectAsset* Effects = nullptr;
+
     FTimerHandle EventTimer;
     EEventType EventType;
 };

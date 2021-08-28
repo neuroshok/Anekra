@@ -36,7 +36,7 @@ void UUnlockAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
         FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
         EffectContext.AddSourceObject(this);
 
-        FGameplayEffectSpecHandle EffectHandle = GetAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(Hero->UnlockEffect, 1, EffectContext);
+        FGameplayEffectSpecHandle EffectHandle = GetAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(GetAbilitySystemComponent()->Effects->UnlockEffect, 1, EffectContext);
         check(EffectHandle.IsValid())
         GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*EffectHandle.Data.Get(), GetAbilitySystemComponent());
         auto Task = UCasting::Create(this, NAME_None, EffectHandle.Data->Duration);

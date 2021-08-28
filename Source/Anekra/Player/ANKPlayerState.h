@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AbilitySystemInterface.h"
+#include "Anekra/Game/ANKAbilitySystemComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
 #include "ANKPlayerState.generated.h"
@@ -15,10 +16,16 @@ class ANEKRA_API AANKPlayerState : public APlayerState, public IAbilitySystemInt
 public:
     AANKPlayerState();
 
-    virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+    virtual UANKAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+    void Die();
 
     void ComputeCellPosition();
     FIntVector GetCellPosition() const;
+    bool IsDead() const;
+
+    UFUNCTION(Client, Reliable)
+    void ClientDie();
 
     FOnCastingDelegate OnCastingDelegate;
 
@@ -28,6 +35,9 @@ public:
     UPROPERTY()
     class UAttributeBasic* PAttributeBasic;
 
+    //
+
 private:
     FIntVector CellPosition;
+    bool bIsDead = false;
 };

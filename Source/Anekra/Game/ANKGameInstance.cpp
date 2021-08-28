@@ -9,3 +9,8 @@ UBasicAsset* UANKGameInstance::GetBasicAsset()
 {
     return BasicAsset.GetDefaultObject();
 }
+
+UEffectAsset* UANKGameInstance::GetEffectAsset()
+{
+    return EffectAsset.GetDefaultObject();
+}

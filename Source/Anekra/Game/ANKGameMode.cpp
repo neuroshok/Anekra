@@ -83,6 +83,7 @@ FString AANKGameMode::InitNewPlayer(APlayerController* PlayerController, const F
         MakeMap();
         EventSystem = NewObject<UEventSystem>(this, BP_EventSystem, "Event System");
         check(EventSystem);
+        EventSystem->Initialize();
         EventSystem->Start();
     }
 

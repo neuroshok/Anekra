@@ -26,9 +26,6 @@ public:
     virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    TSubclassOf<class UGameplayEffect> UnlockEffect;
-
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     class UAnimMontage* UnlockMontage;
 
 protected:

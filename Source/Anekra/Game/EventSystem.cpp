@@ -1,11 +1,18 @@
 #include "EventSystem.h"
 
 #include "AbilitySystemComponent.h"
+#include "ANKGameInstance.h"
 #include "ANKGameMode.h"
 #include "ANKGameState.h"
+#include "ANKTag.h"
 #include "Anekra/Log.h"
 #include "Anekra/Player/ANKPlayerState.h"
 #include "Anekra/World/Cell.h"
+
+void UEventSystem::Initialize()
+{
+    Effects = Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetEffectAsset();
+}
 
 void UEventSystem::Start()
 {
@@ -33,25 +40,16 @@ void UEventSystem::UpdateEvent()
     {
         auto ANKPlayerState = Cast<AANKPlayerState>(PlayerState);
 
-        // clear event tags
-        FGameplayTagContainer Tags;
-        Tags.AddTag(FGameplayTag::RequestGameplayTag("Event.Snake"));
-        ANKPlayerState->GetAbilitySystemComponent()->RemoveActiveEffectsWithGrantedTags(Tags);
+        ANKPlayerState->GetAbilitySystemComponent()->RemoveEffect(ANKTag.Event.Snake);
 
-        FGameplayEffectContextHandle EffectContext = ANKPlayerState->GetAbilitySystemComponent()->MakeEffectContext();
-        EffectContext.AddSourceObject(this);
-        auto ApplyEffect = [ANKPlayerState, EffectContext](TSubclassOf<class UGameplayEffect> Effect)
-        { ANKPlayerState->GetAbilitySystemComponent()->ApplyGameplayEffectToSelf(Effect.GetDefaultObject(), 1, EffectContext); };
+        auto ApplyEffect = [ANKPlayerState](TSubclassOf<class UGameplayEffect> Effect)
+        { ANKPlayerState->GetAbilitySystemComponent()->ApplyEffect(Effect); };
 
         switch (EventType)
         {
-            case EEventType::Snake: ApplyEffect(SnakeEffect); break;
+            case EEventType::Snake: ApplyEffect(Effects->SnakeEffect); break;
         }
-
-        auto EffectHandle = FActiveGameplayEffectHandle::GenerateNewHandle(ANKPlayerState->GetAbilitySystemComponent());
     }
-
-
 }
 
 void UEventSystem::ClearEvent()

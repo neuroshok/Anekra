@@ -4,6 +4,7 @@
 #include "Anekra/Game/ANKGameMode.h"
 #include "Anekra/Game/ANKGameState.h"
 #include "Anekra/Game/ANKAbilitySystemComponent.h"
+#include "GameFramework/SpectatorPawn.h"
 
 #include "Net/UnrealNetwork.h"
 
@@ -17,7 +18,7 @@ AANKPlayerState::AANKPlayerState()
     PAttributeBasic = CreateDefaultSubobject<UAttributeBasic>(TEXT("AttributeBasic"));
 }
 
-UAbilitySystemComponent* AANKPlayerState::GetAbilitySystemComponent() const
+UANKAbilitySystemComponent* AANKPlayerState::GetAbilitySystemComponent() const
 {
     return ANKAbilitySystemComponent;
 }
@@ -50,4 +51,23 @@ void AANKPlayerState::ComputeCellPosition()
 FIntVector AANKPlayerState::GetCellPosition() const
 {
     return CellPosition;
+}
+
+bool AANKPlayerState::IsDead() const
+{
+    return bIsDead;
+}
+
+// server
+void AANKPlayerState::Die()
+{
+    GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->DeadEffect);
+    //bIsDead = true;
+    //ClientDie();
+}
+
+void AANKPlayerState::ClientDie_Implementation()
+{
+    //auto Spectator = GetWorld()->SpawnActor(ASpectatorPawn::StaticClass());
+    //Cast<APlayerController>(GetOwner())->Possess(Cast<APawn>(Spectator));
 }

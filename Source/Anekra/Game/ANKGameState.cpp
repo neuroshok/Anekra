@@ -20,24 +20,34 @@ void AANKGameState::Tick(float DeltaSeconds)
     if (GetWorld()->IsServer()) OnUpdateIndexLocation();
 }
 
-/// server
+// server
 void AANKGameState::OnUpdateIndexLocation()
 {
     for (const auto& Player : PlayerArray)
     {
-        auto PPlayer = Cast<AANKPlayerState>(Player);
-        auto PreviousCellPosition = PPlayer->GetCellPosition();
-        PPlayer->ComputeCellPosition();
+        auto ANKPlayer = Cast<AANKPlayerState>(Player);
+        if (ANKPlayer->IsDead()) return;
 
-        // player cell position changed
-        if (PPlayer->GetCellPosition() != PreviousCellPosition)
+        auto PreviousCellPosition = ANKPlayer->GetCellPosition();
+        ANKPlayer->ComputeCellPosition();
+
+        if (ANKPlayer->GetPawn()->GetActorLocation().Z < -1000)
         {
-            auto PreviousCell = Cast<AANKGameMode>(GetWorld()->GetAuthGameMode())->GetCell(PreviousCellPosition.X, PreviousCellPosition.Y);
-            PreviousCell->Leave(PPlayer);
+            ANKPlayer->Die();
+        }
 
-            auto Cell = Cast<AANKGameMode>(GetWorld()->GetAuthGameMode())->GetCell(PPlayer->GetCellPosition().X, PPlayer->GetCellPosition().Y);
-            if (Cell) Cell->Enter(PPlayer);
-            // else player out
+        if (!ANKPlayer->IsDead())
+        {
+            // player cell position changed
+            if (ANKPlayer->GetCellPosition() != PreviousCellPosition)
+            {
+                auto PreviousCell = Cast<AANKGameMode>(GetWorld()->GetAuthGameMode())->GetCell(PreviousCellPosition.X, PreviousCellPosition.Y);
+                if (PreviousCell) PreviousCell->Leave(ANKPlayer);
+
+                auto Cell = Cast<AANKGameMode>(GetWorld()->GetAuthGameMode())->GetCell(ANKPlayer->GetCellPosition().X, ANKPlayer->GetCellPosition().Y);
+                if (Cell) Cell->Enter(ANKPlayer);
+                // else player out
+            }
         }
     }
 }
