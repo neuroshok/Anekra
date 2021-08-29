@@ -15,6 +15,8 @@ public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<class UGameplayEffect> DeadEffect;
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
+    TSubclassOf<class UGameplayEffect> FrozenEffect;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<class UGameplayEffect> HealingEffect;
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<class UGameplayEffect> UnlockEffect;

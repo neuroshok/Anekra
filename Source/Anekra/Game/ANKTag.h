@@ -14,6 +14,13 @@ static struct ANEKRA_API FANKTag : public FGameplayTagNativeAdder
 
     struct
     {
+        FGameplayTag Burn;
+        FGameplayTag Freeze;
+        FGameplayTag Heal;
+    } Effect;
+
+    struct
+    {
         FGameplayTag Snake;
     } Event;
 
@@ -29,6 +36,10 @@ protected:
         UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
 
         InitTag(Ability.Unlock);
+
+        InitTag(Effect.Burn);
+        InitTag(Effect.Freeze);
+        InitTag(Effect.Heal);
 
         InitTag(Event.Snake);
 

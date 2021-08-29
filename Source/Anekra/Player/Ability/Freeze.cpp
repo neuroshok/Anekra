@@ -6,21 +6,27 @@
 #include "Anekra/Player/Hero.h"
 #include "Anekra/Player/ANKPlayerState.h"
 
-void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle GameplayAbilitySpecHandle, const FGameplayAbilityActorInfo* GameplayAbilityActorInfo,
-                                      const FGameplayAbilityActivationInfo GameplayAbilityActivationInfo, const FGameplayEventData* GameplayEventData)
+void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+                                      const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* GameplayEventData)
 {
-    GetAbilitySystemComponentFromActorInfo()->SetRemoveAbilityOnEnd(GameplayAbilitySpecHandle);
-
-    Super::ActivateAbility(GameplayAbilitySpecHandle, GameplayAbilityActorInfo, GameplayAbilityActivationInfo, GameplayEventData);
+    GetAbilitySystemComponentFromActorInfo()->SetRemoveAbilityOnEnd(Handle);
 
     ANK_LOG("activate ability freeze")
+    if (HasAuthorityOrPredictionKey(ActorInfo, &ActivationInfo))
+    {
+        if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
+        {
+            EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
+            return;
+        }
+    }
     auto Hero = Cast<AHero>(GetAvatarActorFromActorInfo());
-    Hero->Jump();
 
     for (auto PlayerState : Cast<AANKGameState>(GetWorld()->GetGameState())->PlayerArray)
     {
-        //Cast<AANKPlayerState>(PlayerState)->GetAbilitySystemComponent()->ApplyGameplayEffectToTarget(FGameplayTag::RequestGameplayTag("State.Frozen"));
+        if (Hero->GetPlayerState()->PlayerId == PlayerState->PlayerId) continue;
+        Cast<AANKPlayerState>(PlayerState)->GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->FrozenEffect);
     }
 
-    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+    EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }

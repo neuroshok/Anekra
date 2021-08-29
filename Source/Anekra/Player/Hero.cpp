@@ -75,8 +75,11 @@ void AHero::BeginPlay()
 
 void AHero::AddMovementInput(FVector WorldDirection, float ScaleValue, bool bForce)
 {
-    Super::AddMovementInput(WorldDirection, ScaleValue, bForce);
+    FGameplayTagContainer GTags;
+    GetAbilitySystemComponent()->GetOwnedGameplayTags(GTags);
+    if (GTags.HasTagExact(ANKTag.Effect.Freeze)) return;
 
+    Super::AddMovementInput(WorldDirection, ScaleValue, bForce);
 }
 
 void AHero::MoveForward(float Value)
