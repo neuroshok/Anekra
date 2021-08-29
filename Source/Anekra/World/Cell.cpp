@@ -83,7 +83,7 @@ void ACell::Leave(AANKPlayerState* ANKPlayerState)
     FGameplayTagContainer EventTags;
     Hero->GetAbilitySystemComponent()->GetOwnedGameplayTags(EventTags);
 
-    if (EventTags.HasTagExact(FGameplayTag::RequestGameplayTag("Event.Snake")))
+    if (EventTags.HasTagExact(ANKTag.Event.Snake))
     {
         SetType(ECellType::Burn);
         OnTypeUpdated();

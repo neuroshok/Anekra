@@ -13,12 +13,12 @@ void UCasting::Activate()
 
     auto ANKPlayerState = Cast<AANKPlayerState>(GetOwnerActor());
     ANKPlayerState->OnCastingDelegate.Broadcast(Duration);
-    AbilitySystemComponent->RegisterGameplayTagEvent(FANKTag::Get(ANKTag.Ability.Unlock)).AddUObject(this, &UCasting::OnCancelled);
+    AbilitySystemComponent->RegisterGameplayTagEvent(ANKTag.Ability.Unlock).AddUObject(this, &UCasting::OnCancelled);
 }
 
 void UCasting::OnDestroy(bool bInOwnerFinished)
 {
-    AbilitySystemComponent->RegisterGameplayTagEvent(FANKTag::Get(ANKTag.Ability.Unlock)).RemoveAll(this);
+    AbilitySystemComponent->RegisterGameplayTagEvent(ANKTag.Ability.Unlock).RemoveAll(this);
     // call in last
     Super::OnDestroy(bInOwnerFinished);
 }

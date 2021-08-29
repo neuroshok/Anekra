@@ -4,7 +4,6 @@
 
 UBasicAsset::UBasicAsset()
 {
-
     for (int i = 0; i < static_cast<int>(EAbilityType::Count); ++i)
     {
         auto v = UEnum::GetValueAsString(static_cast<EAbilityType>(i));

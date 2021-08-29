@@ -9,14 +9,14 @@ UANKAbilitySystemComponent::UANKAbilitySystemComponent()
     ReplicationMode = EGameplayEffectReplicationMode::Full;
 }
 
-void UANKAbilitySystemComponent::AddTag(const char* GameplayTag)
+void UANKAbilitySystemComponent::AddTag(const FGameplayTag& GameplayTag)
 {
-    AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(GameplayTag));
+    AddLooseGameplayTag(GameplayTag);
 }
 
-void UANKAbilitySystemComponent::RemoveTag(const char* GameplayTag)
+void UANKAbilitySystemComponent::RemoveTag(const FGameplayTag& GameplayTag)
 {
-    RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(GameplayTag));
+    RemoveLooseGameplayTag(GameplayTag);
 }
 
 void UANKAbilitySystemComponent::BeginPlay()
@@ -49,10 +49,9 @@ FGameplayEffectSpecHandle UANKAbilitySystemComponent::ApplyEffectSpec(TSubclassO
     return EffectHandle;
 }
 
-void UANKAbilitySystemComponent::RemoveEffectByTag(const char* GameplayTag)
+void UANKAbilitySystemComponent::RemoveEffectByTag(const FGameplayTag& GameplayTag)
 {
-    auto Tag = FGameplayTag::RequestGameplayTag(GameplayTag);
     FGameplayTagContainer Tags;
-    Tags.AddTag(Tag);
+    Tags.AddTag(GameplayTag);
     RemoveActiveEffectsWithGrantedTags(Tags);
 }

@@ -7,6 +7,7 @@ public class Anekra : ModuleRules
 	public Anekra(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		CppStandard = CppStandardVersion.Cpp17;
 	
 		PublicDependencyModuleNames.AddRange(new string[]
 		{

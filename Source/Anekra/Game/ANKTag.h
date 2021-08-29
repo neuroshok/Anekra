@@ -1,33 +1,38 @@
 #pragma once
+
 #include "GameplayTagContainer.h"
-/*
-        FGameplayTag Snake = FGameplayTag::RequestGameplayTag("Event.Snake");
-    } Event;
+#include "GameplayTagsManager.h"
 
-    struct FState
-    {
-        FGameplayTag Dead = FGameplayTag::RequestGameplayTag("State.Dead");
-        FGameplayTag Moving = FGameplayTag::RequestGameplayTag("State.Moving");
-*/
+#define InitTag(Name) Name = Manager.AddNativeGameplayTag(#Name)
 
-static struct FANKTag
+static struct ANEKRA_API FANKTag : public FGameplayTagNativeAdder
 {
-    static auto Get(const char* Tag) { return FGameplayTag::RequestGameplayTag(Tag); }
-
-    struct FAbility
+    struct
     {
-        //FGameplayTag Unlock;
-        const char* Unlock = "Ability.Unlock";
+        FGameplayTag Unlock;
     } Ability;
 
-    struct FEvent
+    struct
     {
-        const char* Snake = "Event.Snake";
+        FGameplayTag Snake;
     } Event;
 
-    struct FState
+    struct
     {
-        const char* Dead = "State.Dead";
-        const char* Moving = "State.Moving";
+        FGameplayTag Dead;
+        FGameplayTag Moving;
     } State;
+
+protected:
+    virtual void AddTags() override
+    {
+        UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
+
+        InitTag(Ability.Unlock);
+
+        InitTag(Event.Snake);
+
+        InitTag(State.Dead);
+        InitTag(State.Moving);
+    }
 } ANKTag;

@@ -1,5 +1,7 @@
 #include "Anekra/Game/ANKGameInstance.h"
 
+#include "ANKTag.h"
+
 UANKGameInstance::UANKGameInstance()
 {
 

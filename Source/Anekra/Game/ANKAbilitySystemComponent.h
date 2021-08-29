@@ -17,12 +17,12 @@ class ANEKRA_API UANKAbilitySystemComponent : public UAbilitySystemComponent
 public:
     virtual void BindAbilityActivationToInputComponent(UInputComponent* InputComponent, FGameplayAbilityInputBinds BindInfo) override;
 
-    void AddTag(const char*);
-    void RemoveTag(const char*);
+    void AddTag(const FGameplayTag&);
+    void RemoveTag(const FGameplayTag&);
 
     void ApplyEffect(TSubclassOf<UGameplayEffect>);
     FGameplayEffectSpecHandle ApplyEffectSpec(TSubclassOf<UGameplayEffect>);
-    void RemoveEffectByTag(const char*);
+    void RemoveEffectByTag(const FGameplayTag&);
 
     UPROPERTY()
     UEffectAsset* Effects = nullptr;
