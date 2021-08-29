@@ -4,6 +4,7 @@
 #include "Anekra/EventType.h"
 
 #include "CoreMinimal.h"
+#include "Abilities/GameplayAbilityTypes.h"
 #include "Blueprint/UserWidget.h"
 #include "WMain.generated.h"
 
@@ -16,9 +17,8 @@ class ANEKRA_API UWMain : public UUserWidget
     GENERATED_BODY()
 
 public:
-    UFUNCTION()
     void OnCasting(float Duration);
-
+    void OnCastingCancelled();
 
     void OnAbilitiesUpdated();
     void OnEventUpdated(EEventType Type/*, EventData*/);

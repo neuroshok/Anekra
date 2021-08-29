@@ -9,6 +9,16 @@ UANKAbilitySystemComponent::UANKAbilitySystemComponent()
     ReplicationMode = EGameplayEffectReplicationMode::Full;
 }
 
+void UANKAbilitySystemComponent::AddTag(const char* GameplayTag)
+{
+    AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(GameplayTag));
+}
+
+void UANKAbilitySystemComponent::RemoveTag(const char* GameplayTag)
+{
+    RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(GameplayTag));
+}
+
 void UANKAbilitySystemComponent::BeginPlay()
 {
     Super::BeginPlay();
@@ -29,9 +39,20 @@ void UANKAbilitySystemComponent::ApplyEffect(TSubclassOf<UGameplayEffect> Effect
     ApplyGameplayEffectToSelf(Effect.GetDefaultObject(), 1, EffectContext);
 }
 
-void UANKAbilitySystemComponent::RemoveEffect(const FGameplayTag& GameplayTag)
+FGameplayEffectSpecHandle UANKAbilitySystemComponent::ApplyEffectSpec(TSubclassOf<UGameplayEffect> Effect)
 {
+    FGameplayEffectContextHandle EffectContext = MakeEffectContext();
+    EffectContext.AddSourceObject(this);
+    FGameplayEffectSpecHandle EffectHandle = MakeOutgoingSpec(Effect, 1, EffectContext);
+    check(EffectHandle.IsValid())
+    ApplyGameplayEffectSpecToTarget(*EffectHandle.Data.Get(), this);
+    return EffectHandle;
+}
+
+void UANKAbilitySystemComponent::RemoveEffectByTag(const char* GameplayTag)
+{
+    auto Tag = FGameplayTag::RequestGameplayTag(GameplayTag);
     FGameplayTagContainer Tags;
-    Tags.AddTag(GameplayTag);
+    Tags.AddTag(Tag);
     RemoveActiveEffectsWithGrantedTags(Tags);
 }

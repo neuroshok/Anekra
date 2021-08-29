@@ -35,11 +35,19 @@ void UWMain::NativeOnInitialized()
 
 void UWMain::OnCasting(float Duration)
 {
-    WCastBar->SetPercent(0);
+    CastProgress = 0;
     WCastBar->SetVisibility(ESlateVisibility::Visible);
     CastDuration = Duration;
     bCasting = true;
 }
+
+void UWMain::OnCastingCancelled()
+{
+    WCastBar->SetVisibility(ESlateVisibility::Hidden);
+    bCasting = false;
+}
+
+
 
 void UWMain::OnAbilitiesUpdated()
 {

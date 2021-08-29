@@ -1,34 +1,55 @@
 #include "Casting.h"
 
+#include "Anekra/Log.h"
 #include "Anekra/Player/ANKPlayerState.h"
 
 UCasting::UCasting()
 {
-    //bStopWhenAbilityEnds = true;
 }
 
 void UCasting::Activate()
 {
-    GetWorld()->GetTimerManager().SetTimer(CastingTimer, this, &UCasting::OnEndCasting, Duration);
-    SetWaitingOnRemotePlayerData();
+    GetWorld()->GetTimerManager().SetTimer(CastingTimer, this, &UCasting::OnCompleted, Duration);
 
     auto ANKPlayerState = Cast<AANKPlayerState>(GetOwnerActor());
-    check(ANKPlayerState);
     ANKPlayerState->OnCastingDelegate.Broadcast(Duration);
+    AbilitySystemComponent->RegisterGameplayTagEvent(FANKTag::Get(ANKTag.Ability.Unlock)).AddUObject(this, &UCasting::OnCancelled);
 }
 
-void UCasting::OnEndCasting()
+void UCasting::OnDestroy(bool bInOwnerFinished)
+{
+    AbilitySystemComponent->RegisterGameplayTagEvent(FANKTag::Get(ANKTag.Ability.Unlock)).RemoveAll(this);
+    // call in last
+    Super::OnDestroy(bInOwnerFinished);
+}
+
+void UCasting::OnCompleted()
 {
     if (ShouldBroadcastAbilityTaskDelegates())
     {
-        OnComplete.Broadcast(FGameplayTag(), FGameplayEventData());
+        OnCompleteDelegate.Broadcast(FGameplayTag(), FGameplayEventData());
     }
     EndTask();
+}
+
+void UCasting::OnCancelled(FGameplayTag Tag, int32 Count)
+{
+    if (Count == 0)
+    {
+        if (ShouldBroadcastAbilityTaskDelegates())
+        {
+            OnCancelDelegate.Broadcast();
+            auto ANKPlayerState = Cast<AANKPlayerState>(GetOwnerActor());
+            ANKPlayerState->OnCastingCancelDelegate.Broadcast();
+        }
+        EndTask();
+    }
 }
 
 UCasting* UCasting::Create(UGameplayAbility* OwningAbility, FName TaskInstanceName, float Duration)
 {
     UCasting* Task = NewAbilityTask<UCasting>(OwningAbility, TaskInstanceName);
     Task->Duration = Duration;
+
     return Task;
 }

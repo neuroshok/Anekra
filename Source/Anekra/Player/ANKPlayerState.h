@@ -12,6 +12,7 @@ class ANEKRA_API AANKPlayerState : public APlayerState, public IAbilitySystemInt
     GENERATED_BODY()
 
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnCastingDelegate, float);
+    DECLARE_MULTICAST_DELEGATE(FOnCastingCancelDelegate);
 
 public:
     AANKPlayerState();
@@ -24,10 +25,8 @@ public:
     FIntVector GetCellPosition() const;
     bool IsDead() const;
 
-    UFUNCTION(Client, Reliable)
-    void ClientDie();
-
     FOnCastingDelegate OnCastingDelegate;
+    FOnCastingCancelDelegate OnCastingCancelDelegate;
 
     //
     UPROPERTY()

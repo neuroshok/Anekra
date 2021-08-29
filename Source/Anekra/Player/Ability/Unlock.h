@@ -19,10 +19,14 @@ protected:
         const FGameplayTagContainer* TargetTags = nullptr,
         OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const override;
     virtual void ActivateAbility(const FGameplayAbilitySpecHandle, const FGameplayAbilityActorInfo*, const FGameplayAbilityActivationInfo, const FGameplayEventData*) override;
+    virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;
     virtual void InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
     //virtual void OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 
+
 private:
     UFUNCTION()
-    void OnCastingComplete(FGameplayTag EventTag, FGameplayEventData EventData);
+    void OnCastingCompleted(FGameplayTag EventTag, FGameplayEventData EventData);
+
+    FDelegateHandle CancelHandle;
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Abilities/GameplayAbilityTypes.h"
 
 #include "Anekra/EventType.h"
 #include "GameFramework/HUD.h"
@@ -19,6 +20,8 @@ class ANEKRA_API AANKHUD : public AHUD
 public:
     void Initialize();
     void Error(FString);
+
+    FGameplayEventTagMulticastDelegate::FDelegate OnTest;
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<class UUserWidget> BP_WMain;

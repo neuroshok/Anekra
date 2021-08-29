@@ -69,9 +69,3 @@ void AANKPlayerState::Die()
     auto Spectator = GetWorld()->SpawnActor(ASpectatorPawn::StaticClass());
     Cast<APlayerController>(GetOwner())->Possess(Cast<APawn>(Spectator));
 }
-
-void AANKPlayerState::ClientDie_Implementation()
-{
-    auto Spectator = GetWorld()->SpawnActor(ASpectatorPawn::StaticClass());
-    Cast<APlayerController>(GetOwner())->Possess(Cast<APawn>(Spectator));
-}

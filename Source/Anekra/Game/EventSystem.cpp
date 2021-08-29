@@ -40,7 +40,7 @@ void UEventSystem::UpdateEvent()
     {
         auto ANKPlayerState = Cast<AANKPlayerState>(PlayerState);
 
-        ANKPlayerState->GetAbilitySystemComponent()->RemoveEffect(ANKTag.Event.Snake);
+        ANKPlayerState->GetAbilitySystemComponent()->RemoveEffectByTag(ANKTag.Event.Snake);
 
         auto ApplyEffect = [ANKPlayerState](TSubclassOf<class UGameplayEffect> Effect)
         { ANKPlayerState->GetAbilitySystemComponent()->ApplyEffect(Effect); };

@@ -14,5 +14,5 @@ public:
     UAbility();
 
 protected:
-    class UANKAbilitySystemComponent* GetAbilitySystemComponent();
+    UANKAbilitySystemComponent* GetAbilitySystemComponent();
 };

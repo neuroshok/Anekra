@@ -31,10 +31,7 @@ void AANKGameState::OnUpdateIndexLocation()
         auto PreviousCellPosition = ANKPlayer->GetCellPosition();
         ANKPlayer->ComputeCellPosition();
 
-        if (ANKPlayer->GetPawn()->GetActorLocation().Z < -1000)
-        {
-            ANKPlayer->Die();
-        }
+        if (ANKPlayer->GetPawn()->GetActorLocation().Z < -1000) ANKPlayer->Die();
 
         if (!ANKPlayer->IsDead())
         {

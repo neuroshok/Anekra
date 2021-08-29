@@ -12,6 +12,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Anekra/Log.h"
+#include "Anekra/Game/ANKTag.h"
 
 AHero::AHero()
 {
@@ -72,6 +73,12 @@ void AHero::BeginPlay()
     Super::BeginPlay();
 }
 
+void AHero::AddMovementInput(FVector WorldDirection, float ScaleValue, bool bForce)
+{
+    Super::AddMovementInput(WorldDirection, ScaleValue, bForce);
+
+}
+
 void AHero::MoveForward(float Value)
 {
     if (Controller && Value != 0.0f)
@@ -82,6 +89,7 @@ void AHero::MoveForward(float Value)
         const FVector Direction = FRotationMatrix{ YawRotation }.GetUnitAxis(EAxis::X);
         AddMovementInput(Direction, Value);
     }
+    UpdateMovingTag();
 }
 
 void AHero::MoveBackward(float Value)
@@ -99,6 +107,7 @@ void AHero::MoveLeft(float Value)
         const FVector Direction = FRotationMatrix{ YawRotation }.GetUnitAxis(EAxis::Y);
         AddMovementInput(Direction, -Value);
     }
+    UpdateMovingTag();
 }
 
 void AHero::MoveRight(float Value)
@@ -135,9 +144,32 @@ void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
     TryBindAbilities();
 }
 
-UAbilitySystemComponent* AHero::GetAbilitySystemComponent() const
+UANKAbilitySystemComponent* AHero::GetAbilitySystemComponent() const
 {
     return ANKAbilitySystemComponent.Get();
+}
+
+void AHero::UpdateMovingTag()
+{
+    if (GetAbilitySystemComponent())
+    {
+        if (!GetVelocity().IsZero())
+        {
+            if (!bHasMovingEffect)
+            {
+                GetAbilitySystemComponent()->AddTag(ANKTag.State.Moving);
+                bHasMovingEffect = true;
+            }
+        }
+        else
+        {
+            if (bHasMovingEffect)
+            {
+                GetAbilitySystemComponent()->RemoveTag(ANKTag.State.Moving);
+                bHasMovingEffect = false;
+            }
+        }
+    }
 }
 
 void AHero::TryBindAbilities()

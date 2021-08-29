@@ -59,9 +59,11 @@ void AANKPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 void AANKPlayerController::Unlock()
 {
     ANK_LOG("Unlock")
-    check(GetLocalRole() == ROLE_Authority);
-    auto AbilityID = FMath::RandRange(0, static_cast<int8>(EAbilityType::Count) - 1);
-    AddAbility(static_cast<EAbilityType>(AbilityID));
+    if (GetLocalRole() == ROLE_Authority)
+    {
+        auto AbilityID = FMath::RandRange(0, static_cast<int8>(EAbilityType::Count) - 1);
+        AddAbility(static_cast<EAbilityType>(AbilityID));
+    }
 }
 
 void AANKPlayerController::OnAbilitiesUpdated()

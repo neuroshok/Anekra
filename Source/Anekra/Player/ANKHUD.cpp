@@ -19,13 +19,14 @@ void AANKHUD::Initialize()
 
     if (ANKPlayerState && GameState)
     {
+        auto ASC = ANKPlayerState->GetAbilitySystemComponent();
         GameState->OnEventDelegate.AddUObject(WMain, &UWMain::OnEventUpdated);
 
-        ANKPlayerState->GetAbilitySystemComponent()
-            ->GetGameplayAttributeValueChangeDelegate(ANKPlayerState->PAttributeBasic->GetHealthAttribute())
+        ASC->GetGameplayAttributeValueChangeDelegate(ANKPlayerState->PAttributeBasic->GetHealthAttribute())
             .AddUObject(WMain, &UWMain::OnHealthUpdated);
 
         ANKPlayerState->OnCastingDelegate.AddUObject(WMain, &UWMain::OnCasting);
+        ANKPlayerState->OnCastingCancelDelegate.AddUObject(WMain, &UWMain::OnCastingCancelled);
 
         Cast<AANKPlayerController>(GetOwningPlayerController())->OnAbilitiesUpdateDelegate.AddUObject(WMain, &UWMain::OnAbilitiesUpdated);
 

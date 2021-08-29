@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "ANKTag.h"
 #include "Anekra/Asset/EffectAsset.h"
 #include "UObject/Object.h"
 #include "ANKAbilitySystemComponent.generated.h"
@@ -14,14 +15,20 @@ class ANEKRA_API UANKAbilitySystemComponent : public UAbilitySystemComponent
     UANKAbilitySystemComponent();
 
 public:
-    virtual void BeginPlay() override;
     virtual void BindAbilityActivationToInputComponent(UInputComponent* InputComponent, FGameplayAbilityInputBinds BindInfo) override;
 
+    void AddTag(const char*);
+    void RemoveTag(const char*);
+
     void ApplyEffect(TSubclassOf<UGameplayEffect>);
-    void RemoveEffect(const FGameplayTag&);
+    FGameplayEffectSpecHandle ApplyEffectSpec(TSubclassOf<UGameplayEffect>);
+    void RemoveEffectByTag(const char*);
 
     UPROPERTY()
     UEffectAsset* Effects = nullptr;
+
+protected:
+    virtual void BeginPlay() override;
 
 private:
     bool BoundAbilities = false;
