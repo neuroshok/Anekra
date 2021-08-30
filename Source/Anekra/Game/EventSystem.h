@@ -13,20 +13,25 @@ class ANEKRA_API UEventSystem : public UObject
     GENERATED_BODY()
 
 public:
+    UEventSystem();
     void Initialize();
 
     void Start();
     void Stop();
 
     UFUNCTION()
-    void UpdateEvent();
-    UFUNCTION()
-    void ClearEvent();
+    void StartEvent();
 
 private:
     UPROPERTY()
     UEffectAsset* Effects = nullptr;
 
+    UPROPERTY()
+    TArray<class UEvent*> Events;
+
     FTimerHandle EventTimer;
     EEventType EventType;
+
+
+    float NoEventDuration;
 };

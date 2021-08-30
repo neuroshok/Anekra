@@ -11,16 +11,16 @@ class ANEKRA_API AANKGameState : public AGameStateBase
 {
     GENERATED_BODY()
 
-    DECLARE_MULTICAST_DELEGATE_OneParam(FOnEventDelegate, EEventType);
+    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEventUpdateDelegate, EEventType, EEventPhase);
 
 public:
     AANKGameState();
     void OnUpdateIndexLocation();
 
     UFUNCTION(NetMulticast, Reliable)
-    void ClientStartEvent(EEventType EventType);
+    void ClientUpdateEvent(EEventType EventType, EEventPhase EventPhase);
 
-    FOnEventDelegate OnEventDelegate;
+    FOnEventUpdateDelegate OnEventUpdateDelegate;
 
 protected:
     virtual void BeginPlay() override;

@@ -49,7 +49,7 @@ void AANKGameState::OnUpdateIndexLocation()
     }
 }
 
-void AANKGameState::ClientStartEvent_Implementation(const EEventType EventType)
+void AANKGameState::ClientUpdateEvent_Implementation(const EEventType EventType, EEventPhase EventPhase)
 {
-    OnEventDelegate.Broadcast(EventType);
+    OnEventUpdateDelegate.Broadcast(EventType, EventPhase);
 }

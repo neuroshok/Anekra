@@ -7,10 +7,12 @@
 #include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
-#include "Anekra/Log.h"
+#include "Anekra/Game/ANKTag.h"
 #include "Anekra/EventType.h"
 #include "Anekra/Game/ANKGameInstance.h"
+#include "Anekra/Game/Event/SnakeEvent.h"
 #include "Anekra/Player/ANKPlayerController.h"
+#include "Anekra/Player/ANKPlayerState.h"
 
 void UWMain::NativeTick(const FGeometry& MovieSceneBlends, float InDeltaTime)
 {
@@ -62,24 +64,23 @@ void UWMain::OnAbilitiesUpdated()
     }
 }
 
-void UWMain::OnEventUpdated(EEventType Type/*, EventData*/)
+void UWMain::OnEventUpdated(FGameplayTag Tag, int32 Count)
 {
-    UE_LOG(LogTemp, Warning, TEXT("OnEvent"))
     FText EventText;
-    switch (Type)
+    WEventText->SetVisibility(ESlateVisibility::Hidden);
+
+    FGameplayTagContainer Tags;
+    Cast<AANKPlayerState>(GetOwningPlayerState())->GetAbilitySystemComponent()->GetOwnedGameplayTags(Tags);
+
+    if (Tags.HasTagExact(ANKTag.Event.Snake))
     {
-    /*case EEventType::FindColor:
-        EventText = FText::Format(FText::FromString("Find a {} cell !"), (int)Type);
-        break;
-    case EEventType::StopMove:
-        EventText = FText::FromString("Stop move !");
-        break;*/
-        case EEventType::Snake:
         EventText = FText::FromString("Snake: don't touch a colored cell !");
-        break;
-    default:
-        WEventText->SetVisibility(ESlateVisibility::Hidden);
     }
+    else if (Tags.HasTagExact(ANKTag.Event.FindCell))
+    {
+        EventText = FText::FromString("FindCell: go over a marked cell !");
+    }
+
 
     WEventText->SetText(EventText);
     WEventText->SetVisibility(ESlateVisibility::Visible);

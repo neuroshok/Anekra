@@ -21,6 +21,7 @@ static struct ANEKRA_API FANKTag : public FGameplayTagNativeAdder
 
     struct
     {
+        FGameplayTag FindCell;
         FGameplayTag Snake;
     } Event;
 
@@ -41,6 +42,7 @@ protected:
         InitTag(Effect.Freeze);
         InitTag(Effect.Heal);
 
+        InitTag(Event.FindCell);
         InitTag(Event.Snake);
 
         InitTag(State.Dead);

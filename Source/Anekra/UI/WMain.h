@@ -21,7 +21,7 @@ public:
     void OnCastingCancelled();
 
     void OnAbilitiesUpdated();
-    void OnEventUpdated(EEventType Type/*, EventData*/);
+    void OnEventUpdated(FGameplayTag Tag, int32 Count);
     void OnHealthUpdated(const FOnAttributeChangeData&);
 
     //
