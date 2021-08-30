@@ -20,6 +20,7 @@ void UEventSystem::Initialize()
     Effects = Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetEffectAsset();
 
     Events.Add(NewObject<USnakeEvent>(this));
+    //Events.Add(NewObject<UFindCellEvent>(this));
 }
 
 void UEventSystem::Start()

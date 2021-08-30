@@ -19,8 +19,7 @@ public:
     virtual void Activate() override;
     virtual void OnDestroy(bool bInOwnerFinished) override;
 
-    void OnCompleted();
-    void OnCancelled(FGameplayTag Tag, int32 Count);
+    void OnUpdated(FGameplayTag Tag, int32 Count);
 
     FOnCompleteDelegate OnCompleteDelegate;
     FOnCancelDelegate OnCancelDelegate;
@@ -30,4 +29,5 @@ public:
 private:
     FTimerHandle CastingTimer;
     float Duration;
+    float ActivateTime;
 };

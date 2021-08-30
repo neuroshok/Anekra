@@ -1,6 +1,5 @@
 #include "Casting.h"
 
-#include "Anekra/Log.h"
 #include "Anekra/Player/ANKPlayerState.h"
 
 UCasting::UCasting()
@@ -9,11 +8,10 @@ UCasting::UCasting()
 
 void UCasting::Activate()
 {
-    GetWorld()->GetTimerManager().SetTimer(CastingTimer, this, &UCasting::OnCompleted, Duration);
-
     auto ANKPlayerState = Cast<AANKPlayerState>(GetOwnerActor());
     ANKPlayerState->OnCastingDelegate.Broadcast(Duration);
-    AbilitySystemComponent->RegisterGameplayTagEvent(ANKTag.Ability.Unlock).AddUObject(this, &UCasting::OnCancelled);
+    AbilitySystemComponent->RegisterGameplayTagEvent(ANKTag.Ability.Unlock).AddUObject(this, &UCasting::OnUpdated);
+    ActivateTime = GetWorld()->GetTimeSeconds();
 }
 
 void UCasting::OnDestroy(bool bInOwnerFinished)
@@ -23,24 +21,21 @@ void UCasting::OnDestroy(bool bInOwnerFinished)
     Super::OnDestroy(bInOwnerFinished);
 }
 
-void UCasting::OnCompleted()
-{
-    if (ShouldBroadcastAbilityTaskDelegates())
-    {
-        OnCompleteDelegate.Broadcast(FGameplayTag(), FGameplayEventData());
-    }
-    EndTask();
-}
-
-void UCasting::OnCancelled(FGameplayTag Tag, int32 Count)
+void UCasting::OnUpdated(FGameplayTag Tag, int32 Count)
 {
     if (Count == 0)
     {
-        if (ShouldBroadcastAbilityTaskDelegates())
+        float Elapsed = GetWorld()->GetTimeSeconds() - ActivateTime;
+        // cast completed
+        if (FMath::IsNearlyZero(Duration - Elapsed, 0.01f))
         {
-            OnCancelDelegate.Broadcast();
-            auto ANKPlayerState = Cast<AANKPlayerState>(GetOwnerActor());
-            ANKPlayerState->OnCastingCancelDelegate.Broadcast();
+            if (ShouldBroadcastAbilityTaskDelegates())
+                OnCompleteDelegate.Broadcast(FGameplayTag(), FGameplayEventData());
+        }
+        else
+        {
+            if (ShouldBroadcastAbilityTaskDelegates())
+                OnCancelDelegate.Broadcast();
         }
         EndTask();
     }

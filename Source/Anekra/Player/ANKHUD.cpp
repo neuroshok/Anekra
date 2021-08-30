@@ -22,7 +22,7 @@ void AANKHUD::Initialize()
         auto ASC = ANKPlayerState->GetAbilitySystemComponent();
         //GameState->OnEventUpdateDelegate.AddUObject(WMain, &UWMain::OnEventUpdated);
 
-        ASC->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag("Event")).AddUObject(WMain, &UWMain::OnEventUpdated);
+        ASC->RegisterGameplayTagEvent(ANKTag.Event.Root).AddUObject(WMain, &UWMain::OnEventUpdated);
 
         ASC->GetGameplayAttributeValueChangeDelegate(ANKPlayerState->PAttributeBasic->GetHealthAttribute())
             .AddUObject(WMain, &UWMain::OnHealthUpdated);

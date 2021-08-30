@@ -3,6 +3,7 @@
 #include "GameplayTagContainer.h"
 #include "GameplayTagsManager.h"
 
+#define InitRoot(Name) Name.Root = Manager.AddNativeGameplayTag(#Name)
 #define InitTag(Name) Name = Manager.AddNativeGameplayTag(#Name)
 
 static struct ANEKRA_API FANKTag : public FGameplayTagNativeAdder
@@ -21,6 +22,7 @@ static struct ANEKRA_API FANKTag : public FGameplayTagNativeAdder
 
     struct
     {
+        FGameplayTag Root;
         FGameplayTag FindCell;
         FGameplayTag Snake;
     } Event;
@@ -42,6 +44,7 @@ protected:
         InitTag(Effect.Freeze);
         InitTag(Effect.Heal);
 
+        InitRoot(Event);
         InitTag(Event.FindCell);
         InitTag(Event.Snake);
 

@@ -4,6 +4,7 @@
 #include "Anekra/Log.h"
 #include "Anekra/Player/Hero.h"
 #include "Anekra/Player/ANKPlayerController.h"
+#include "Anekra/Player/ANKPlayerState.h"
 #include "Task/Casting.h"
 
 UUnlockAbility::UUnlockAbility()
@@ -29,7 +30,7 @@ void UUnlockAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
     {
         if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
         {
-            EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
+            EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
             return;
         }
 
@@ -48,8 +49,11 @@ void UUnlockAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
 void UUnlockAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                    const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
 {
-    Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
     GetAbilitySystemComponent()->CurrentMontageStop();
+    auto ANKPlayerState = Cast<AANKPlayerState>(ActorInfo->PlayerController->PlayerState);
+    ANKPlayerState->OnCastingCancelDelegate.Broadcast();
+
+    Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
 }
 
 void UUnlockAbility::InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
@@ -67,5 +71,5 @@ void UUnlockAbility::OnCastingCompleted(FGameplayTag EventTag, FGameplayEventDat
     check(ANKPlayerController);
     // unlock server side
     ANKPlayerController->Unlock();
-    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
+    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
