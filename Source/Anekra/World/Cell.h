@@ -46,11 +46,6 @@ public:
     UFUNCTION()
     void OnStateUpdated();
 
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    TSubclassOf<class UGameplayEffect> HealingEffect;
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    TSubclassOf<class UGameplayEffect> BurningEffect;
-
 public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Cell")
     class UStaticMesh* BP_Mesh;

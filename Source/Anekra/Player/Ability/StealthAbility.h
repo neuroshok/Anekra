@@ -2,13 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "Anekra/Player/Ability.h"
-#include "Freeze.generated.h"
+#include "StealthAbility.generated.h"
 
 UCLASS()
-class ANEKRA_API UFreezeAbility : public UAbility
+class ANEKRA_API UStealthAbility : public UAbility
 {
     GENERATED_BODY()
 
-protected:
+public:
     virtual void ActivateAbility(const FGameplayAbilitySpecHandle, const FGameplayAbilityActorInfo*, const FGameplayAbilityActivationInfo, const FGameplayEventData*) override;
 };

@@ -6,6 +6,7 @@
 #include "ANKPlayerState.h"
 #include "Ability/Binding.h"
 #include "Ability/Freeze.h"
+#include "Ability/StealthAbility.h"
 #include "Net/UnrealNetwork.h"
 #include "Anekra/Log.h"
 #include "Anekra/Game/Constant.h"
@@ -29,11 +30,13 @@ void AANKPlayerController::AddAbility(EAbilityType AbilityID)
     {
         case EAbilityType::Freeze: AbilityClass = UFreezeAbility::StaticClass(); break;
         case EAbilityType::CrossFire: AbilityClass = UFreezeAbility::StaticClass(); break;
+        case EAbilityType::Stealth: AbilityClass = UStealthAbility::StaticClass(); break;
+        default:;
     }
     check(AbilityClass);
 
     int BindIndex = static_cast<int32>(EBinding::Ability1);
-    int SlotIndex = 0;
+    int SlotIndex;
     for (SlotIndex = 0; SlotIndex < Abilities.Num(); ++SlotIndex)
     {
         if (Abilities[SlotIndex] == EAbilityType::None)
@@ -70,6 +73,7 @@ void AANKPlayerController::RemoveAbility(FGameplayAbilitySpecHandle Handle)
 
 void AANKPlayerController::NotifyError(FString Message)
 {
+    if (!GetHUD()) return;
     Cast<AANKHUD>(GetHUD())->Error(std::move(Message));
 }
 
@@ -88,6 +92,7 @@ void AANKPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(AANKPlayerController, Abilities);
+    DOREPLIFETIME(AANKPlayerController, AbilityCount);
 }
 
 // server

@@ -11,6 +11,7 @@ static struct ANEKRA_API FANKTag : public FGameplayTagNativeAdder
     struct
     {
         FGameplayTag Unlock;
+        FGameplayTag Stealth;
     } Ability;
 
     struct
@@ -38,6 +39,7 @@ protected:
     {
         UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
 
+        InitTag(Ability.Stealth);
         InitTag(Ability.Unlock);
 
         InitTag(Effect.Burn);

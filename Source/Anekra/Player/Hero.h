@@ -22,7 +22,9 @@ public:
     virtual void PossessedBy(AController*) override;
     virtual void SetupPlayerInputComponent(UInputComponent*) override;
     virtual class UANKAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
     void UpdateMovingTag();
+    void SetStealth(bool bIsStealth = true);
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     class UAnimMontage* UnlockMontage;

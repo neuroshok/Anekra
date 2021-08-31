@@ -2,6 +2,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "Anekra/Log.h"
+#include "Anekra/Game/Constant.h"
 #include "Anekra/Player/Hero.h"
 #include "Anekra/Player/ANKPlayerController.h"
 #include "Anekra/Player/ANKPlayerState.h"
@@ -18,8 +19,8 @@ bool UUnlockAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
     bool Activatable = Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
     auto Hero = Cast<AHero>(GetAvatarActorFromActorInfo());
     auto AbilitiesCount = Cast<AANKPlayerController>(Hero->GetController())->AbilityCount;
-    Activatable = Activatable && Hero->GetVelocity().IsZero() && (AbilitiesCount < 4);
-    if (!Activatable && (AbilitiesCount >= 4)) Cast<AANKPlayerController>(Hero->GetController())->NotifyError("You have too many abilities");
+    Activatable = Activatable && Hero->GetVelocity().IsZero() && (AbilitiesCount < Game.Player.AbilitiesCount);
+    if (!Activatable && (AbilitiesCount >= Game.Player.AbilitiesCount)) Cast<AANKPlayerController>(Hero->GetController())->NotifyError("You have too many abilities");
     return Activatable;
 }
 

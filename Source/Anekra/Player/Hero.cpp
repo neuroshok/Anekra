@@ -67,7 +67,6 @@ void AHero::PossessedBy(AController* PlayerController)
     ANKAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UUnlockAbility::StaticClass(), 1, static_cast<int32>(EBinding::Unlock), this));
 }
 
-// Called when the game starts or when spawned
 void AHero::BeginPlay()
 {
     Super::BeginPlay();
@@ -173,6 +172,11 @@ void AHero::UpdateMovingTag()
             }
         }
     }
+}
+
+void AHero::SetStealth(bool bIsStealth)
+{
+    GetMesh()->SetVisibility(!bIsStealth, true);
 }
 
 void AHero::TryBindAbilities()

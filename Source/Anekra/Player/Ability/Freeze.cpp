@@ -10,7 +10,7 @@
 void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                       const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* GameplayEventData)
 {
-    GetAbilitySystemComponentFromActorInfo()->SetRemoveAbilityOnEnd(Handle);
+    GetAbilitySystemComponent()->SetRemoveAbilityOnEnd(Handle);
 
     if (HasAuthorityOrPredictionKey(ActorInfo, &ActivationInfo))
     {
@@ -25,7 +25,7 @@ void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
     for (auto PlayerState : Cast<AANKGameState>(GetWorld()->GetGameState())->PlayerArray)
     {
         if (Hero->GetPlayerState()->GetPlayerId() == PlayerState->GetPlayerId()) continue;
-        Cast<AANKPlayerState>(PlayerState)->GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->FrozenEffect);
+        GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->FreezeEffect);
     }
 
     Cast<AANKPlayerController>(Hero->GetController())->RemoveAbility(Handle);

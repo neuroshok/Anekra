@@ -11,13 +11,15 @@ class ANEKRA_API UEffectAsset : public UDataAsset
 
 public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    TSubclassOf<class UGameplayEffect> BurningEffect;
+    TSubclassOf<class UGameplayEffect> BurnEffect;
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<class UGameplayEffect> DeadEffect;
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    TSubclassOf<class UGameplayEffect> FrozenEffect;
+    TSubclassOf<class UGameplayEffect> FreezeEffect;
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    TSubclassOf<class UGameplayEffect> HealingEffect;
+    TSubclassOf<class UGameplayEffect> HealEffect;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
+    TSubclassOf<class UGameplayEffect> StealthEffect;
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<class UGameplayEffect> UnlockEffect;
     // event

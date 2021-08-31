@@ -35,7 +35,8 @@ public:
     UPROPERTY(Replicated, ReplicatedUsing = OnAbilitiesUpdated)
     TArray<EAbilityType> Abilities;
 
-    TMap<FGameplayAbilitySpecHandle, int> Slots;
-
+    UPROPERTY(Replicated)
     int AbilityCount = 0;
+
+    TMap<FGameplayAbilitySpecHandle, int> Slots;
 };

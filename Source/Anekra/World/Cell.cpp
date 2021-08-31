@@ -72,8 +72,8 @@ void ACell::Enter(AANKPlayerState* ANKPlayerState)
     switch (Type)
     {
         case ECellType::Slow:break;
-        case ECellType::Heal:ApplyEffect(ANKPlayerState, HealingEffect); break;
-        case ECellType::Burn:ApplyEffect(ANKPlayerState, BurningEffect); break;
+        //case ECellType::Heal:ApplyEffect(ANKPlayerState, HealEffect); break;
+        //case ECellType::Burn:ApplyEffect(ANKPlayerState, BurnEffect); break;
     }
 }
 
@@ -93,8 +93,8 @@ void ACell::Leave(AANKPlayerState* ANKPlayerState)
         switch (Type)
         {
         case ECellType::Slow:break;
-        case ECellType::Heal:RemoveEffect(ANKPlayerState, HealingEffect); break;
-        case ECellType::Burn:RemoveEffect(ANKPlayerState, BurningEffect); break;
+        //case ECellType::Heal:RemoveEffect(ANKPlayerState, HealEffect); break;
+        //case ECellType::Burn:RemoveEffect(ANKPlayerState, BurnEffect); break;
         }
     }
 }
@@ -145,6 +145,7 @@ void ACell::ApplyEffect(AANKPlayerState* ANKPlayerState, TSubclassOf<UGameplayEf
     EffectContext.AddSourceObject(this);
 
     FGameplayEffectSpecHandle EffectHandle = Hero->GetAbilitySystemComponent()->MakeOutgoingSpec(Effect, 1, EffectContext);
+    // todo ensure effect is valid at game start
     check(EffectHandle.IsValid());
     Hero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*EffectHandle.Data.Get(), Hero->GetAbilitySystemComponent());
 }

@@ -1,5 +1,6 @@
 #include "Anekra/Player/ANKPlayerState.h"
 
+#include "Hero.h"
 #include "Anekra/Player/Attribute/Basic.h"
 #include "Anekra/Game/ANKGameMode.h"
 #include "Anekra/Game/ANKGameState.h"
@@ -68,4 +69,19 @@ void AANKPlayerState::Die()
 
     auto Spectator = GetWorld()->SpawnActor(ASpectatorPawn::StaticClass());
     Cast<APlayerController>(GetOwner())->Possess(Cast<APawn>(Spectator));
+}
+
+void AANKPlayerState::SetStealth()
+{
+    Cast<AHero>(GetPawn())->SetStealth();
+    GetAbilitySystemComponent()->RegisterGameplayTagEvent(ANKTag.Ability.Stealth).AddUObject(this, &AANKPlayerState::OnStealthUpdated);
+}
+
+void AANKPlayerState::OnStealthUpdated(FGameplayTag Tag, int32 Count)
+{
+    if (Count == 0)
+    {
+        Cast<AHero>(GetPawn())->SetStealth(false);
+        GetAbilitySystemComponent()->RegisterGameplayTagEvent(ANKTag.Ability.Stealth).RemoveAll(this);
+    }
 }

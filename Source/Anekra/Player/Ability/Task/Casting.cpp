@@ -1,5 +1,6 @@
 #include "Casting.h"
 
+#include "Anekra/Log.h"
 #include "Anekra/Player/ANKPlayerState.h"
 
 UCasting::UCasting()
@@ -27,7 +28,8 @@ void UCasting::OnUpdated(FGameplayTag Tag, int32 Count)
     {
         float Elapsed = GetWorld()->GetTimeSeconds() - ActivateTime;
         // cast completed
-        if (FMath::IsNearlyZero(Duration - Elapsed, 0.01f))
+        float CastingCompleteDelta = Duration - Elapsed;
+        if (FMath::IsNearlyZero(CastingCompleteDelta, 0.01f) || CastingCompleteDelta < 0.f)
         {
             if (ShouldBroadcastAbilityTaskDelegates())
                 OnCompleteDelegate.Broadcast(FGameplayTag(), FGameplayEventData());
