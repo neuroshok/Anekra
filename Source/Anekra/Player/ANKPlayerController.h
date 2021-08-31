@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayAbilitySpec.h"
 #include "GameFramework/PlayerController.h"
 #include "Anekra/AbilityType.h"
 #include "ANKPlayerController.generated.h"
@@ -16,6 +17,7 @@ public:
     void InitializeHUD();
 
     void AddAbility(EAbilityType);
+    void RemoveAbility(FGameplayAbilitySpecHandle Handle);
     void NotifyError(FString);
 
     void Unlock();
@@ -32,4 +34,8 @@ protected:
 public:
     UPROPERTY(Replicated, ReplicatedUsing = OnAbilitiesUpdated)
     TArray<EAbilityType> Abilities;
+
+    TMap<FGameplayAbilitySpecHandle, int> Slots;
+
+    int AbilityCount = 0;
 };

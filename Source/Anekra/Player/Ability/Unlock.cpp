@@ -17,7 +17,7 @@ bool UUnlockAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
     bool Activatable = Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
     auto Hero = Cast<AHero>(GetAvatarActorFromActorInfo());
-    auto AbilitiesCount = Cast<AANKPlayerController>(Hero->GetController())->Abilities.Num();
+    auto AbilitiesCount = Cast<AANKPlayerController>(Hero->GetController())->AbilityCount;
     Activatable = Activatable && Hero->GetVelocity().IsZero() && (AbilitiesCount < 4);
     if (!Activatable && (AbilitiesCount >= 4)) Cast<AANKPlayerController>(Hero->GetController())->NotifyError("You have too many abilities");
     return Activatable;

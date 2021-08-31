@@ -5,5 +5,6 @@ enum class EAbilityType : uint8
 {
     Freeze,
     CrossFire,
-    Count
+    Count,
+    None = 255
 };

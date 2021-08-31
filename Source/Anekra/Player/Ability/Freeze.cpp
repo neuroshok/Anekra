@@ -3,6 +3,7 @@
 #include "AbilitySystemComponent.h"
 #include "Anekra/Log.h"
 #include "Anekra/Game/ANKGameState.h"
+#include "Anekra/Player/ANKPlayerController.h"
 #include "Anekra/Player/Hero.h"
 #include "Anekra/Player/ANKPlayerState.h"
 
@@ -11,7 +12,6 @@ void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
 {
     GetAbilitySystemComponentFromActorInfo()->SetRemoveAbilityOnEnd(Handle);
 
-    ANK_LOG("activate ability freeze")
     if (HasAuthorityOrPredictionKey(ActorInfo, &ActivationInfo))
     {
         if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
@@ -27,6 +27,8 @@ void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
         if (Hero->GetPlayerState()->GetPlayerId() == PlayerState->GetPlayerId()) continue;
         Cast<AANKPlayerState>(PlayerState)->GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->FrozenEffect);
     }
+
+    Cast<AANKPlayerController>(Hero->GetController())->RemoveAbility(Handle);
 
     EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }

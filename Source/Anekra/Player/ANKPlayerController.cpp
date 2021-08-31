@@ -8,6 +8,7 @@
 #include "Ability/Freeze.h"
 #include "Net/UnrealNetwork.h"
 #include "Anekra/Log.h"
+#include "Anekra/Game/Constant.h"
 
 void AANKPlayerController::InitializeHUD()
 {
@@ -31,12 +32,40 @@ void AANKPlayerController::AddAbility(EAbilityType AbilityID)
     }
     check(AbilityClass);
 
-    FGameplayAbilitySpec AbilitySpec{ AbilityClass, 1, static_cast<int32>(EBinding::Ability1) };
-    GetPlayerState<AANKPlayerState>()->GetAbilitySystemComponent()->GiveAbility(AbilitySpec);
+    int BindIndex = static_cast<int32>(EBinding::Ability1);
+    int SlotIndex = 0;
+    for (SlotIndex = 0; SlotIndex < Abilities.Num(); ++SlotIndex)
+    {
+        if (Abilities[SlotIndex] == EAbilityType::None)
+        {
+            Abilities[SlotIndex] = AbilityID;
+            BindIndex += SlotIndex;
+            ++AbilityCount;
+            break;
+        }
+    }
 
-    ANK_LOG("AddAbility")
-    Abilities.Add(AbilityID);
+    const FGameplayAbilitySpec AbilitySpec{ AbilityClass, 1, BindIndex };
+
+    FGameplayAbilitySpecHandle Handle = GetPlayerState<AANKPlayerState>()->GetAbilitySystemComponent()->GiveAbility(AbilitySpec);
+    Slots.Add(Handle, SlotIndex);
+
     OnAbilitiesUpdated();
+}
+
+// server
+void AANKPlayerController::RemoveAbility(FGameplayAbilitySpecHandle Handle)
+{
+    if (GetLocalRole() == ROLE_Authority)
+    {
+        int Slot = 0;
+        Slots.RemoveAndCopyValue(Handle, Slot);
+        check(Slot < Abilities.Num());
+
+        Abilities[Slot] = EAbilityType::None;
+        --AbilityCount;
+        OnAbilitiesUpdated();
+    }
 }
 
 void AANKPlayerController::NotifyError(FString Message)
@@ -47,6 +76,12 @@ void AANKPlayerController::NotifyError(FString Message)
 void AANKPlayerController::BeginPlay()
 {
     Super::BeginPlay();
+    Abilities.SetNum(Game.Player.AbilitiesCount);
+    for (auto& Ability : Abilities)
+    {
+        Ability = EAbilityType::None;
+    }
+    AbilityCount = 0;
 }
 
 void AANKPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -58,7 +93,6 @@ void AANKPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 // server
 void AANKPlayerController::Unlock()
 {
-    ANK_LOG("Unlock")
     if (GetLocalRole() == ROLE_Authority)
     {
         auto AbilityID = FMath::RandRange(0, static_cast<int8>(EAbilityType::Count) - 1);

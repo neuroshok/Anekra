@@ -53,13 +53,13 @@ void UWMain::OnCastingCancelled()
 
 void UWMain::OnAbilitiesUpdated()
 {
-    auto Abilities = Cast<AANKPlayerController>(GetOwningPlayer())->Abilities;
+    auto& Abilities = Cast<AANKPlayerController>(GetOwningPlayer())->Abilities;
 
     WAbilityBox->ClearChildren();
     for (int i = 0; i < Abilities.Num(); ++i)
     {
         auto WAbility = CreateWidget<UWAbility>(GetWorld(), BP_WAbility);
-        WAbility->SetImage(static_cast<EAbilityType>(Abilities[i]));
+        WAbility->SetImage(Abilities[i]);
         WAbilityBox->AddChild(WAbility);
     }
 }

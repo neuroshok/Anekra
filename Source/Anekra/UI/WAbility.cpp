@@ -5,5 +5,6 @@
 
 void UWAbility::SetImage(EAbilityType AbilityID)
 {
+    if (AbilityID == EAbilityType::None) return;
     WImage->SetBrushFromSoftTexture(Cast<UANKGameInstance>(GetGameInstance())->GetBasicAsset()->GetAbility(AbilityID));
 }
