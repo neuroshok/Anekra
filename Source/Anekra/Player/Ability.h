@@ -13,6 +13,10 @@ class ANEKRA_API UAbility : public UGameplayAbility
 public:
     UAbility();
 
+    class AHero* GetHero();
+    class ANKPlayerState* GetANKPlayerState();
+    class ANKPlayerController* GetANKPlayerController();
+
 protected:
     UANKAbilitySystemComponent* GetAbilitySystemComponent();
 };

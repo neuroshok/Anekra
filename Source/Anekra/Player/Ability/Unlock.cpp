@@ -35,8 +35,7 @@ void UUnlockAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
             return;
         }
 
-        auto Hero = Cast<AHero>(GetAvatarActorFromActorInfo());
-        GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, Hero->UnlockMontage, 1);
+        GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, GetHero()->UnlockMontage, 1);
 
         auto EffectHandle = GetAbilitySystemComponent()->ApplyEffectSpec(GetAbilitySystemComponent()->Effects->UnlockEffect);
         auto Task = UCasting::Create(this, NAME_None, EffectHandle.Data->Duration);
@@ -51,26 +50,21 @@ void UUnlockAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, cons
                                    const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
 {
     GetAbilitySystemComponent()->CurrentMontageStop();
-    auto ANKPlayerState = Cast<AANKPlayerState>(ActorInfo->PlayerController->PlayerState);
-    ANKPlayerState->OnCastingCancelDelegate.Broadcast();
+    GetANKPlayerState()->OnCastingCancelDelegate.Broadcast();
 
     Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
 }
 
 void UUnlockAbility::InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
-    check(ActorInfo && ActorInfo->AvatarActor.Get());
 
-    //CancelAbility(Handle, ActorInfo, ActivationInfo, true);
 }
 
 void UUnlockAbility::OnCastingCompleted(FGameplayTag EventTag, FGameplayEventData EventData)
 {
     GetAbilitySystemComponent()->CurrentMontageStop();
 
-    auto ANKPlayerController = Cast<AANKPlayerController>(GetAvatarActorFromActorInfo()->GetInstigatorController());
-    check(ANKPlayerController);
     // unlock server side
-    ANKPlayerController->Unlock();
+    GetANKPlayerController()->Unlock();
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }

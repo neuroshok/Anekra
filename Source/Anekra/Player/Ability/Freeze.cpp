@@ -20,7 +20,7 @@ void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
             return;
         }
 
-        auto Hero = Cast<AHero>(GetAvatarActorFromActorInfo());
+        auto Hero = GetHero();
 
         for (auto PlayerState : Cast<AANKGameState>(GetWorld()->GetGameState())->PlayerArray)
         {

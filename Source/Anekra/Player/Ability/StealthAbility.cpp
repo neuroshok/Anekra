@@ -18,13 +18,13 @@ void UStealthAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
             return;
         }
 
-        GetAbilitySystemComponentFromActorInfo()->SetRemoveAbilityOnEnd(Handle);
+        GetAbilitySystemComponent()->SetRemoveAbilityOnEnd(Handle);
 
-        auto Hero = Cast<AHero>(GetAvatarActorFromActorInfo());
+
         GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->StealthEffect);
-        Hero->SetStealth();
+        GetHero()->SetStealth();
 
-        Cast<AANKPlayerController>(Hero->GetController())->RemoveAbility(Handle);
+        GetANKPlayerController()->RemoveAbility(Handle);
 
         auto Task = UWaitTagEventTask::Create(this, NAME_None, ANKTag.Ability.Stealth);
 
@@ -35,7 +35,7 @@ void UStealthAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
 
 void UStealthAbility::OnCompleted()
 {
-    Cast<AHero>(GetAvatarActorFromActorInfo())->SetStealth(false);
+    GetHero()->SetStealth(false);
 
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
