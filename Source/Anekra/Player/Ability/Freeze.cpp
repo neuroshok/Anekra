@@ -1,7 +1,7 @@
 #include "Freeze.h"
 
 #include "AbilitySystemComponent.h"
-#include "Anekra/Log.h"
+
 #include "Anekra/Game/ANKGameState.h"
 #include "Anekra/Player/ANKPlayerController.h"
 #include "Anekra/Player/Hero.h"
@@ -19,6 +19,7 @@ void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
             EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
             return;
         }
+
         auto Hero = Cast<AHero>(GetAvatarActorFromActorInfo());
 
         for (auto PlayerState : Cast<AANKGameState>(GetWorld()->GetGameState())->PlayerArray)

@@ -8,6 +8,7 @@
 #include "Anekra/Log.h"
 #include "Anekra/Player/ANKPlayerState.h"
 #include "Anekra/World/Cell.h"
+#include "Event/ReduceCellEvent.h"
 #include "Event/SnakeEvent.h"
 
 UEventSystem::UEventSystem()
@@ -19,8 +20,8 @@ void UEventSystem::Initialize()
 {
     Effects = Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetEffectAsset();
 
-    Events.Add(NewObject<USnakeEvent>(this));
-    //Events.Add(NewObject<UFindCellEvent>(this));
+    //Events.Add(NewObject<USnakeEvent>(this));
+    Events.Add(NewObject<UReduceCellEvent>(this));
 }
 
 void UEventSystem::Start()

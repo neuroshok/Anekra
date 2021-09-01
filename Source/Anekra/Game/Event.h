@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Anekra/EventType.h"
 #include "UObject/Object.h"
 #include "Event.generated.h"
 
@@ -14,7 +15,10 @@ class ANEKRA_API UEvent : public UObject
 public:
     UEvent();
 
-    virtual void Start() {}
+    virtual void Start();
+    void Complete();
+
+    virtual EEventType GetType() { return EEventType::None; }
 
     FOnCompleted OnCompleted;
 

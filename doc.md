@@ -34,6 +34,8 @@ Time crystal
 Triggers every X secondes
 - Player has X second to find & stay on a specific color cell or symbol
 - Snake: Player must change cell every 2sec, without reusing the same cell of any player
+- Safespot : Display X safe cells, other cells become burning cells over time
+
 
 ## Cell
 ### Property

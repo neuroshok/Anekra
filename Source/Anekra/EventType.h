@@ -12,8 +12,8 @@ UENUM()
 enum class EEventType : uint8
 {
     None,
-    StopMove,
-    //FindColor,
+    ReduceCell,
     Snake,
+    StopMove,
     Count
 };

@@ -1,7 +1,10 @@
 #include "ANKAbilitySystemComponent.h"
 
 #include "ANKGameInstance.h"
+
 #include "Kismet/GameplayStatics.h"
+#include "AbilitySystemGlobals.h"
+#include "GameplayCueManager.h"
 
 UANKAbilitySystemComponent::UANKAbilitySystemComponent()
 {
@@ -54,4 +57,23 @@ void UANKAbilitySystemComponent::RemoveEffectByTag(const FGameplayTag& GameplayT
     FGameplayTagContainer Tags;
     Tags.AddTag(GameplayTag);
     RemoveActiveEffectsWithGrantedTags(Tags);
+}
+
+void UANKAbilitySystemComponent::ExecuteLocalCue(const FGameplayTag& GameplayCueTag, AActor* Target, const FGameplayCueParameters& GameplayCueParameters)
+{
+    if (Target == nullptr) Target = GetAvatarActor();
+    UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(Target, GameplayCueTag, EGameplayCueEvent::Type::Executed, GameplayCueParameters);
+}
+
+void UANKAbilitySystemComponent::AddLocalCue(const FGameplayTag& GameplayCueTag, AActor* Target, const FGameplayCueParameters& GameplayCueParameters)
+{
+    if (Target == nullptr) Target = GetAvatarActor();
+    UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(Target, GameplayCueTag, EGameplayCueEvent::Type::OnActive, GameplayCueParameters);
+    UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(Target, GameplayCueTag, EGameplayCueEvent::Type::WhileActive, GameplayCueParameters);
+}
+
+void UANKAbilitySystemComponent::RemoveLocalCue(const FGameplayTag& GameplayCueTag, AActor* Target, const FGameplayCueParameters& GameplayCueParameters)
+{
+    if (Target == nullptr) Target = GetAvatarActor();
+    UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(Target, GameplayCueTag, EGameplayCueEvent::Type::Removed, GameplayCueParameters);
 }

@@ -8,7 +8,7 @@
 
 void USnakeEvent::Start()
 {
-    GetWorld()->GetGameState<AANKGameState>()->ClientUpdateEvent(EEventType::Snake, EEventPhase::Start);
+    UEvent::Start();
 
     auto Effect = Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetEffectAsset()->SnakeEffect;
 
@@ -31,6 +31,6 @@ void USnakeEvent::Start()
         }
 
         GetWorld()->GetGameState<AANKGameState>()->ClientUpdateEvent(EEventType::Snake, EEventPhase::Stop);
-        OnCompleted.Execute();
+        UEvent::Complete();
     });
 }

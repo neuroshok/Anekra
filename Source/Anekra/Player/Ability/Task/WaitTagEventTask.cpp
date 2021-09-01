@@ -10,6 +10,7 @@ void UWaitTagEventTask::Activate()
 void UWaitTagEventTask::OnDestroy(bool bInOwnerFinished)
 {
     AbilitySystemComponent->RegisterGameplayTagEvent(WaitingTag).RemoveAll(this);
+    OnCompleteDelegate.Clear();
     // call in last
     Super::OnDestroy(bInOwnerFinished);
 }

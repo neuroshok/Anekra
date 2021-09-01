@@ -24,6 +24,10 @@ public:
     FGameplayEffectSpecHandle ApplyEffectSpec(TSubclassOf<UGameplayEffect>);
     void RemoveEffectByTag(const FGameplayTag&);
 
+    void ExecuteLocalCue(const FGameplayTag& GameplayCueTag, AActor* Target = nullptr, const FGameplayCueParameters& GameplayCueParameters = FGameplayCueParameters{});
+    void AddLocalCue(const FGameplayTag& GameplayCueTag, AActor* Target = nullptr, const FGameplayCueParameters& GameplayCueParameters = FGameplayCueParameters{});
+    void RemoveLocalCue(const FGameplayTag& GameplayCueTag, AActor* Target = nullptr, const FGameplayCueParameters& GameplayCueParameters = FGameplayCueParameters{});
+
     UPROPERTY()
     UEffectAsset* Effects = nullptr;
 

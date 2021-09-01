@@ -5,13 +5,23 @@
 
 #define InitRoot(Name) Name.Root = Manager.AddNativeGameplayTag(#Name)
 #define InitTag(Name) Name = Manager.AddNativeGameplayTag(#Name)
+#define InitTagAndCue(Name) Name = Manager.AddNativeGameplayTag(#Name); GC.Name = Manager.AddNativeGameplayTag("GameplayCue." #Name)
 
 static struct ANEKRA_API FANKTag : public FGameplayTagNativeAdder
 {
     struct
     {
+        struct
+        {
+            FGameplayTag Stealth;
+        } Ability;
+    } GC;
+
+    struct
+    {
         FGameplayTag Unlock;
         FGameplayTag Stealth;
+        FGameplayTag StealthCue;
     } Ability;
 
     struct
@@ -39,7 +49,7 @@ protected:
     {
         UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
 
-        InitTag(Ability.Stealth);
+        InitTagAndCue(Ability.Stealth);
         InitTag(Ability.Unlock);
 
         InitTag(Effect.Burn);
@@ -54,3 +64,7 @@ protected:
         InitTag(State.Moving);
     }
 } ANKTag;
+
+#undef InitRoot
+#undef InitTag
+#undef InitTagAndCue

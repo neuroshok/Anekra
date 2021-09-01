@@ -36,5 +36,6 @@ void UStealthAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
 void UStealthAbility::OnCompleted()
 {
     Cast<AHero>(GetAvatarActorFromActorInfo())->SetStealth(false);
-    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
+
+    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
