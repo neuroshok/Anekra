@@ -13,6 +13,8 @@ public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<class UGameplayEffect> BurnEffect;
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
+    TSubclassOf<class UGameplayEffect> DamageEffect;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<class UGameplayEffect> DeadEffect;
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<class UGameplayEffect> FreezeEffect;

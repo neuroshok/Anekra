@@ -28,13 +28,20 @@ public:
     FOnCastingDelegate OnCastingDelegate;
     FOnCastingCancelDelegate OnCastingCancelDelegate;
 
+    FDelegateHandle OnHealthUpdateDelegate;
+
+    void OnHealthUpdated(const FOnAttributeChangeData& Data);
+
     //
     UPROPERTY()
     class UANKAbilitySystemComponent* ANKAbilitySystemComponent;
     UPROPERTY()
-    class UAttributeBasic* PAttributeBasic;
+    class UAttributeBasic* AttributeBasic;
 
     //
+
+protected:
+    virtual void BeginPlay() override;
 
 private:
     FIntVector CellPosition;

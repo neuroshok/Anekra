@@ -25,7 +25,7 @@ void USnakeEvent::Start()
     // todo
     Delay(Duration, [this]
     {
-        for (ACell* Cell : Cast<AANKGameMode>(GetWorld()->GetAuthGameMode())->GetCells())
+        for (ACell* Cell : Cast<AANKGameState>(GetWorld()->GetGameState())->GetCells())
         {
             Cell->SetColor({ 0.2, 0.2, 0.8 });
         }

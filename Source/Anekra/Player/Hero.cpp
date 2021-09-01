@@ -139,8 +139,6 @@ void AHero::MovePitch(float Value)
 
 void AHero::OnVisibilityUpdated()
 {
-    ANK_LOG("STEALTH %d SERVER %d", bVisible, (GetLocalRole() == ROLE_Authority))
-
     if (!bVisible) GetAbilitySystemComponent()->AddLocalCue(ANKTag.GC.Ability.Stealth, this);
     else GetAbilitySystemComponent()->RemoveLocalCue(ANKTag.GC.Ability.Stealth, this);
 }

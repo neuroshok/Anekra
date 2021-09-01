@@ -1,11 +1,20 @@
 #include "Ability.h"
 
-#include "Hero.h"
-#include "Anekra/Game/ANKTag.h"
+#include "Anekra/Game/ANKGameInstance.h"
 
 UAbility::UAbility()
 {
     InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
+}
+
+UEffectAsset* UAbility::GetEffects()
+{
+    return Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetEffectAsset();
+}
+
+UMontageAsset* UAbility::GetMontages()
+{
+    return Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetMontageAsset();
 }
 
 AHero* UAbility::GetHero()
@@ -13,14 +22,14 @@ AHero* UAbility::GetHero()
     return Cast<AHero>(GetAvatarActorFromActorInfo());
 }
 
-ANKPlayerState* UAbility::GetANKPlayerState()
+AANKPlayerState* UAbility::GetANKPlayerState()
 {
-    return Cast<ANKPlayerState>(GetHero()->GetPlayerState());
+    return Cast<AANKPlayerState>(GetHero()->GetPlayerState());
 }
 
-ANKPlayerController* UAbility::GetANKPlayerController()
+AANKPlayerController* UAbility::GetANKPlayerController()
 {
-    return Cast<ANKPlayerController>(GetHero()->GetController());
+    return Cast<AANKPlayerController>(GetHero()->GetController());
 }
 
 UANKAbilitySystemComponent* UAbility::GetAbilitySystemComponent()

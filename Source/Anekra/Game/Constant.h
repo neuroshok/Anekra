@@ -15,4 +15,10 @@ constexpr struct Game
         int AbilitiesCount = 4;
 
     } Player;
+
+    struct
+    {
+        int CellCountX = 10;
+        float CellSize = 800.f;
+    } Map;
 } Game;

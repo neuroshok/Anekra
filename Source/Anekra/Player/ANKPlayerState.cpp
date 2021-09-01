@@ -16,7 +16,7 @@ AANKPlayerState::AANKPlayerState()
     ANKAbilitySystemComponent->SetIsReplicated(true);
     ANKAbilitySystemComponent->ReplicationMode = EGameplayEffectReplicationMode::Full;
 
-    PAttributeBasic = CreateDefaultSubobject<UAttributeBasic>(TEXT("AttributeBasic"));
+    AttributeBasic = CreateDefaultSubobject<UAttributeBasic>(TEXT("AttributeBasic"));
 }
 
 UANKAbilitySystemComponent* AANKPlayerState::GetAbilitySystemComponent() const
@@ -30,9 +30,9 @@ void AANKPlayerState::ComputeCellPosition()
     float X = GetPawn()->GetActorLocation().X;
     float Y = GetPawn()->GetActorLocation().Y;
 
-    auto ANKGameMode = Cast<AANKGameMode>(GetWorld()->GetAuthGameMode());
-    const float MapWidth = ANKGameMode->GetMapWidth();
-    const float CellSize = ANKGameMode->GetCellSize();
+    auto ANKGameState = Cast<AANKGameState>(GetWorld()->GetGameState());
+    const float MapWidth = ANKGameState->GetMapWidth();
+    const float CellSize = ANKGameState->GetMapCellSize();
 
     float CellX = (X + CellSize / 2.f) / CellSize;
     float CellY = (Y + CellSize / 2.f) / CellSize;
@@ -59,9 +59,26 @@ bool AANKPlayerState::IsDead() const
     return bIsDead;
 }
 
+void AANKPlayerState::OnHealthUpdated(const FOnAttributeChangeData& Data)
+{
+    if (!(AttributeBasic->GetHealth() > 0.f))
+    {
+        Die();
+    }
+}
+
+void AANKPlayerState::BeginPlay()
+{
+    Super::BeginPlay();
+
+    OnHealthUpdateDelegate = GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(AttributeBasic->GetHealthAttribute()).AddUObject(this, &AANKPlayerState::OnHealthUpdated);
+}
+
 // server
 void AANKPlayerState::Die()
 {
+    if (!HasAuthority()) return;
+
     GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->DeadEffect);
     bIsDead = true;
 

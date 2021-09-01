@@ -28,7 +28,7 @@ void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
             GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->FreezeEffect);
         }
 
-        Cast<AANKPlayerController>(Hero->GetController())->RemoveAbility(Handle);
+        GetANKPlayerController()->RemoveAbility(Handle);
     }
 
     EndAbility(Handle, ActorInfo, ActivationInfo, false, false);

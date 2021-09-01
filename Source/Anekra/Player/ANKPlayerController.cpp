@@ -5,6 +5,7 @@
 #include "ANKHUD.h"
 #include "ANKPlayerState.h"
 #include "Ability/Binding.h"
+#include "Ability/CrossFireAbility.h"
 #include "Ability/Freeze.h"
 #include "Ability/StealthAbility.h"
 #include "Net/UnrealNetwork.h"
@@ -22,7 +23,7 @@ void AANKPlayerController::InitializeHUD()
 // server
 void AANKPlayerController::AddAbility(EAbilityType AbilityID)
 {
-    AbilityID = EAbilityType::Stealth;
+    //AbilityID = EAbilityType::CrossFire;
     check(GetLocalRole() == ROLE_Authority);
 
     TSubclassOf<UGameplayAbility> AbilityClass;
@@ -30,7 +31,7 @@ void AANKPlayerController::AddAbility(EAbilityType AbilityID)
     switch (AbilityID)
     {
         case EAbilityType::Freeze: AbilityClass = UFreezeAbility::StaticClass(); break;
-        case EAbilityType::CrossFire: AbilityClass = UFreezeAbility::StaticClass(); break;
+        case EAbilityType::CrossFire: AbilityClass = UCrossFireAbility::StaticClass(); break;
         case EAbilityType::Stealth: AbilityClass = UStealthAbility::StaticClass(); break;
         default:;
     }

@@ -16,3 +16,8 @@ UEffectAsset* UANKGameInstance::GetEffectAsset()
 {
     return EffectAsset.GetDefaultObject();
 }
+
+UMontageAsset* UANKGameInstance::GetMontageAsset()
+{
+    return MontageAsset.GetDefaultObject();
+}

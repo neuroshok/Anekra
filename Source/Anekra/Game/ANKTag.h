@@ -13,12 +13,14 @@ static struct ANEKRA_API FANKTag : public FGameplayTagNativeAdder
     {
         struct
         {
+            FGameplayTag CrossFire;
             FGameplayTag Stealth;
         } Ability;
     } GC;
 
     struct
     {
+        FGameplayTag CrossFire;
         FGameplayTag Unlock;
         FGameplayTag Stealth;
         FGameplayTag StealthCue;
@@ -50,6 +52,7 @@ protected:
         UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
 
         InitTagAndCue(Ability.Stealth);
+        InitTagAndCue(Ability.CrossFire);
         InitTag(Ability.Unlock);
 
         InitTag(Effect.Burn);

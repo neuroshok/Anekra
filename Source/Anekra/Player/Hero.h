@@ -26,9 +26,6 @@ public:
     void UpdateMovingTag();
     void SetStealth(bool bIsStealth = true);
 
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    class UAnimMontage* UnlockMontage;
-
 protected:
     virtual void BeginPlay() override;
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

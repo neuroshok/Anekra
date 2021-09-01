@@ -29,6 +29,7 @@ void UCasting::OnUpdated(FGameplayTag Tag, int32 Count)
         float Elapsed = GetWorld()->GetTimeSeconds() - ActivateTime;
         // cast completed
         float CastingCompleteDelta = Duration - Elapsed;
+        ANK_LOG("Casting delta %f", CastingCompleteDelta)
         if (FMath::IsNearlyZero(CastingCompleteDelta, 0.01f) || CastingCompleteDelta < 0.f)
         {
             if (ShouldBroadcastAbilityTaskDelegates())

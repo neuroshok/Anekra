@@ -35,9 +35,9 @@ void UUnlockAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
             return;
         }
 
-        GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, GetHero()->UnlockMontage, 1);
+        GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, GetMontages()->UnlockMontage, 1);
 
-        auto EffectHandle = GetAbilitySystemComponent()->ApplyEffectSpec(GetAbilitySystemComponent()->Effects->UnlockEffect);
+        auto EffectHandle = GetAbilitySystemComponent()->ApplyEffectSpec(GetEffects()->UnlockEffect);
         auto Task = UCasting::Create(this, NAME_None, EffectHandle.Data->Duration);
 
         Task->OnCompleteDelegate.AddUObject(this, &UUnlockAbility::OnCastingCompleted);
@@ -50,9 +50,9 @@ void UUnlockAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, cons
                                    const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
 {
     GetAbilitySystemComponent()->CurrentMontageStop();
-    GetANKPlayerState()->OnCastingCancelDelegate.Broadcast();
+    if (GetANKPlayerState()) GetANKPlayerState()->OnCastingCancelDelegate.Broadcast();
 
-    Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
+    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
 }
 
 void UUnlockAbility::InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
