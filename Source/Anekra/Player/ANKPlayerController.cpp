@@ -22,6 +22,7 @@ void AANKPlayerController::InitializeHUD()
 // server
 void AANKPlayerController::AddAbility(EAbilityType AbilityID)
 {
+    AbilityID = EAbilityType::Stealth;
     check(GetLocalRole() == ROLE_Authority);
 
     TSubclassOf<UGameplayAbility> AbilityClass;

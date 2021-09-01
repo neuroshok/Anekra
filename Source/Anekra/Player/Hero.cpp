@@ -13,6 +13,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Anekra/Log.h"
 #include "Anekra/Game/ANKTag.h"
+#include "Net/UnrealNetwork.h"
 
 AHero::AHero()
 {
@@ -70,6 +71,12 @@ void AHero::PossessedBy(AController* PlayerController)
 void AHero::BeginPlay()
 {
     Super::BeginPlay();
+}
+
+void AHero::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+    DOREPLIFETIME(AHero, bVisible);
 }
 
 void AHero::AddMovementInput(FVector WorldDirection, float ScaleValue, bool bForce)
@@ -130,6 +137,12 @@ void AHero::MovePitch(float Value)
     Controller->SetControlRotation(Rotation);
 }
 
+void AHero::OnVisibilityUpdated()
+{
+    ANK_LOG("STEALTH %d SERVER %d", bVisible, (GetLocalRole() == ROLE_Authority))
+    GetMesh()->SetVisibility(bVisible);
+}
+
 
 void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -176,7 +189,8 @@ void AHero::UpdateMovingTag()
 
 void AHero::SetStealth(bool bIsStealth)
 {
-    GetMesh()->SetVisibility(!bIsStealth, true);
+    bVisible = !bIsStealth;
+    OnVisibilityUpdated();
 }
 
 void AHero::TryBindAbilities()

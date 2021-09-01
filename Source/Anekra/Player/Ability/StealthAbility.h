@@ -11,4 +11,6 @@ class ANEKRA_API UStealthAbility : public UAbility
 
 public:
     virtual void ActivateAbility(const FGameplayAbilitySpecHandle, const FGameplayAbilityActorInfo*, const FGameplayAbilityActivationInfo, const FGameplayEventData*) override;
+
+    void OnCompleted();
 };

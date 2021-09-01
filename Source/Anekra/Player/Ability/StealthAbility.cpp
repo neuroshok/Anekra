@@ -1,15 +1,15 @@
 #include "StealthAbility.h"
 
+#include "Anekra/Log.h"
 #include "Anekra/Game/ANKGameState.h"
 #include "Anekra/Player/ANKPlayerController.h"
 #include "Anekra/Player/ANKPlayerState.h"
 #include "Anekra/Player/Hero.h"
+#include "Task/WaitTagEventTask.h"
 
 void UStealthAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-                                       const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* GameplayEventData)
+                                      const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* GameplayEventData)
 {
-    GetAbilitySystemComponentFromActorInfo()->SetRemoveAbilityOnEnd(Handle);
-
     if (HasAuthorityOrPredictionKey(ActorInfo, &ActivationInfo))
     {
         if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
@@ -17,12 +17,24 @@ void UStealthAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
             EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
             return;
         }
+
+        GetAbilitySystemComponentFromActorInfo()->SetRemoveAbilityOnEnd(Handle);
+
+        auto Hero = Cast<AHero>(GetAvatarActorFromActorInfo());
+        GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->StealthEffect);
+        Hero->SetStealth();
+
+        Cast<AANKPlayerController>(Hero->GetController())->RemoveAbility(Handle);
+
+        auto Task = UWaitTagEventTask::Create(this, NAME_None, ANKTag.Ability.Stealth);
+
+        Task->OnCompleteDelegate.AddUObject(this, &UStealthAbility::OnCompleted);
+        Task->ReadyForActivation();
     }
-    auto Hero = Cast<AHero>(GetAvatarActorFromActorInfo());
-    GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->StealthEffect);
-    Cast<AANKPlayerState>(Hero->GetPlayerState())->SetStealth();
+}
 
-    Cast<AANKPlayerController>(Hero->GetController())->RemoveAbility(Handle);
-
-    EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
+void UStealthAbility::OnCompleted()
+{
+    Cast<AHero>(GetAvatarActorFromActorInfo())->SetStealth(false);
+    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
 }

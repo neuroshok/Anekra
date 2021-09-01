@@ -31,6 +31,7 @@ public:
 
 protected:
     virtual void BeginPlay() override;
+    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
     virtual void AddMovementInput(FVector WorldDirection, float ScaleValue = 1.0f, bool bForce = false) override;
 
     void MoveForward(float);
@@ -39,6 +40,12 @@ protected:
     void MoveRight(float);
     void MoveYaw(float);
     void MovePitch(float);
+
+    UFUNCTION()
+    void OnVisibilityUpdated();
+
+    UPROPERTY(Replicated, ReplicatedUsing = "OnVisibilityUpdated")
+    bool bVisible = true;
 
 private:
     void TryBindAbilities();

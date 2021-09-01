@@ -19,16 +19,16 @@ void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
             EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
             return;
         }
-    }
-    auto Hero = Cast<AHero>(GetAvatarActorFromActorInfo());
+        auto Hero = Cast<AHero>(GetAvatarActorFromActorInfo());
 
-    for (auto PlayerState : Cast<AANKGameState>(GetWorld()->GetGameState())->PlayerArray)
-    {
-        if (Hero->GetPlayerState()->GetPlayerId() == PlayerState->GetPlayerId()) continue;
-        GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->FreezeEffect);
-    }
+        for (auto PlayerState : Cast<AANKGameState>(GetWorld()->GetGameState())->PlayerArray)
+        {
+            if (Hero->GetPlayerState()->GetPlayerId() == PlayerState->GetPlayerId()) continue;
+            GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->FreezeEffect);
+        }
 
-    Cast<AANKPlayerController>(Hero->GetController())->RemoveAbility(Handle);
+        Cast<AANKPlayerController>(Hero->GetController())->RemoveAbility(Handle);
+    }
 
     EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }

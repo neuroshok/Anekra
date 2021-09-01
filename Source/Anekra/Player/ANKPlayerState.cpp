@@ -70,18 +70,3 @@ void AANKPlayerState::Die()
     auto Spectator = GetWorld()->SpawnActor(ASpectatorPawn::StaticClass());
     Cast<APlayerController>(GetOwner())->Possess(Cast<APawn>(Spectator));
 }
-
-void AANKPlayerState::SetStealth()
-{
-    Cast<AHero>(GetPawn())->SetStealth();
-    GetAbilitySystemComponent()->RegisterGameplayTagEvent(ANKTag.Ability.Stealth).AddUObject(this, &AANKPlayerState::OnStealthUpdated);
-}
-
-void AANKPlayerState::OnStealthUpdated(FGameplayTag Tag, int32 Count)
-{
-    if (Count == 0)
-    {
-        Cast<AHero>(GetPawn())->SetStealth(false);
-        GetAbilitySystemComponent()->RegisterGameplayTagEvent(ANKTag.Ability.Stealth).RemoveAll(this);
-    }
-}

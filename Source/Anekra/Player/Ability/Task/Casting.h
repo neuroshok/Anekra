@@ -27,7 +27,6 @@ public:
     static UCasting* Create(UGameplayAbility* OwningAbility, FName TaskInstanceName, float Duration);
 
 private:
-    FTimerHandle CastingTimer;
     float Duration;
     float ActivateTime;
 };

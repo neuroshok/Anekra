@@ -20,9 +20,6 @@ public:
     virtual UANKAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
     void Die();
-    void SetStealth();
-
-    void OnStealthUpdated(FGameplayTag Tag, int32 Count);
 
     void ComputeCellPosition();
     FIntVector GetCellPosition() const;
