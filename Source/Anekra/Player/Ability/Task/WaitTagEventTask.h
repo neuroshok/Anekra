@@ -21,7 +21,7 @@ public:
 
     FOnCompleteDelegate OnCompleteDelegate;
 
-    static UWaitTagEventTask* Create(UGameplayAbility* OwningAbility, FName TaskInstanceName, FGameplayTag Tag);
+    static UWaitTagEventTask* Create(UGameplayAbility* OwningAbility, FGameplayTag Tag);
 
     FGameplayTag WaitingTag;
 };

@@ -10,5 +10,6 @@ class ANEKRA_API UFreezeAbility : public UAbility
     GENERATED_BODY()
 
 protected:
+    UFreezeAbility();
     virtual void ActivateAbility(const FGameplayAbilitySpecHandle, const FGameplayAbilityActorInfo*, const FGameplayAbilityActivationInfo, const FGameplayEventData*) override;
 };

@@ -13,14 +13,19 @@ static struct ANEKRA_API FANKTag : public FGameplayTagNativeAdder
     {
         struct
         {
+            FGameplayTag Freeze;
             FGameplayTag CrossFire;
             FGameplayTag Stealth;
         } Ability;
     } GC;
 
+    //
+
     struct
     {
+        FGameplayTag Root;
         FGameplayTag CrossFire;
+        FGameplayTag Freeze;
         FGameplayTag Unlock;
         FGameplayTag Stealth;
         FGameplayTag StealthCue;
@@ -42,6 +47,7 @@ static struct ANEKRA_API FANKTag : public FGameplayTagNativeAdder
 
     struct
     {
+        FGameplayTag Casting;
         FGameplayTag Dead;
         FGameplayTag Moving;
     } State;
@@ -51,6 +57,8 @@ protected:
     {
         UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
 
+        InitRoot(Ability);
+        InitTagAndCue(Ability.Freeze);
         InitTagAndCue(Ability.Stealth);
         InitTagAndCue(Ability.CrossFire);
         InitTag(Ability.Unlock);
@@ -63,6 +71,7 @@ protected:
         InitTag(Event.FindCell);
         InitTag(Event.Snake);
 
+        InitTag(State.Casting);
         InitTag(State.Dead);
         InitTag(State.Moving);
     }

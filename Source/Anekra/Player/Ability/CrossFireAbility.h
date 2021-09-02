@@ -10,5 +10,6 @@ class ANEKRA_API UCrossFireAbility : public UAbility
     GENERATED_BODY()
 
 public:
+    UCrossFireAbility();
     virtual void ActivateAbility(const FGameplayAbilitySpecHandle, const FGameplayAbilityActorInfo*, const FGameplayAbilityActivationInfo, const FGameplayEventData*) override;
 };

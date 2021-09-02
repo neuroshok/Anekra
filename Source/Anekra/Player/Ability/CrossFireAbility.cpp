@@ -8,6 +8,11 @@
 #include "GameFramework/GameStateBase.h"
 
 
+UCrossFireAbility::UCrossFireAbility()
+{
+    AbilityTags.AddTag(ANKTag.Ability.CrossFire);
+}
+
 void UCrossFireAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                         const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* GameplayEventData)
 {

@@ -7,8 +7,13 @@
 #include "Anekra/Player/Hero.h"
 #include "Anekra/Player/ANKPlayerState.h"
 
+UFreezeAbility::UFreezeAbility()
+{
+    AbilityTags.AddTag(ANKTag.Ability.Freeze);
+}
+
 void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-                                      const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* GameplayEventData)
+                                     const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* GameplayEventData)
 {
     GetAbilitySystemComponent()->SetRemoveAbilityOnEnd(Handle);
 

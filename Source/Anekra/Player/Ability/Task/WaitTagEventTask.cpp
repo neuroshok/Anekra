@@ -25,9 +25,9 @@ void UWaitTagEventTask::OnUpdated(FGameplayTag Tag, int32 Count)
     }
 }
 
-UWaitTagEventTask* UWaitTagEventTask::Create(UGameplayAbility* OwningAbility, FName TaskInstanceName, FGameplayTag Tag)
+UWaitTagEventTask* UWaitTagEventTask::Create(UGameplayAbility* OwningAbility, FGameplayTag Tag)
 {
-    UWaitTagEventTask* Task = NewAbilityTask<UWaitTagEventTask>(OwningAbility, TaskInstanceName);
+    UWaitTagEventTask* Task = NewAbilityTask<UWaitTagEventTask>(OwningAbility, NAME_None);
     Task->WaitingTag = Tag;
 
     return Task;

@@ -6,7 +6,7 @@ constexpr struct Game
     {
         struct
         {
-            float CastingTime = 2.f;
+            float CastingTime = 1.f;
         } Unlock;
     } Ability;
 

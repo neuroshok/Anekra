@@ -19,14 +19,15 @@ public:
     virtual void Activate() override;
     virtual void OnDestroy(bool bInOwnerFinished) override;
 
-    void OnUpdated(FGameplayTag Tag, int32 Count);
+    void OnCancelled(FGameplayTag Tag, int32 Count);
+    void OnCompleted();
 
     FOnCompleteDelegate OnCompleteDelegate;
     FOnCancelDelegate OnCancelDelegate;
 
-    static UCasting* Create(UGameplayAbility* OwningAbility, FName TaskInstanceName, float Duration);
+    static UCasting* Create(UGameplayAbility* OwningAbility, float Duration);
 
 private:
+    FTimerHandle CastingTimer;
     float Duration;
-    float ActivateTime;
 };

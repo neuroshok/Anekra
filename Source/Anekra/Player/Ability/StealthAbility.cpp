@@ -7,6 +7,11 @@
 #include "Anekra/Player/Hero.h"
 #include "Task/WaitTagEventTask.h"
 
+UStealthAbility::UStealthAbility()
+{
+    AbilityTags.AddTag(ANKTag.Ability.Stealth);
+}
+
 void UStealthAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                       const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* GameplayEventData)
 {
@@ -26,7 +31,7 @@ void UStealthAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
 
         GetANKPlayerController()->RemoveAbility(Handle);
 
-        auto Task = UWaitTagEventTask::Create(this, NAME_None, ANKTag.Ability.Stealth);
+        auto Task = UWaitTagEventTask::Create(this, ANKTag.Ability.Stealth);
 
         Task->OnCompleteDelegate.AddUObject(this, &UStealthAbility::OnCompleted);
         Task->ReadyForActivation();

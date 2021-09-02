@@ -11,42 +11,37 @@ void UCasting::Activate()
 {
     auto ANKPlayerState = Cast<AANKPlayerState>(GetOwnerActor());
     ANKPlayerState->OnCastingDelegate.Broadcast(Duration);
-    AbilitySystemComponent->RegisterGameplayTagEvent(ANKTag.Ability.Unlock).AddUObject(this, &UCasting::OnUpdated);
-    ActivateTime = GetWorld()->GetTimeSeconds();
+    GetWorld()->GetTimerManager().SetTimer(CastingTimer, this, &UCasting::OnCompleted, Duration);
+    AbilitySystemComponent->RegisterGameplayTagEvent(ANKTag.State.Moving).AddUObject(this, &UCasting::OnCancelled);
 }
 
 void UCasting::OnDestroy(bool bInOwnerFinished)
 {
-    AbilitySystemComponent->RegisterGameplayTagEvent(ANKTag.Ability.Unlock).RemoveAll(this);
+    AbilitySystemComponent->RegisterGameplayTagEvent(ANKTag.State.Moving).RemoveAll(this);
     // call in last
     Super::OnDestroy(bInOwnerFinished);
 }
 
-void UCasting::OnUpdated(FGameplayTag Tag, int32 Count)
+void UCasting::OnCancelled(FGameplayTag Tag, int32 Count)
 {
-    if (Count == 0)
+    if (Count > 0)
     {
-        float Elapsed = GetWorld()->GetTimeSeconds() - ActivateTime;
-        // cast completed
-        float CastingCompleteDelta = Duration - Elapsed;
-        ANK_LOG("Casting delta %f", CastingCompleteDelta)
-        if (FMath::IsNearlyZero(CastingCompleteDelta, 0.01f) || CastingCompleteDelta < 0.f)
-        {
-            if (ShouldBroadcastAbilityTaskDelegates())
-                OnCompleteDelegate.Broadcast(FGameplayTag(), FGameplayEventData());
-        }
-        else
-        {
-            if (ShouldBroadcastAbilityTaskDelegates())
-                OnCancelDelegate.Broadcast();
-        }
+        if (ShouldBroadcastAbilityTaskDelegates())
+            OnCancelDelegate.Broadcast();
         EndTask();
     }
 }
 
-UCasting* UCasting::Create(UGameplayAbility* OwningAbility, FName TaskInstanceName, float Duration)
+void UCasting::OnCompleted()
 {
-    UCasting* Task = NewAbilityTask<UCasting>(OwningAbility, TaskInstanceName);
+    if (ShouldBroadcastAbilityTaskDelegates())
+        OnCompleteDelegate.Broadcast(FGameplayTag(), FGameplayEventData());
+    EndTask();
+}
+
+UCasting* UCasting::Create(UGameplayAbility* OwningAbility, float Duration)
+{
+    UCasting* Task = NewAbilityTask<UCasting>(OwningAbility, NAME_None);
     Task->Duration = Duration;
 
     return Task;

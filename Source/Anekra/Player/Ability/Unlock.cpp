@@ -10,6 +10,12 @@
 
 UUnlockAbility::UUnlockAbility()
 {
+    AbilityTags.AddTag(ANKTag.Ability.Unlock);
+
+    BlockAbilitiesWithTag.AddTag(ANKTag.Ability.Root);
+    CancelAbilitiesWithTag.AddTag(ANKTag.Ability.Root);
+    ActivationOwnedTags.AddTag(ANKTag.State.Casting);
+    ActivationOwnedTags.AddTag(ANKTag.Ability.Unlock);
 }
 
 
@@ -37,8 +43,8 @@ void UUnlockAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
 
         GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, GetMontages()->UnlockMontage, 1);
 
-        auto EffectHandle = GetAbilitySystemComponent()->ApplyEffectSpec(GetEffects()->UnlockEffect);
-        auto Task = UCasting::Create(this, NAME_None, EffectHandle.Data->Duration);
+        //auto EffectHandle = GetAbilitySystemComponent()->ApplyEffectSpec(GetEffects()->CastingEffect);
+        auto Task = UCasting::Create(this, Game.Ability.Unlock.CastingTime);
 
         Task->OnCompleteDelegate.AddUObject(this, &UUnlockAbility::OnCastingCompleted);
         Task->OnCancelDelegate.AddLambda([this, Handle, ActorInfo, ActivationInfo]() { CancelAbility(Handle, ActorInfo, ActivationInfo, true); });
@@ -66,5 +72,5 @@ void UUnlockAbility::OnCastingCompleted(FGameplayTag EventTag, FGameplayEventDat
 
     // unlock server side
     GetANKPlayerController()->Unlock();
-    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
 }
