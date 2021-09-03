@@ -3,8 +3,8 @@
 #include "Components/Image.h"
 #include "Anekra/Game/ANKGameInstance.h"
 
-void UWAbility::SetImage(EAbilityType AbilityID)
+void UWAbility::SetImage(int AbilityID)
 {
-    if (AbilityID == EAbilityType::None) return;
-    WImage->SetBrushFromSoftTexture(Cast<UANKGameInstance>(GetGameInstance())->GetBasicAsset()->GetAbility(AbilityID));
+    if (AbilityID == -1) return;
+    WImage->SetBrushFromSoftTexture(Cast<UANKGameInstance>(GetGameInstance())->GetAbility(AbilityID)->GetImage());
 }

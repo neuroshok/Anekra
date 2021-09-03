@@ -1,11 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Anekra/Player/Ability.h"
+#include "Anekra/Player/ANKAbility.h"
 #include "Freeze.generated.h"
 
 UCLASS()
-class ANEKRA_API UFreezeAbility : public UAbility
+class ANEKRA_API UFreezeAbility : public UANKAbility
 {
     GENERATED_BODY()
 

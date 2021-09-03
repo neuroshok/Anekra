@@ -3,6 +3,7 @@
 #include "Constant.h"
 #include "Anekra/Player/ANKPlayerState.h"
 #include "Anekra/Game/ANKGameMode.h"
+#include "Anekra/Game/ANKGameInstance.h"
 #include "Anekra/World/Cell.h"
 #include "Anekra/Log.h"
 #include "Net/UnrealNetwork.h"
@@ -45,35 +46,35 @@ void AANKGameState::OnUpdateIndexLocation()
 void AANKGameState::MakeMap()
 {
     if (!BP_Cell) ANK_LOG("bp_cell not found")
-        else
-        {
-            int Size = GetMapCellCountX();
-            FVector Position;
+    else
+    {
+        int Size = GetMapCellCountX();
+        FVector Position;
 
-            for (int x = 0; x < Size; ++x)
+        for (int x = 0; x < Size; ++x)
+        {
+            for (int y = 0; y < Size; ++y)
             {
-                for (int y = 0; y < Size; ++y)
+                Position.X = x * MapCellSize;
+                Position.Y = y * MapCellSize;
+                FActorSpawnParameters params;
+                params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+                auto Cell = GetWorld()->SpawnActor<ACell>(BP_Cell, Position, FRotator{0, 0, 0}, params);
+                if (!Cell)
                 {
-                    Position.X = x * Game.Map.CellSize;
-                    Position.Y = y * Game.Map.CellSize;
-                    FActorSpawnParameters params;
-                    params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-                    auto Cell = GetWorld()->SpawnActor<ACell>(BP_Cell, Position, FRotator{0, 0, 0}, params);
-                    if (!Cell)
-                    {
-                        ANK_ERROR("unable to make map")
-                        break;
-                    }
-                    auto CellType = FMath::RandRange(0, static_cast<int8>(ECellType::Count));
-                    //Cell->SetType(static_cast<ECellType>(CellType));
-                    if (x == 0 && y == 0) Cell->SetType(ECellType::Heal);
-                    if (x == 2 && y == 2) Cell->SetType(ECellType::Burn);
-                    if (x == 1 && y == 0) Cell->SetType(ECellType::Slow);
-                    Cells.Add(Cell);
+                    ANK_ERROR("unable to make map")
+                    break;
                 }
+                auto CellType = FMath::RandRange(0, static_cast<int8>(ECellType::Count));
+                //Cell->SetType(static_cast<ECellType>(CellType));
+                if (x == 0 && y == 0) Cell->SetType(ECellType::Heal);
+                if (x == 2 && y == 2) Cell->SetType(ECellType::Burn);
+                if (x == 1 && y == 0) Cell->SetType(ECellType::Slow);
+                Cells.Add(Cell);
             }
-            ANK_LOG("Map created with %d cells", Cells.Num());
         }
+        ANK_LOG("Map created with %d cells", Cells.Num());
+    }
 }
 
 void AANKGameState::ClientUpdateEvent_Implementation(const EEventType EventType, EEventPhase EventPhase)
@@ -81,8 +82,8 @@ void AANKGameState::ClientUpdateEvent_Implementation(const EEventType EventType,
     OnEventUpdateDelegate.Broadcast(EventType, EventPhase);
 }
 
-float AANKGameState::GetMapWidth() const { return GetMapCellCountX() * Game.Map.CellSize; }
-float AANKGameState::GetMapCellSize() const { return Game.Map.CellSize; }
+float AANKGameState::GetMapWidth() const { return GetMapCellCountX() * MapCellSize; }
+float AANKGameState::GetMapCellSize() const { return MapCellSize; }
 
 ACell* AANKGameState::GetCell(int X, int Y)
 {
@@ -96,9 +97,21 @@ TArray<ACell*> AANKGameState::GetCells()
     return Cells;
 }
 
+TArray<AANKPlayerState*> AANKGameState::GetPlayersAtCellPosition(int X, int Y)
+{
+    TArray<AANKPlayerState*> Array;
+    for (auto PlayerState : PlayerArray)
+    {
+        auto ANKPlayerState = Cast<AANKPlayerState>(PlayerState);
+        if (ANKPlayerState->GetCellPosition().X == X && ANKPlayerState->GetCellPosition().Y == Y)
+            Array.Add(ANKPlayerState);
+    }
+    return Array;
+}
+
 int AANKGameState::GetMapCellCountX() const
 {
-    return Game.Map.CellCountX;
+    return MapCellCountX;
 }
 
 void AANKGameState::BeginPlay()

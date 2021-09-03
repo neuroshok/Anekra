@@ -22,7 +22,9 @@ public:
     void Die();
 
     void ComputeCellPosition();
+    UFUNCTION(BlueprintCallable)
     FIntVector GetCellPosition() const;
+    UFUNCTION(BlueprintCallable)
     bool IsDead() const;
 
     FOnCastingDelegate OnCastingDelegate;

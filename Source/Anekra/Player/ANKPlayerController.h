@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "GameplayAbilitySpec.h"
 #include "GameFramework/PlayerController.h"
-#include "Anekra/AbilityType.h"
 #include "ANKPlayerController.generated.h"
 
 UCLASS()
@@ -16,8 +15,11 @@ class ANEKRA_API AANKPlayerController : public APlayerController
 public:
     void InitializeHUD();
 
-    void AddAbility(EAbilityType);
+    UFUNCTION(BlueprintCallable)
+    void AddAbility(int);
+    UFUNCTION(BlueprintCallable)
     void RemoveAbility(FGameplayAbilitySpecHandle Handle);
+    UFUNCTION(BlueprintCallable)
     void NotifyError(FString);
 
     void Unlock();
@@ -27,16 +29,26 @@ public:
 
     FOnAbilitiesUpdateDelegate OnAbilitiesUpdateDelegate;
 
+    UFUNCTION(BlueprintCallable)
+    int GetAbilitiesCountMax() { return AbilitiesCountMax; }
+    UFUNCTION(BlueprintCallable)
+    int GetAbilitiesCount() { return AbilitiesCount; }
+    UFUNCTION(BlueprintCallable)
+    const TArray<int>& GetAbilities() { return Abilities; }
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
+    int AbilitiesCountMax = 4;
+
 protected:
     virtual void BeginPlay() override;
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-public:
+private:
     UPROPERTY(Replicated, ReplicatedUsing = OnAbilitiesUpdated)
-    TArray<EAbilityType> Abilities;
+    TArray<int> Abilities;
 
     UPROPERTY(Replicated)
-    int AbilityCount = 0;
+    int AbilitiesCount = 0;
 
     TMap<FGameplayAbilitySpecHandle, int> Slots;
 };

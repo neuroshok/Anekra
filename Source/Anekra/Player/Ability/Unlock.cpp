@@ -24,9 +24,10 @@ bool UUnlockAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
     bool Activatable = Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
     auto Hero = Cast<AHero>(GetAvatarActorFromActorInfo());
-    auto AbilitiesCount = Cast<AANKPlayerController>(Hero->GetController())->AbilityCount;
-    Activatable = Activatable && Hero->GetVelocity().IsZero() && (AbilitiesCount < Game.Player.AbilitiesCount);
-    if (!Activatable && (AbilitiesCount >= Game.Player.AbilitiesCount)) Cast<AANKPlayerController>(Hero->GetController())->NotifyError("You have too many abilities");
+    auto AbilitiesCountMax = GetANKPlayerController()->GetAbilitiesCountMax();
+    auto AbilitiesCount = GetANKPlayerController()->GetAbilitiesCount();
+    Activatable = Activatable && Hero->GetVelocity().IsZero() && (AbilitiesCount < AbilitiesCountMax);
+    if (!Activatable && (AbilitiesCount >= AbilitiesCountMax)) Cast<AANKPlayerController>(Hero->GetController())->NotifyError("You have too many abilities");
     return Activatable;
 }
 
@@ -41,10 +42,10 @@ void UUnlockAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
             return;
         }
 
-        GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, GetMontages()->UnlockMontage, 1);
+        GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, Montage, 1);
 
         //auto EffectHandle = GetAbilitySystemComponent()->ApplyEffectSpec(GetEffects()->CastingEffect);
-        auto Task = UCasting::Create(this, Game.Ability.Unlock.CastingTime);
+        auto Task = UCasting::Create(this, CastingTime);
 
         Task->OnCompleteDelegate.AddUObject(this, &UUnlockAbility::OnCastingCompleted);
         Task->OnCancelDelegate.AddLambda([this, Handle, ActorInfo, ActivationInfo]() { CancelAbility(Handle, ActorInfo, ActivationInfo, true); });

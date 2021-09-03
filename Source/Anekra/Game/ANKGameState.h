@@ -3,6 +3,7 @@
 #include "Anekra/EventType.h"
 
 #include "CoreMinimal.h"
+#include "Anekra/Player/ANKPlayerState.h"
 #include "GameFramework/GameStateBase.h"
 #include "ANKGameState.generated.h"
 
@@ -22,10 +23,15 @@ public:
     UFUNCTION(NetMulticast, Reliable)
     void ClientUpdateEvent(EEventType EventType, EEventPhase EventPhase);
 
+    // Cell
     UFUNCTION(BlueprintCallable)
     class ACell* GetCell(int X, int Y);
     UFUNCTION(BlueprintCallable)
     TArray<class ACell*> GetCells();
+    UFUNCTION(BlueprintCallable)
+    TArray<class AANKPlayerState*> GetPlayersAtCellPosition(int X, int Y);
+
+    // Map
     UFUNCTION(BlueprintCallable)
     int GetMapCellCountX() const;
     UFUNCTION(BlueprintCallable)
@@ -33,10 +39,15 @@ public:
     UFUNCTION(BlueprintCallable)
     float GetMapWidth() const;
 
+    FOnEventUpdateDelegate OnEventUpdateDelegate;
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra|Map")
+    int MapCellCountX = 10;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra|Map")
+    float MapCellSize = 800.f;
+
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<class ACell> BP_Cell;
-
-    FOnEventUpdateDelegate OnEventUpdateDelegate;
 
 protected:
     virtual void BeginPlay() override;

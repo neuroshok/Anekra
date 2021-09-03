@@ -53,7 +53,7 @@ void UWMain::OnCastingCancelled()
 
 void UWMain::OnAbilitiesUpdated()
 {
-    auto& Abilities = Cast<AANKPlayerController>(GetOwningPlayer())->Abilities;
+    auto& Abilities = Cast<AANKPlayerController>(GetOwningPlayer())->GetAbilities();
 
     WAbilityBox->ClearChildren();
     for (int i = 0; i < Abilities.Num(); ++i)

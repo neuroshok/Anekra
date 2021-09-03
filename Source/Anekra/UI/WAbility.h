@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Anekra/AbilityType.h"
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -12,7 +11,7 @@ class ANEKRA_API UWAbility : public UUserWidget
     GENERATED_BODY()
 
 public:
-    void SetImage(EAbilityType);
+    void SetImage(int);
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
     class UImage* WImage;

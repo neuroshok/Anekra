@@ -5,11 +5,8 @@
 #include "ANKHUD.h"
 #include "ANKPlayerState.h"
 #include "Ability/Binding.h"
-#include "Ability/CrossFireAbility.h"
-#include "Ability/Freeze.h"
-#include "Ability/StealthAbility.h"
 #include "Net/UnrealNetwork.h"
-#include "Anekra/Log.h"
+#include "Anekra/Game/ANKGameInstance.h"
 #include "Anekra/Game/Constant.h"
 
 void AANKPlayerController::InitializeHUD()
@@ -21,31 +18,21 @@ void AANKPlayerController::InitializeHUD()
 }
 
 // server
-void AANKPlayerController::AddAbility(EAbilityType AbilityID)
+void AANKPlayerController::AddAbility(int AbilityID)
 {
-    //AbilityID = EAbilityType::CrossFire;
     check(GetLocalRole() == ROLE_Authority);
 
-    TSubclassOf<UGameplayAbility> AbilityClass;
-
-    switch (AbilityID)
-    {
-        case EAbilityType::Freeze: AbilityClass = UFreezeAbility::StaticClass(); break;
-        case EAbilityType::CrossFire: AbilityClass = UCrossFireAbility::StaticClass(); break;
-        case EAbilityType::Stealth: AbilityClass = UStealthAbility::StaticClass(); break;
-        default:;
-    }
-    check(AbilityClass);
+    TSubclassOf<UGameplayAbility> AbilityClass = Cast<UANKGameInstance>(GetGameInstance())->GetAbilityClass(AbilityID);
 
     int BindIndex = static_cast<int32>(EBinding::Ability1);
     int SlotIndex;
     for (SlotIndex = 0; SlotIndex < Abilities.Num(); ++SlotIndex)
     {
-        if (Abilities[SlotIndex] == EAbilityType::None)
+        if (Abilities[SlotIndex] == -1)
         {
             Abilities[SlotIndex] = AbilityID;
             BindIndex += SlotIndex;
-            ++AbilityCount;
+            ++AbilitiesCount;
             break;
         }
     }
@@ -67,8 +54,8 @@ void AANKPlayerController::RemoveAbility(FGameplayAbilitySpecHandle Handle)
         Slots.RemoveAndCopyValue(Handle, Slot);
         check(Slot < Abilities.Num());
 
-        Abilities[Slot] = EAbilityType::None;
-        --AbilityCount;
+        Abilities[Slot] = -1;
+        --AbilitiesCount;
         OnAbilitiesUpdated();
     }
 }
@@ -82,19 +69,17 @@ void AANKPlayerController::NotifyError(FString Message)
 void AANKPlayerController::BeginPlay()
 {
     Super::BeginPlay();
-    Abilities.SetNum(Game.Player.AbilitiesCount);
-    for (auto& Ability : Abilities)
-    {
-        Ability = EAbilityType::None;
-    }
-    AbilityCount = 0;
+    Abilities.SetNum(AbilitiesCountMax);
+    for (auto& Ability : Abilities) Ability = -1;
+    AbilitiesCount = 0;
+    OnAbilitiesUpdated();
 }
 
 void AANKPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(AANKPlayerController, Abilities);
-    DOREPLIFETIME(AANKPlayerController, AbilityCount);
+    DOREPLIFETIME(AANKPlayerController, AbilitiesCount);
 }
 
 // server
@@ -102,8 +87,8 @@ void AANKPlayerController::Unlock()
 {
     if (GetLocalRole() == ROLE_Authority)
     {
-        auto AbilityID = FMath::RandRange(0, static_cast<int8>(EAbilityType::Count) - 1);
-        AddAbility(static_cast<EAbilityType>(AbilityID));
+        auto AbilityID = FMath::RandRange(0, Cast<UANKGameInstance>(GetGameInstance())->GetAbilityAsset()->Abilities.Num() - 1);
+        AddAbility(AbilityID);
     }
 }
 

@@ -1,11 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Anekra/Player/Ability.h"
+#include "Anekra/Player/ANKAbility.h"
 #include "Unlock.generated.h"
 
 UCLASS()
-class ANEKRA_API UUnlockAbility : public UAbility
+class ANEKRA_API UUnlockAbility : public UANKAbility
 {
     GENERATED_BODY()
 
@@ -23,6 +23,10 @@ protected:
     virtual void InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
     //virtual void OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
+    float CastingTime = 1.f;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
+    class UAnimMontage* Montage;
 
 private:
     UFUNCTION()

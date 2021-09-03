@@ -1,11 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Anekra/Player/Ability.h"
+#include "Anekra/Player/ANKAbility.h"
 #include "StealthAbility.generated.h"
 
 UCLASS()
-class ANEKRA_API UStealthAbility : public UAbility
+class ANEKRA_API UStealthAbility : public UANKAbility
 {
     GENERATED_BODY()
 

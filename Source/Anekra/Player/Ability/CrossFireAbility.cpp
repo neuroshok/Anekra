@@ -1,8 +1,6 @@
 #include "CrossFireAbility.h"
 
-#include "Anekra/Log.h"
-#include "Anekra/Asset/MontageAsset.h"
-#include "Anekra/Game/ANKGameMode.h"
+#include "Anekra/Player/ANKPlayerController.h"
 #include "Anekra/Player/ANKPlayerState.h"
 #include "Anekra/Player/Hero.h"
 #include "GameFramework/GameStateBase.h"
@@ -40,7 +38,7 @@ void UCrossFireAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 
 
 
-    GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, GetMontages()->CrossFireMontage, 1);
+    GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, Montage, 1);
 
     GetANKPlayerController()->RemoveAbility(Handle);
 
