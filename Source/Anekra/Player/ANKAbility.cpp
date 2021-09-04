@@ -11,6 +11,13 @@ UANKAbility::UANKAbility()
     InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 }
 
+void UANKAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+{
+    Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+    if (bAutoRemove) GetANKPlayerController()->RemoveAbility(Handle);
+}
+
 UEffectAsset* UANKAbility::GetEffects()
 {
     return Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetEffectAsset();
@@ -18,6 +25,7 @@ UEffectAsset* UANKAbility::GetEffects()
 
 AHero* UANKAbility::GetHero() const
 {
+    check(GetAvatarActorFromActorInfo());
     return Cast<AHero>(GetAvatarActorFromActorInfo());
 }
 

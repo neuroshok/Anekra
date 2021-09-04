@@ -15,8 +15,6 @@ UFreezeAbility::UFreezeAbility()
 void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                      const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* GameplayEventData)
 {
-    GetAbilitySystemComponent()->SetRemoveAbilityOnEnd(Handle);
-
     if (HasAuthorityOrPredictionKey(ActorInfo, &ActivationInfo))
     {
         if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
@@ -32,8 +30,6 @@ void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
             if (Hero->GetPlayerState()->GetPlayerId() == PlayerState->GetPlayerId()) continue;
             GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->FreezeEffect);
         }
-
-        GetANKPlayerController()->RemoveAbility(Handle);
     }
 
     EndAbility(Handle, ActorInfo, ActivationInfo, false, false);

@@ -1,4 +1,4 @@
-#include "CrossFireAbility.h"
+#include "CrossFire.h"
 
 #include "Anekra/Player/ANKPlayerController.h"
 #include "Anekra/Player/ANKPlayerState.h"
@@ -22,8 +22,6 @@ void UCrossFireAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
             return;
         }
 
-        GetAbilitySystemComponentFromActorInfo()->SetRemoveAbilityOnEnd(Handle);
-
         auto SourcePos = GetANKPlayerState()->GetCellPosition();
 
         for (auto PlayerState : GetWorld()->GetGameState()->PlayerArray)
@@ -32,15 +30,11 @@ void UCrossFireAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
             if (PlayerState->GetPlayerId() == GetANKPlayerState()->GetPlayerId()) continue;
             auto TargetPos = ANKPlayerState->GetCellPosition();
             if (TargetPos.X == SourcePos.X || TargetPos.Y == SourcePos.Y)
-                ANKPlayerState->GetAbilitySystemComponent()->ApplyEffect(GetEffects()->DamageEffect);
+                ANKPlayerState->GetAbilitySystemComponent()->ApplyEffectSpec(GetEffects()->DamageEffect, ANKTag.Effect.Damage, -20);
         }
     }
 
-
-
     GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, Montage, 1);
-
-    GetANKPlayerController()->RemoveAbility(Handle);
 
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
 }

@@ -13,8 +13,9 @@ static struct ANEKRA_API FANKTag : public FGameplayTagNativeAdder
     {
         struct
         {
-            FGameplayTag Freeze;
             FGameplayTag CrossFire;
+            FGameplayTag Drain;
+            FGameplayTag Freeze;
             FGameplayTag Stealth;
         } Ability;
     } GC;
@@ -25,15 +26,16 @@ static struct ANEKRA_API FANKTag : public FGameplayTagNativeAdder
     {
         FGameplayTag Root;
         FGameplayTag CrossFire;
+        FGameplayTag Drain;
         FGameplayTag Freeze;
         FGameplayTag Unlock;
-        FGameplayTag Stealth;
-        FGameplayTag StealthCue;
+        FGameplayTag Stealth; FGameplayTag StealthCue;
     } Ability;
 
     struct
     {
         FGameplayTag Burn;
+        FGameplayTag Damage;
         FGameplayTag Freeze;
         FGameplayTag Heal;
     } Effect;
@@ -58,12 +60,14 @@ protected:
         UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
 
         InitRoot(Ability);
+        InitTagAndCue(Ability.Drain);
         InitTagAndCue(Ability.Freeze);
         InitTagAndCue(Ability.Stealth);
         InitTagAndCue(Ability.CrossFire);
         InitTag(Ability.Unlock);
 
         InitTag(Effect.Burn);
+        InitTag(Effect.Damage);
         InitTag(Effect.Freeze);
         InitTag(Effect.Heal);
 

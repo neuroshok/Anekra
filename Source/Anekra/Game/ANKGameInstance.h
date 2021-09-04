@@ -2,10 +2,10 @@
 
 #include "Anekra/Asset/BasicAsset.h"
 #include "Anekra/Asset/EffectAsset.h"
-
-#include "CoreMinimal.h"
 #include "Anekra/Asset/AbilityAsset.h"
 #include "Anekra/Player/ANKAbility.h"
+
+#include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "ANKGameInstance.generated.h"
 
@@ -16,14 +16,15 @@ class ANEKRA_API UANKGameInstance : public UGameInstance
 
 public:
     UANKGameInstance();
+    virtual void Init() override;
 
-    class UANKAbility* GetAbility(int ID) const;
-    TSubclassOf<UANKAbility> GetAbilityClass(int ID) const;
+    struct FAbilityData* GetAbility(int ID) const;
+    class UANKAbility* GetAbilityClass(int ID) const;
+    const TArray<struct FAbilityData*>& GetAbilities() const;
 
     UAbilityAsset* GetAbilityAsset() const;
     UBasicAsset* GetBasicAsset() const;
     UEffectAsset* GetEffectAsset() const;
-
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<UAbilityAsset> AbilityAsset;
@@ -33,5 +34,5 @@ public:
     TSubclassOf<UEffectAsset> EffectAsset;
 
 private:
-
+    TArray<struct FAbilityData*> Abilities;
 };

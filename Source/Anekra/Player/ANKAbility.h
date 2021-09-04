@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
+#include "Anekra/Asset/AbilityAsset.h"
 #include "ANKAbility.generated.h"
 
 UCLASS()
@@ -11,6 +12,10 @@ class ANEKRA_API UANKAbility : public UGameplayAbility
 
 public:
     UANKAbility();
+
+    virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+
+
 
     UFUNCTION(BlueprintCallable)
     class UEffectAsset* GetEffects();
@@ -23,18 +28,8 @@ public:
     UFUNCTION(BlueprintCallable)
     class UANKGameInstance* GetANKGameInstance() const;
 
-    const FText& GetName() const { return Name; }
-    const FText& GetDescription() const { return Description; }
-    class UTexture2D* GetImage() const { return Image; }
-
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    FText Name;
-
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    FText Description;
-
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    class UTexture2D* Image;
+    struct FAbilityData* Data = nullptr;
+    bool bAutoRemove = true;
 
 protected:
     class UANKAbilitySystemComponent* GetAbilitySystemComponent();

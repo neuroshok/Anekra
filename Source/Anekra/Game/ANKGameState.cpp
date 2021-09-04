@@ -1,6 +1,5 @@
 #include "Anekra/Game/ANKGameState.h"
 
-#include "Constant.h"
 #include "Anekra/Player/ANKPlayerState.h"
 #include "Anekra/Game/ANKGameMode.h"
 #include "Anekra/Game/ANKGameInstance.h"
@@ -97,13 +96,26 @@ TArray<ACell*> AANKGameState::GetCells()
     return Cells;
 }
 
-TArray<AANKPlayerState*> AANKGameState::GetPlayersAtCellPosition(int X, int Y)
+TArray<AANKPlayerState*> AANKGameState::GetPlayersAtCellPosition(const FIntVector& Position)
 {
     TArray<AANKPlayerState*> Array;
     for (auto PlayerState : PlayerArray)
     {
         auto ANKPlayerState = Cast<AANKPlayerState>(PlayerState);
-        if (ANKPlayerState->GetCellPosition().X == X && ANKPlayerState->GetCellPosition().Y == Y)
+        if (ANKPlayerState->GetCellPosition().X == Position.X && ANKPlayerState->GetCellPosition().Y == Position.Y)
+            Array.Add(ANKPlayerState);
+    }
+    return Array;
+}
+
+TArray<AANKPlayerState*> AANKGameState::GetPlayersAtCellPositionExclude(const FIntVector& Position, const APlayerState* ExcludedPlayerState)
+{
+    TArray<AANKPlayerState*> Array;
+    for (auto PlayerState : PlayerArray)
+    {
+        auto ANKPlayerState = Cast<AANKPlayerState>(PlayerState);
+        if (ExcludedPlayerState->GetPlayerId() == ANKPlayerState->GetPlayerId()) continue;
+        if (ANKPlayerState->GetCellPosition().X == Position.X && ANKPlayerState->GetCellPosition().Y == Position.Y)
             Array.Add(ANKPlayerState);
     }
     return Array;

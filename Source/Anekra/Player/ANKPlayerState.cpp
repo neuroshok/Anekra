@@ -5,6 +5,8 @@
 #include "Anekra/Game/ANKGameMode.h"
 #include "Anekra/Game/ANKGameState.h"
 #include "Anekra/Game/ANKAbilitySystemComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpectatorPawn.h"
 
 #include "Net/UnrealNetwork.h"
@@ -82,8 +84,17 @@ void AANKPlayerState::Die()
     GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->DeadEffect);
     bIsDead = true;
 
-    GetPawn()->Destroy();
+    auto Hero = Cast<AHero>(GetPawn());
 
+    Hero->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    Hero->GetCharacterMovement()->GravityScale = 0;
+    Hero->GetCharacterMovement()->Velocity = {0};
+    Hero->SetActorLocation({4000, 4000, 2000});
+    //GetAbilitySystemComponent()->CancelAllAbilities();
+    //GetAbilitySystemComponent()->ClearAllAbilities();
+
+    /*
+    GetPawn()->Destroy();
     auto Spectator = GetWorld()->SpawnActor(ASpectatorPawn::StaticClass());
-    Cast<APlayerController>(GetOwner())->Possess(Cast<APawn>(Spectator));
+    Cast<APlayerController>(GetOwner())->Possess(Cast<APawn>(Spectator));*/
 }

@@ -1,4 +1,4 @@
-#include "StealthAbility.h"
+#include "Stealth.h"
 
 #include "Anekra/Log.h"
 #include "Anekra/Game/ANKGameState.h"
@@ -23,13 +23,8 @@ void UStealthAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
             return;
         }
 
-        GetAbilitySystemComponent()->SetRemoveAbilityOnEnd(Handle);
-
-
         GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->StealthEffect);
         GetHero()->SetStealth();
-
-        GetANKPlayerController()->RemoveAbility(Handle);
 
         auto Task = UWaitTagEventTask::Create(this, ANKTag.Ability.Stealth);
 

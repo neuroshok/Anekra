@@ -21,7 +21,8 @@ public:
     void RemoveTag(const FGameplayTag&);
 
     void ApplyEffect(TSubclassOf<UGameplayEffect>);
-    FGameplayEffectSpecHandle ApplyEffectSpec(TSubclassOf<UGameplayEffect>);
+
+    FGameplayEffectSpecHandle ApplyEffectSpec(TSubclassOf<UGameplayEffect>, const FGameplayTag& Tag, float Magnitude);
     void RemoveEffectByTag(const FGameplayTag&);
 
     void ExecuteLocalCue(const FGameplayTag& GameplayCueTag, AActor* Target = nullptr, const FGameplayCueParameters& GameplayCueParameters = FGameplayCueParameters{});

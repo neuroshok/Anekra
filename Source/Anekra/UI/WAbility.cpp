@@ -6,5 +6,5 @@
 void UWAbility::SetImage(int AbilityID)
 {
     if (AbilityID == -1) return;
-    WImage->SetBrushFromSoftTexture(Cast<UANKGameInstance>(GetGameInstance())->GetAbility(AbilityID)->GetImage());
+    WImage->SetBrushFromSoftTexture(Cast<UANKGameInstance>(GetGameInstance())->GetAbility(AbilityID)->Image);
 }

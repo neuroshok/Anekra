@@ -42,11 +42,12 @@ void UANKAbilitySystemComponent::ApplyEffect(TSubclassOf<UGameplayEffect> Effect
     ApplyGameplayEffectToSelf(Effect.GetDefaultObject(), 1, EffectContext);
 }
 
-FGameplayEffectSpecHandle UANKAbilitySystemComponent::ApplyEffectSpec(TSubclassOf<UGameplayEffect> Effect)
+FGameplayEffectSpecHandle UANKAbilitySystemComponent::ApplyEffectSpec(TSubclassOf<UGameplayEffect> Effect, const FGameplayTag& Tag, float Magnitude)
 {
     FGameplayEffectContextHandle EffectContext = MakeEffectContext();
     EffectContext.AddSourceObject(this);
     FGameplayEffectSpecHandle EffectHandle = MakeOutgoingSpec(Effect, 1, EffectContext);
+    EffectHandle.Data->SetSetByCallerMagnitude(Tag, Magnitude);
     check(EffectHandle.IsValid())
     ApplyGameplayEffectSpecToTarget(*EffectHandle.Data.Get(), this);
     return EffectHandle;

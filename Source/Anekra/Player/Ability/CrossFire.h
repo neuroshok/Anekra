@@ -2,16 +2,17 @@
 
 #include "CoreMinimal.h"
 #include "Anekra/Player/ANKAbility.h"
-#include "StealthAbility.generated.h"
+#include "CrossFire.generated.h"
 
 UCLASS()
-class ANEKRA_API UStealthAbility : public UANKAbility
+class ANEKRA_API UCrossFireAbility : public UANKAbility
 {
     GENERATED_BODY()
 
 public:
-    UStealthAbility();
+    UCrossFireAbility();
     virtual void ActivateAbility(const FGameplayAbilitySpecHandle, const FGameplayAbilityActorInfo*, const FGameplayAbilityActivationInfo, const FGameplayEventData*) override;
 
-    void OnCompleted();
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
+    class UAnimMontage* Montage;
 };

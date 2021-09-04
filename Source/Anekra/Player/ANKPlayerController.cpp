@@ -7,7 +7,6 @@
 #include "Ability/Binding.h"
 #include "Net/UnrealNetwork.h"
 #include "Anekra/Game/ANKGameInstance.h"
-#include "Anekra/Game/Constant.h"
 
 void AANKPlayerController::InitializeHUD()
 {
@@ -22,7 +21,8 @@ void AANKPlayerController::AddAbility(int AbilityID)
 {
     check(GetLocalRole() == ROLE_Authority);
 
-    TSubclassOf<UGameplayAbility> AbilityClass = Cast<UANKGameInstance>(GetGameInstance())->GetAbilityClass(AbilityID);
+    auto AbilityClass = Cast<UANKGameInstance>(GetGameInstance())->GetAbilityClass(AbilityID);
+    check(AbilityClass);
 
     int BindIndex = static_cast<int32>(EBinding::Ability1);
     int SlotIndex;
@@ -50,6 +50,7 @@ void AANKPlayerController::RemoveAbility(FGameplayAbilitySpecHandle Handle)
 {
     if (GetLocalRole() == ROLE_Authority)
     {
+        GetPlayerState<AANKPlayerState>()->GetAbilitySystemComponent()->ClearAbility(Handle);
         int Slot = 0;
         Slots.RemoveAndCopyValue(Handle, Slot);
         check(Slot < Abilities.Num());
@@ -87,7 +88,7 @@ void AANKPlayerController::Unlock()
 {
     if (GetLocalRole() == ROLE_Authority)
     {
-        auto AbilityID = FMath::RandRange(0, Cast<UANKGameInstance>(GetGameInstance())->GetAbilityAsset()->Abilities.Num() - 1);
+        auto AbilityID = FMath::RandRange(0, Cast<UANKGameInstance>(GetGameInstance())->GetAbilities().Num() - 1);
         AddAbility(AbilityID);
     }
 }

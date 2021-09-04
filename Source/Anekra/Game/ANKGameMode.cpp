@@ -28,6 +28,8 @@ void AANKGameMode::PostLogin(APlayerController* PlayerController)
     //const int32 CellIndex = FMath::RandRange(0, CellsView.Num() - 1);
     //FVector SpawnLocation =  CellsView[CellIndex]->GetActorLocation();
     FVector SpawnLocation;
+    SpawnLocation.X = 0;
+    SpawnLocation.Y = 0;
     SpawnLocation.Z = 1000;
     FActorSpawnParameters Params;
     Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;

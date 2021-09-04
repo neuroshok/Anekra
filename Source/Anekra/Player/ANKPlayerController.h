@@ -16,11 +16,11 @@ public:
     void InitializeHUD();
 
     UFUNCTION(BlueprintCallable)
-    void AddAbility(int);
+    void AddAbility(int AbilityID);
     UFUNCTION(BlueprintCallable)
     void RemoveAbility(FGameplayAbilitySpecHandle Handle);
     UFUNCTION(BlueprintCallable)
-    void NotifyError(FString);
+    void NotifyError(FString Message);
 
     void Unlock();
 

@@ -1,8 +1,7 @@
 #include "Unlock.h"
 
 #include "AbilitySystemComponent.h"
-#include "Anekra/Log.h"
-#include "Anekra/Game/Constant.h"
+#include "Anekra/Game/ANKGameInstance.h"
 #include "Anekra/Player/Hero.h"
 #include "Anekra/Player/ANKPlayerController.h"
 #include "Anekra/Player/ANKPlayerState.h"
@@ -10,6 +9,7 @@
 
 UUnlockAbility::UUnlockAbility()
 {
+    bAutoRemove = false;
     AbilityTags.AddTag(ANKTag.Ability.Unlock);
 
     BlockAbilitiesWithTag.AddTag(ANKTag.Ability.Root);
@@ -18,16 +18,15 @@ UUnlockAbility::UUnlockAbility()
     ActivationOwnedTags.AddTag(ANKTag.Ability.Unlock);
 }
 
-
 bool UUnlockAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                         const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
 {
     bool Activatable = Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
-    auto Hero = Cast<AHero>(GetAvatarActorFromActorInfo());
+    auto Hero = GetHero();
     auto AbilitiesCountMax = GetANKPlayerController()->GetAbilitiesCountMax();
     auto AbilitiesCount = GetANKPlayerController()->GetAbilitiesCount();
     Activatable = Activatable && Hero->GetVelocity().IsZero() && (AbilitiesCount < AbilitiesCountMax);
-    if (!Activatable && (AbilitiesCount >= AbilitiesCountMax)) Cast<AANKPlayerController>(Hero->GetController())->NotifyError("You have too many abilities");
+    if (!Activatable && (AbilitiesCount >= AbilitiesCountMax)) GetANKPlayerController()->NotifyError("You have too many abilities");
     return Activatable;
 }
 

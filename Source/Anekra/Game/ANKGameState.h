@@ -29,7 +29,9 @@ public:
     UFUNCTION(BlueprintCallable)
     TArray<class ACell*> GetCells();
     UFUNCTION(BlueprintCallable)
-    TArray<class AANKPlayerState*> GetPlayersAtCellPosition(int X, int Y);
+    TArray<class AANKPlayerState*> GetPlayersAtCellPosition(const FIntVector& Position);
+    UFUNCTION(BlueprintCallable)
+    TArray<class AANKPlayerState*> GetPlayersAtCellPositionExclude(const FIntVector& Position, const APlayerState* ExcludedPlayerState);
 
     // Map
     UFUNCTION(BlueprintCallable)

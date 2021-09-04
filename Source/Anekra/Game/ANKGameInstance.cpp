@@ -7,14 +7,38 @@ UANKGameInstance::UANKGameInstance()
 {
 }
 
-UANKAbility* UANKGameInstance::GetAbility(int ID) const
+void UANKGameInstance::Init()
 {
-    return GetAbilityAsset()->Abilities[ID].GetDefaultObject();
+    Super::Init();
+
+    for (TFieldIterator<FProperty> It{ UAbilityAsset::StaticClass() }; It; ++It)
+    {
+        FProperty* Property = *It;
+        auto Data = Property->ContainerPtrToValuePtr<FAbilityData>(AbilityAsset->GetDefaultObject());
+        if (Data->AbilityClass)
+        {
+            Cast<UANKAbility>(Data->AbilityClass->GetDefaultObject())->Data = Data;
+            if (!Data->bIsStatic) Abilities.Add(Data);
+        }
+
+    }
+    ANK_LOG("Load %d abilities", Abilities.Num())
 }
 
-TSubclassOf<UANKAbility> UANKGameInstance::GetAbilityClass(int ID) const
+FAbilityData* UANKGameInstance::GetAbility(int ID) const
 {
-    return GetAbilityAsset()->Abilities[ID];
+    return Abilities[ID];
+}
+
+UANKAbility* UANKGameInstance::GetAbilityClass(int ID) const
+{
+    check(ID < Abilities.Num());
+    return Abilities[ID]->AbilityClass.GetDefaultObject();
+}
+
+const TArray<FAbilityData*>& UANKGameInstance::GetAbilities() const
+{
+    return Abilities;
 }
 
 UAbilityAsset* UANKGameInstance::GetAbilityAsset() const
