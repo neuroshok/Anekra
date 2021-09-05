@@ -139,10 +139,9 @@ void AHero::MovePitch(float Value)
 
 void AHero::OnVisibilityUpdated()
 {
-    if (!bVisible) GetAbilitySystemComponent()->AddLocalCue(ANKTag.GC.Ability.Stealth, this);
-    else GetAbilitySystemComponent()->RemoveLocalCue(ANKTag.GC.Ability.Stealth, this);
+    if (!bVisible) GetAbilitySystemComponent()->AddLocalCue(ANKTag.Ability.StealthCue, this);
+    else GetAbilitySystemComponent()->RemoveLocalCue(ANKTag.Ability.StealthCue, this);
 }
-
 
 void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -191,6 +190,11 @@ void AHero::SetStealth(bool bIsStealth)
 {
     bVisible = !bIsStealth;
     OnVisibilityUpdated();
+}
+
+UCameraComponent* AHero::GetCamera() const
+{
+    return Camera;
 }
 
 void AHero::TryBindAbilities()

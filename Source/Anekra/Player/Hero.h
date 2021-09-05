@@ -26,6 +26,8 @@ public:
     void UpdateMovingTag();
     void SetStealth(bool bIsStealth = true);
 
+    class UCameraComponent* GetCamera() const;
+
 protected:
     virtual void BeginPlay() override;
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

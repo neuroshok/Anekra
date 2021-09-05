@@ -10,9 +10,12 @@ class ANEKRA_API AANKPlayerController : public APlayerController
 {
     GENERATED_BODY()
 
+    DECLARE_MULTICAST_DELEGATE(FClickDelegate);
     DECLARE_MULTICAST_DELEGATE(FOnAbilitiesUpdateDelegate)
 
 public:
+    virtual void SetupInputComponent() override;
+
     void InitializeHUD();
 
     UFUNCTION(BlueprintCallable)
@@ -24,10 +27,13 @@ public:
 
     void Unlock();
 
+    void OnClick();
+
     UFUNCTION()
     void OnAbilitiesUpdated();
 
     FOnAbilitiesUpdateDelegate OnAbilitiesUpdateDelegate;
+    FClickDelegate ClickDelegate;
 
     UFUNCTION(BlueprintCallable)
     int GetAbilitiesCountMax() { return AbilitiesCountMax; }

@@ -19,7 +19,7 @@ void UStealthAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
     {
         if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
         {
-            EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
+            EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
             return;
         }
 

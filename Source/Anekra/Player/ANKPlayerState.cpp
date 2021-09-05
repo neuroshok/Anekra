@@ -39,6 +39,7 @@ void AANKPlayerState::ComputeCellPosition()
     float CellX = (X + CellSize / 2.f) / CellSize;
     float CellY = (Y + CellSize / 2.f) / CellSize;
 
+
     //bIsOut = false;
     //ANK_LOG("%f %f", CellX, CellY)
     if (CellX < 0 || CellX > CellSize - 1 || CellY < 0 || CellY > CellSize - 1)

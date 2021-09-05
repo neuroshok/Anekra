@@ -18,7 +18,7 @@ void UCrossFireAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
     {
         if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
         {
-            EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
+            EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
             return;
         }
 

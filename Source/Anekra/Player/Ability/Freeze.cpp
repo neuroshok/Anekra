@@ -19,7 +19,7 @@ void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
     {
         if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
         {
-            EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
+            EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
             return;
         }
 

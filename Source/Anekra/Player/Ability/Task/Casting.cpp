@@ -26,17 +26,15 @@ void UCasting::OnCancelled(FGameplayTag Tag, int32 Count)
 {
     if (Count > 0)
     {
-        if (ShouldBroadcastAbilityTaskDelegates())
-            OnCancelDelegate.Broadcast();
         EndTask();
+        OnCancelDelegate.Broadcast();
     }
 }
 
 void UCasting::OnCompleted()
 {
-    if (ShouldBroadcastAbilityTaskDelegates())
-        OnCompleteDelegate.Broadcast(FGameplayTag(), FGameplayEventData());
     EndTask();
+    OnCompleteDelegate.Broadcast(FGameplayTag(), FGameplayEventData());
 }
 
 UCasting* UCasting::Create(UGameplayAbility* OwningAbility, float Duration)

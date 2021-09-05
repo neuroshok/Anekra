@@ -8,6 +8,12 @@
 #include "Net/UnrealNetwork.h"
 #include "Anekra/Game/ANKGameInstance.h"
 
+void AANKPlayerController::SetupInputComponent()
+{
+    Super::SetupInputComponent();
+    InputComponent->BindAction("Click", IE_Pressed, this, &AANKPlayerController::OnClick);
+}
+
 void AANKPlayerController::InitializeHUD()
 {
     /*
@@ -91,6 +97,11 @@ void AANKPlayerController::Unlock()
         auto AbilityID = FMath::RandRange(0, Cast<UANKGameInstance>(GetGameInstance())->GetAbilities().Num() - 1);
         AddAbility(AbilityID);
     }
+}
+
+void AANKPlayerController::OnClick()
+{
+    ClickDelegate.Broadcast();
 }
 
 void AANKPlayerController::OnAbilitiesUpdated()
