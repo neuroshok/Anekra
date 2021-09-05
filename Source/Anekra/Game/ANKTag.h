@@ -5,53 +5,44 @@
 
 #define InitRoot(Name) Name.Root = Manager.AddNativeGameplayTag(#Name)
 #define InitTag(Name) Name = Manager.AddNativeGameplayTag(#Name)
-#define InitTagAndCue(Name) Name = Manager.AddNativeGameplayTag(#Name); GC.Name = Manager.AddNativeGameplayTag("GameplayCue." #Name)
+#define InitTagAndCue(Name) Name = Manager.AddNativeGameplayTag(#Name); Name##Cue = Manager.AddNativeGameplayTag("GameplayCue." #Name)
+
+#define Tag(Name) FGameplayTag Name
+#define TagCue(Name) FGameplayTag Name; FGameplayTag Name##Cue
 
 static struct ANEKRA_API FANKTag : public FGameplayTagNativeAdder
 {
     struct
     {
-        struct
-        {
-            FGameplayTag CrossFire;
-            FGameplayTag Drain;
-            FGameplayTag Freeze;
-            FGameplayTag Stealth;
-        } Ability;
-    } GC;
-
-    //
-
-    struct
-    {
-        FGameplayTag Root;
-        FGameplayTag CrossFire;
-        FGameplayTag Drain;
-        FGameplayTag Freeze;
-        FGameplayTag Unlock;
-        FGameplayTag Stealth; FGameplayTag StealthCue;
+        Tag(Root);
+        TagCue(CrossFire);
+        TagCue(Drain);
+        TagCue(Freeze);
+        TagCue(LaserBurst);
+        Tag(Unlock);
+        TagCue(Stealth);
     } Ability;
 
     struct
     {
-        FGameplayTag Burn;
-        FGameplayTag Damage;
-        FGameplayTag Freeze;
-        FGameplayTag Heal;
+        Tag(Burn);
+        Tag(Damage);
+        Tag(Freeze);
+        Tag(Heal);
     } Effect;
 
     struct
     {
-        FGameplayTag Root;
-        FGameplayTag FindCell;
-        FGameplayTag Snake;
+        Tag(Root);
+        Tag(FindCell);
+        Tag(Snake);
     } Event;
 
     struct
     {
-        FGameplayTag Casting;
-        FGameplayTag Dead;
-        FGameplayTag Moving;
+        Tag(Casting);
+        Tag(Dead);
+        Tag(Moving);
     } State;
 
 protected:
@@ -62,6 +53,7 @@ protected:
         InitRoot(Ability);
         InitTagAndCue(Ability.Drain);
         InitTagAndCue(Ability.Freeze);
+        InitTagAndCue(Ability.LaserBurst);
         InitTagAndCue(Ability.Stealth);
         InitTagAndCue(Ability.CrossFire);
         InitTag(Ability.Unlock);
