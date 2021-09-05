@@ -2,10 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/Tasks/AbilityTask.h"
-#include "LaserTargetTask.generated.h"
+#include "WaitTargetDataTask.generated.h"
 
 UCLASS(MinimalAPI)
-class ULaserTargetTask : public UAbilityTask
+class UWaitTargetDataTask : public UAbilityTask
 {
     GENERATED_BODY()
 
@@ -16,10 +16,10 @@ public:
 
     void OnClick();
 
-    static ULaserTargetTask* Create(UGameplayAbility* OwningAbility);
+    static UWaitTargetDataTask* Create(UGameplayAbility* OwningAbility);
 
     UFUNCTION(BlueprintCallable, Category = "Anekra|Task", meta = (DisplayName="LaserTargetTask", DefaultToSelf = "TaskOwner", BlueprintInternalUseOnly = "true"))
-    static ULaserTargetTask* Create(TScriptInterface<IGameplayTaskOwnerInterface> TaskOwner);
+    static UWaitTargetDataTask* Create(TScriptInterface<IGameplayTaskOwnerInterface> TaskOwner);
 
     FOnCompleteDelegate OnCompleteDelegate;
     FDelegateHandle OnTargetDataReplicatedCallbackDelegate;

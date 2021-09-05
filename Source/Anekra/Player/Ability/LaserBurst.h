@@ -13,5 +13,6 @@ protected:
     virtual void ActivateAbility(const FGameplayAbilitySpecHandle, const FGameplayAbilityActorInfo*, const FGameplayAbilityActivationInfo, const FGameplayEventData*) override;
 
 private:
-    void OnCompleted(FVector);
+    void OnCompleted();
+    FVector ComputeTargetLocation();
 };

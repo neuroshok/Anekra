@@ -9,7 +9,7 @@ class ULaserTargetTask : public UAbilityTask
 {
     GENERATED_BODY()
 
-    DECLARE_MULTICAST_DELEGATE_OneParam(FOnCompleteDelegate, FVector);
+    DECLARE_MULTICAST_DELEGATE(FOnCompleteDelegate);
 
 public:
     virtual void Activate() override;
@@ -25,6 +25,6 @@ public:
     FDelegateHandle OnTargetDataReplicatedCallbackDelegate;
 
 private:
-    FHitResult ComputeTargetLocation();
-    void OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& Data, FGameplayTag ActivationTag);
+    void ServerOnConfirm();
+    void CompleteTask();
 };

@@ -1,4 +1,4 @@
-#include "LaserTargetTask.h"
+#include "WaitTargetDataTask.h"
 
 #include "AbilitySystemGlobals.h"
 #include "NiagaraComponent.h"
@@ -8,9 +8,9 @@
 #include "Anekra/Player/ANKPlayerController.h"
 #include "Anekra/Player/Hero.h"
 
-void ULaserTargetTask::Activate()
+void UWaitTargetDataTask::Activate()
 {
-    Cast<UANKAbility>(Ability)->GetANKPlayerController()->ClickDelegate.AddUObject(this, &ULaserTargetTask::OnClick);
+    Cast<UANKAbility>(Ability)->GetANKPlayerController()->ClickDelegate.AddUObject(this, &UWaitTargetDataTask::OnClick);
 
     // server
     if (!Ability->IsLocallyControlled())
@@ -19,7 +19,7 @@ void ULaserTargetTask::Activate()
         FGameplayAbilitySpecHandle SpecHandle = GetAbilitySpecHandle();
         FPredictionKey ActivationPredictionKey = GetActivationPredictionKey();
 
-        AbilitySystemComponent->AbilityTargetDataSetDelegate(SpecHandle, ActivationPredictionKey ).AddUObject(this, &ULaserTargetTask::OnTargetDataReplicatedCallback);
+        AbilitySystemComponent->AbilityTargetDataSetDelegate(SpecHandle, ActivationPredictionKey ).AddUObject(this, &UWaitTargetDataTask::OnTargetDataReplicatedCallback);
         AbilitySystemComponent->CallReplicatedTargetDataDelegatesIfSet(SpecHandle, ActivationPredictionKey );
 
         SetWaitingOnRemotePlayerData();
@@ -28,7 +28,7 @@ void ULaserTargetTask::Activate()
     else ANK_LOG("Client Activate")
 }
 
-void ULaserTargetTask::OnClick()
+void UWaitTargetDataTask::OnClick()
 {
     if (IsPredictingClient())
     {
@@ -48,22 +48,22 @@ void ULaserTargetTask::OnClick()
 }
 
 
-ULaserTargetTask* ULaserTargetTask::Create(UGameplayAbility* OwningAbility)
+UWaitTargetDataTask* UWaitTargetDataTask::Create(UGameplayAbility* OwningAbility)
 {
-    ULaserTargetTask* Task = NewAbilityTask<ULaserTargetTask>(OwningAbility, NAME_None);
+    UWaitTargetDataTask* Task = NewAbilityTask<UWaitTargetDataTask>(OwningAbility, NAME_None);
     return Task;
 }
 
-ULaserTargetTask* ULaserTargetTask::Create(TScriptInterface<IGameplayTaskOwnerInterface> TaskOwner)
+UWaitTargetDataTask* UWaitTargetDataTask::Create(TScriptInterface<IGameplayTaskOwnerInterface> TaskOwner)
 {
-    ULaserTargetTask* Task = NewTaskUninitialized<ULaserTargetTask>();
+    UWaitTargetDataTask* Task = NewTaskUninitialized<UWaitTargetDataTask>();
     check(Task && TaskOwner.GetInterface());
     Task->InitTask(*TaskOwner, FGameplayTasks::DefaultPriority);
 
     return Task;
 }
 
-FHitResult ULaserTargetTask::ComputeTargetLocation()
+FHitResult UWaitTargetDataTask::ComputeTargetLocation()
 {
     auto Hero = Cast<AHero>(GetAvatarActor());
     auto SourceLocation = Hero->GetCamera()->GetComponentLocation();
@@ -81,12 +81,12 @@ FHitResult ULaserTargetTask::ComputeTargetLocation()
 }
 
 // server
-void ULaserTargetTask::OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& Data, FGameplayTag ActivationTag)
+void UWaitTargetDataTask::OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& Data, FGameplayTag ActivationTag)
 {
     CompleteTask();
 }
 
-void ULaserTargetTask::CompleteTask()
+void UWaitTargetDataTask::CompleteTask()
 {
     ANK_LOG("Complete Task")
     auto Result = ComputeTargetLocation();

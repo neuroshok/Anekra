@@ -2,6 +2,7 @@
 
 #include "Anekra/Game/ANKAbilitySystemComponent.h"
 #include "Anekra/Game/ANKTag.h"
+#include "Anekra/Player/Hero.h"
 #include "Anekra/Game/ANKGameState.h"
 #include "Task/LaserTargetTask.h"
 
@@ -23,9 +24,9 @@ void ULaserBurst::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const
     }
 }
 
-void ULaserBurst::OnCompleted(FVector TargetLocation)
+void ULaserBurst::OnCompleted()
 {
-    for (auto Player : GetANKGameState()->GetPlayersAtCellPosition(GetANKGameState()->GetCellPosition(TargetLocation)))
+    for (auto Player : GetANKGameState()->GetPlayersAtCellPosition(GetANKGameState()->GetCellPosition(ComputeTargetLocation())))
     {
         auto ANKPlayer = Cast<AANKPlayerState>(Player);
 
@@ -33,4 +34,21 @@ void ULaserBurst::OnCompleted(FVector TargetLocation)
     }
 
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
+}
+
+FVector ULaserBurst::ComputeTargetLocation()
+{
+    auto Hero = GetHero();
+    auto SourceLocation = Hero->GetCamera()->GetComponentLocation();
+    auto AimLocation = Hero->GetCamera()->GetForwardVector();
+    AimLocation = SourceLocation + (AimLocation + FVector{0, 0, 0.3f}) * 5000;
+
+    FHitResult Result;
+    FCollisionObjectQueryParams ObjectParams;
+    ObjectParams.ObjectTypesToQuery = FCollisionObjectQueryParams::AllDynamicObjects;
+    FCollisionQueryParams Params;
+    Params.TraceTag = "trace";
+    GetWorld()->DebugDrawTraceTag = "trace";
+    GetWorld()->LineTraceSingleByObjectType(Result, SourceLocation, AimLocation, ObjectParams, Params);
+    return Result.Location;
 }
