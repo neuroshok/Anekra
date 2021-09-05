@@ -27,6 +27,8 @@ public:
     class AANKPlayerController* GetANKPlayerController() const;
     UFUNCTION(BlueprintCallable)
     class UANKGameInstance* GetANKGameInstance() const;
+    UFUNCTION(BlueprintCallable)
+    class AANKGameState* GetANKGameState() const;
 
     struct FAbilityData* Data = nullptr;
     bool bAutoRemove = true;

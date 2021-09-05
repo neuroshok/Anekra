@@ -30,10 +30,10 @@ void AANKGameState::OnUpdateIndexLocation()
             // player cell position changed
             if (ANKPlayer->GetCellPosition() != PreviousCellPosition)
             {
-                auto PreviousCell = Cast<AANKGameState>(GetWorld()->GetGameState())->GetCell(PreviousCellPosition.X, PreviousCellPosition.Y);
+                auto PreviousCell = Cast<AANKGameState>(GetWorld()->GetGameState())->GetCell(PreviousCellPosition);
                 if (PreviousCell) PreviousCell->Leave(ANKPlayer);
 
-                auto Cell = Cast<AANKGameState>(GetWorld()->GetGameState())->GetCell(ANKPlayer->GetCellPosition().X, ANKPlayer->GetCellPosition().Y);
+                auto Cell = Cast<AANKGameState>(GetWorld()->GetGameState())->GetCell(ANKPlayer->GetCellPosition());
                 if (Cell) Cell->Enter(ANKPlayer);
                 // else player out
             }
@@ -84,11 +84,25 @@ void AANKGameState::ClientUpdateEvent_Implementation(const EEventType EventType,
 float AANKGameState::GetMapWidth() const { return GetMapCellCountX() * MapCellSize; }
 float AANKGameState::GetMapCellSize() const { return MapCellSize; }
 
-ACell* AANKGameState::GetCell(int X, int Y)
+ACell* AANKGameState::GetCell(const FIntVector& Position)
 {
-    auto index = X * GetMapCellCountX() + Y;
+    auto index = Position.X * GetMapCellCountX() + Position.Y;
     if (index >= Cells.Num()) return nullptr;
-    return Cells[X * GetMapCellCountX() + Y];
+    return Cells[Position.X * GetMapCellCountX() + Position.Y];
+}
+
+FIntVector AANKGameState::GetCellPosition(const FVector& Location)
+{
+    FIntVector Position;
+    const float MapWidth = GetMapWidth();
+    const float CellSize = GetMapCellSize();
+
+    Position.X = (Location.X + CellSize / 2.f) / CellSize;
+    Position.Y = (Location.Y + CellSize / 2.f) / CellSize;
+
+    //return FIntVector::NoneValue;
+
+    return Position;
 }
 
 TArray<ACell*> AANKGameState::GetCells()

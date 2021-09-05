@@ -25,7 +25,9 @@ public:
 
     // Cell
     UFUNCTION(BlueprintCallable)
-    class ACell* GetCell(int X, int Y);
+    class ACell* GetCell(const FIntVector& CellPosition);
+    UFUNCTION(BlueprintCallable)
+    FIntVector GetCellPosition(const FVector& Location);
     UFUNCTION(BlueprintCallable)
     TArray<class ACell*> GetCells();
     UFUNCTION(BlueprintCallable)

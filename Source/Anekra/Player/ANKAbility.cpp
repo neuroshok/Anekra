@@ -5,6 +5,7 @@
 #include "Anekra/Player/ANKPlayerState.h"
 #include "Anekra/Player/ANKPlayerController.h"
 #include "Anekra/Game/ANKGameInstance.h"
+#include "Anekra/Game/ANKGameState.h"
 
 UANKAbility::UANKAbility()
 {
@@ -14,8 +15,8 @@ UANKAbility::UANKAbility()
 void UANKAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
+    if (bAutoRemove && GetANKPlayerController()) GetANKPlayerController()->RemoveAbility(Handle);
     Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-    if (bAutoRemove) GetANKPlayerController()->RemoveAbility(Handle);
 }
 
 UEffectAsset* UANKAbility::GetEffects()
@@ -42,6 +43,11 @@ AANKPlayerController* UANKAbility::GetANKPlayerController() const
 UANKGameInstance* UANKAbility::GetANKGameInstance() const
 {
     return Cast<UANKGameInstance>(GetWorld()->GetGameInstance());
+}
+
+AANKGameState* UANKAbility::GetANKGameState() const
+{
+    return Cast<AANKGameState>(GetWorld()->GetGameState());
 }
 
 UANKAbilitySystemComponent* UANKAbility::GetAbilitySystemComponent()
