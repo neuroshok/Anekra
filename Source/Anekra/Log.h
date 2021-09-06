@@ -7,4 +7,5 @@
 DECLARE_LOG_CATEGORY_EXTERN(LogAnekra, Log, All);
 
 #define ANK_LOG(message, ...) UE_LOG(LogAnekra, Display, TEXT(message), __VA_ARGS__)
+#define ANK_WARNING(message, ...) UE_LOG(LogAnekra, Warning, TEXT(message), __VA_ARGS__)
 #define ANK_ERROR(message, ...) UE_LOG(LogAnekra, Error, TEXT(message), __VA_ARGS__)

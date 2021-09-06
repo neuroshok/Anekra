@@ -35,9 +35,9 @@ public:
     void AddState(EEventType);
     void SetActive(bool);
     void SetEffectVisible(bool);
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     void SetColor(FLinearColor NewColor);
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     void SetType(ECellType CellType);
 
     void Enter(class AANKPlayerState*);

@@ -21,7 +21,12 @@ public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<class UGameplayEffect> HealEffect;
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    TSubclassOf<class UGameplayEffect> StealthEffect;;
+    TSubclassOf<class UGameplayEffect> StealthEffect;
+
+    // state
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
+    TSubclassOf<class UGameplayEffect> LaserTargeting;
+
     // event
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra|Event")
     TSubclassOf<class UGameplayEffect> SnakeEffect;
