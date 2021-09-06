@@ -18,16 +18,18 @@ public:
 
     void InitializeHUD();
 
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     void AddAbility(int AbilityID);
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     void RemoveAbility(FGameplayAbilitySpecHandle Handle);
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     void NotifyError(FString Message);
 
     void Unlock();
 
     void OnClick();
+    void OnTabPressed();
+    void OnTabReleased();
 
     UFUNCTION()
     void OnAbilitiesUpdated();
@@ -35,11 +37,11 @@ public:
     FOnAbilitiesUpdateDelegate OnAbilitiesUpdateDelegate;
     FClickDelegate ClickDelegate;
 
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     int GetAbilitiesCountMax() { return AbilitiesCountMax; }
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     int GetAbilitiesCount() { return AbilitiesCount; }
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     const TArray<int>& GetAbilities() { return Abilities; }
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")

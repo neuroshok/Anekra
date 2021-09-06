@@ -1,14 +1,16 @@
 #include "ANKHUD.h"
 
-#include "AbilitySystemComponent.h"
-#include "ANKPlayerController.h"
 #include "Attribute/Basic.h"
-#include "Anekra/Game/ANKGameState.h"
-#include "Anekra/Player/ANKPlayerState.h"
+#include "AbilitySystemComponent.h"
 #include "Components/TextBlock.h"
 #include "Components/ProgressBar.h"
-#include "Anekra/Log.h"
+
+#include "Anekra/Player/ANKPlayerController.h"
+#include "Anekra/Game/ANKGameState.h"
+#include "Anekra/Player/ANKPlayerState.h"
+#include "Anekra/UI/WEndGame.h"
 #include "Anekra/UI/WMain.h"
+#include "Anekra/UI/WGameStats.h"
 
 
 void AANKHUD::Initialize()
@@ -21,6 +23,7 @@ void AANKHUD::Initialize()
     {
         auto ASC = ANKPlayerState->GetAbilitySystemComponent();
         //GameState->OnEventUpdateDelegate.AddUObject(WMain, &UWMain::OnEventUpdated);
+        GameState->OnGameStatusUpdateDelegate.AddUObject(this, &AANKHUD::OnGameStatusUpdated);
 
         ASC->RegisterGameplayTagEvent(ANKTag.Event.Root).AddUObject(WMain, &UWMain::OnEventUpdated);
 
@@ -43,6 +46,35 @@ void AANKHUD::Error(FString Message)
     GetWorld()->GetTimerManager().SetTimer(MessageTimer, [this]{ WMain->WMessage->SetVisibility(ESlateVisibility::Hidden); }, 1, false);
 }
 
+void AANKHUD::ShowStats()
+{
+    WGameStats->SetVisibility(ESlateVisibility::Visible);
+}
+
+void AANKHUD::HideStats()
+{
+    WGameStats->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void AANKHUD::OnGameStatusUpdated(EGameStatus Status)
+{
+    switch (Status)
+    {
+    case EGameStatus::Started:
+        WMain->SetVisibility(ESlateVisibility::Visible);
+        WEndGame->SetVisibility(ESlateVisibility::Hidden);
+        break;
+    case EGameStatus::Finished:
+        WMain->SetVisibility(ESlateVisibility::Hidden);
+        WEndGame->Update();
+        WEndGame->SetVisibility(ESlateVisibility::Visible);
+        ShowStats();
+        GetOwningPlayerController()->SetInputMode(FInputModeUIOnly{});
+        GetOwningPlayerController()->SetShowMouseCursor(true);
+        break;
+    }
+}
+
 void AANKHUD::BeginPlay()
 {
     Super::BeginPlay();
@@ -50,8 +82,15 @@ void AANKHUD::BeginPlay()
     check(BP_WMain);
 
     WMain = CreateWidget<UWMain>(GetWorld(), BP_WMain);
-    check(WMain);
     WMain->AddToViewport();
+
+    WGameStats = CreateWidget<UWGameStats>(GetWorld(), BP_WGameStats);
+    WGameStats->AddToViewport(1);
+    WGameStats->SetVisibility(ESlateVisibility::Hidden);
+
+    WEndGame = CreateWidget<UWEndGame>(GetWorld(), BP_WEndGame);
+    WEndGame->AddToViewport(2);
+    WEndGame->SetVisibility(ESlateVisibility::Hidden);
 
     FInputModeGameOnly Mode;
     GetOwningPlayerController()->SetInputMode(Mode);

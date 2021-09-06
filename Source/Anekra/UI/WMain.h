@@ -1,16 +1,12 @@
 #pragma once
 
 #include "GameplayEffectTypes.h"
-#include "Anekra/EventType.h"
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbilityTypes.h"
 #include "Blueprint/UserWidget.h"
 #include "WMain.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class ANEKRA_API UWMain : public UUserWidget
 {
@@ -37,8 +33,10 @@ public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
     class UHorizontalBox* WAbilityBox;
 
-    UPROPERTY(BlueprintReadWrite, EditAnywhere)
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<UUserWidget> BP_WAbility;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
+    TSubclassOf<UUserWidget> BP_WLog;
 
 protected:
     virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;

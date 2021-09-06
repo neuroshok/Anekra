@@ -17,17 +17,17 @@ public:
 
 
 
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     class UEffectAsset* GetEffects();
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     class AHero* GetHero() const;
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     class AANKPlayerState* GetANKPlayerState() const;
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     class AANKPlayerController* GetANKPlayerController() const;
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     class UANKGameInstance* GetANKGameInstance() const;
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     class AANKGameState* GetANKGameState() const;
 
     struct FAbilityData* Data = nullptr;

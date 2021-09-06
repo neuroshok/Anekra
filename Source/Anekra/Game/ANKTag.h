@@ -42,6 +42,7 @@ static struct ANEKRA_API FANKTag : public FGameplayTagNativeAdder
     {
         Tag(Casting);
         Tag(Dead);
+        TagCue(LaserTargeting);
         Tag(Moving);
     } State;
 
@@ -69,6 +70,7 @@ protected:
 
         InitTag(State.Casting);
         InitTag(State.Dead);
+        InitTagAndCue(State.LaserTargeting);
         InitTag(State.Moving);
     }
 } ANKTag;

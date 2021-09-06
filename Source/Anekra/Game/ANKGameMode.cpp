@@ -4,6 +4,7 @@
 #include "Anekra/World/Cell.h"
 #include "Anekra/Player/Hero.h"
 #include "Anekra/Log.h"
+#include "Anekra/PlayerNetStatus.h"
 #include "Anekra/Game/ANKGameState.h"
 #include "Anekra/Player/ANKPlayerController.h"
 #include "GameFramework/PlayerState.h"
@@ -63,5 +64,5 @@ FString AANKGameMode::InitNewPlayer(APlayerController* PlayerController, const F
 void AANKGameMode::Logout(AController* Controller)
 {
     Super::Logout(Controller);
-    UE_LOG(LogTemp, Warning, TEXT("Logout"));
+    ANK_LOG("Logout")
 }

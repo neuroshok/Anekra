@@ -62,6 +62,11 @@ bool AANKPlayerState::IsDead() const
     return bIsDead;
 }
 
+bool AANKPlayerState::IsAlive() const
+{
+    return !bIsDead;
+}
+
 void AANKPlayerState::OnHealthUpdated(const FOnAttributeChangeData& Data)
 {
     if (!(AttributeBasic->GetHealth() > 0.f))
@@ -91,6 +96,10 @@ void AANKPlayerState::Die()
     Hero->GetCharacterMovement()->GravityScale = 0;
     Hero->GetCharacterMovement()->Velocity = {0};
     Hero->SetActorLocation({4000, 4000, 2000});
+
+    auto ANKGameState = Cast<AANKGameState>(GetWorld()->GetGameState());
+    ANKGameState->CheckEndGame();
+
     //GetAbilitySystemComponent()->CancelAllAbilities();
     //GetAbilitySystemComponent()->ClearAllAbilities();
 

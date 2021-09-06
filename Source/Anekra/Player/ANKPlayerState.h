@@ -22,10 +22,12 @@ public:
     void Die();
 
     void ComputeCellPosition();
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     FIntVector GetCellPosition() const;
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     bool IsDead() const;
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
+    bool IsAlive() const;
 
     FOnCastingDelegate OnCastingDelegate;
     FOnCastingCancelDelegate OnCastingCancelDelegate;

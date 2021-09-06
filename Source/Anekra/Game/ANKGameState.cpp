@@ -12,13 +12,27 @@ AANKGameState::AANKGameState()
     PrimaryActorTick.bCanEverTick = true;
 }
 
+void AANKGameState::CheckEndGame()
+{
+    int PlayersAlive = 0;
+    for (auto Player : PlayerArray)
+        PlayersAlive += Cast<AANKPlayerState>(Player)->IsAlive();
+
+    if (PlayersAlive <= 1) ClientEndGame();
+}
+
+void AANKGameState::ClientEndGame_Implementation()
+{
+    OnGameStatusUpdateDelegate.Broadcast(EGameStatus::Finished);
+}
+
 // server
 void AANKGameState::OnUpdateIndexLocation()
 {
     for (const auto& Player : PlayerArray)
     {
         auto ANKPlayer = Cast<AANKPlayerState>(Player);
-        if (ANKPlayer->IsDead()) continue;
+        if (ANKPlayer->IsDead() || !IsValid(ANKPlayer->GetPawn())) continue;
 
         auto PreviousCellPosition = ANKPlayer->GetCellPosition();
         ANKPlayer->ComputeCellPosition();
@@ -140,6 +154,22 @@ int AANKGameState::GetMapCellCountX() const
     return MapCellCountX;
 }
 
+TArray<APlayerState*> AANKGameState::GetPlayers() const
+{
+    return PlayerArray;
+}
+
+TArray<AANKPlayerState*> AANKGameState::GetPlayersAlive() const
+{
+    TArray<AANKPlayerState*> Players;
+    for (auto Player : PlayerArray)
+    {
+        auto ANKPlayer = Cast<AANKPlayerState>(Player);
+        if (ANKPlayer->IsAlive()) Players.Add(ANKPlayer);
+    }
+    return Players;
+}
+
 void AANKGameState::BeginPlay()
 {
     Super::BeginPlay();
@@ -154,4 +184,17 @@ void AANKGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(AANKGameState, Cells);
+}
+
+void AANKGameState::AddPlayerState(APlayerState* PlayerState)
+{
+    Super::AddPlayerState(PlayerState);
+    //PlayerState->SetPlayerName(FString{ "Arkena" } + FString::FromInt(PlayerState->GetPlayerId()));
+    OnPlayerNetStatusUpdateDelegate.Broadcast(Cast<AANKPlayerState>(PlayerState), EPlayerNetStatus::Login);
+}
+
+void AANKGameState::RemovePlayerState(APlayerState* PlayerState)
+{
+    Super::RemovePlayerState(PlayerState);
+    OnPlayerNetStatusUpdateDelegate.Broadcast(Cast<AANKPlayerState>(PlayerState), EPlayerNetStatus::Logout);
 }

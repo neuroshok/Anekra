@@ -17,10 +17,16 @@ void ULaserBurst::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const
             return;
         }
 
+        FGameplayEffectContextHandle EffectContext =  MakeEffectContext(Handle, ActorInfo);
+        EffectContext.AddSourceObject(GetAbilitySystemComponent());
+        EffectContext.AddInstigator(ActorInfo->AvatarActor.Get(), ActorInfo->AvatarActor.Get());
+        auto H = GetAbilitySystemComponent()->ApplyGameplayEffectToSelf(GetEffects()->LaserTargeting.GetDefaultObject(), 1, EffectContext);
+
         auto Task = ULaserTargetTask::Create(this);
         Task->OnCompleteDelegate.AddUObject(this, &ULaserBurst::OnCompleted);
 
         Task->ReadyForActivation();
+
     }
 }
 
@@ -30,8 +36,10 @@ void ULaserBurst::OnCompleted()
     {
         auto ANKPlayer = Cast<AANKPlayerState>(Player);
 
-        ANKPlayer->GetAbilitySystemComponent()->ApplyEffectSpec(GetAbilitySystemComponent()->Effects->DamageEffect, ANKTag.Effect.Damage, -25);
+        ANKPlayer->GetAbilitySystemComponent()->ApplyEffectSpec(GetEffects()->DamageEffect, ANKTag.Effect.Damage, -25);
     }
+
+    GetAbilitySystemComponent()->RemoveEffectByTag(ANKTag.State.LaserTargeting);
 
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
 }

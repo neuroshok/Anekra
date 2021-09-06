@@ -11,7 +11,9 @@
 void AANKPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
-    InputComponent->BindAction("Click", IE_Pressed, this, &AANKPlayerController::OnClick);
+    InputComponent->BindAction("LeftClick", IE_Pressed, this, &AANKPlayerController::OnClick);
+    InputComponent->BindAction("Tab", IE_Pressed, this, &AANKPlayerController::OnTabPressed);
+    InputComponent->BindAction("Tab", IE_Released, this, &AANKPlayerController::OnTabReleased);
 }
 
 void AANKPlayerController::InitializeHUD()
@@ -103,6 +105,19 @@ void AANKPlayerController::OnClick()
 {
     ClickDelegate.Broadcast();
 }
+
+void AANKPlayerController::OnTabPressed()
+{
+    if (!GetHUD()) return;
+    Cast<AANKHUD>(GetHUD())->ShowStats();
+}
+
+void AANKPlayerController::OnTabReleased()
+{
+    if (!GetHUD()) return;
+    Cast<AANKHUD>(GetHUD())->HideStats();
+}
+
 
 void AANKPlayerController::OnAbilitiesUpdated()
 {

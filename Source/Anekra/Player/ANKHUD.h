@@ -9,6 +9,7 @@
 #include "GameFramework/HUD.h"
 #include "ANKHUD.generated.h"
 
+enum class EGameStatus : uint8;
 /**
  * 
  */
@@ -20,11 +21,17 @@ class ANEKRA_API AANKHUD : public AHUD
 public:
     void Initialize();
     void Error(FString);
+    void ShowStats();
+    void HideStats();
 
-    FGameplayEventTagMulticastDelegate::FDelegate OnTest;
+    void OnGameStatusUpdated(EGameStatus Status);
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<class UUserWidget> BP_WMain;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
+    TSubclassOf<class UUserWidget> BP_WEndGame;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
+    TSubclassOf<class UUserWidget> BP_WGameStats;
 
 protected:
     virtual void BeginPlay() override;
@@ -32,8 +39,12 @@ protected:
 
 private:
     UPROPERTY()
+    class UWEndGame* WEndGame;
+    UPROPERTY()
+    class UWGameStats* WGameStats;
+    UPROPERTY()
     class UWMain* WMain;
-    FTimerHandle MessageTimer;
 
+    FTimerHandle MessageTimer;
     bool bInitialized = false;
 };
