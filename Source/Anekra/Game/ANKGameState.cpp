@@ -170,6 +170,11 @@ TArray<AANKPlayerState*> AANKGameState::GetPlayersAlive() const
     return Players;
 }
 
+void AANKGameState::ClientUpdatePlayers_Implementation(AANKPlayerState* PlayerState)
+{
+    if (IsValid(PlayerState)) OnPlayerNetStatusUpdateDelegate.Broadcast(PlayerState, EPlayerNetStatus::Login);
+}
+
 void AANKGameState::BeginPlay()
 {
     Super::BeginPlay();
@@ -184,17 +189,4 @@ void AANKGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(AANKGameState, Cells);
-}
-
-void AANKGameState::AddPlayerState(APlayerState* PlayerState)
-{
-    Super::AddPlayerState(PlayerState);
-    //PlayerState->SetPlayerName(FString{ "Arkena" } + FString::FromInt(PlayerState->GetPlayerId()));
-    OnPlayerNetStatusUpdateDelegate.Broadcast(Cast<AANKPlayerState>(PlayerState), EPlayerNetStatus::Login);
-}
-
-void AANKGameState::RemovePlayerState(APlayerState* PlayerState)
-{
-    Super::RemovePlayerState(PlayerState);
-    OnPlayerNetStatusUpdateDelegate.Broadcast(Cast<AANKPlayerState>(PlayerState), EPlayerNetStatus::Logout);
 }

@@ -1,12 +1,12 @@
 #include "Anekra/UI/WLog.h"
 
+#include "Anekra/Log.h"
 #include "Anekra/Game/ANKGameState.h"
 #include "Components/RichTextBlock.h"
 
 void UWLog::NativeConstruct()
 {
     Super::NativeConstruct();
-
     Cast<AANKGameState>(GetWorld()->GetGameState())->OnPlayerNetStatusUpdateDelegate.AddUObject(this, &UWLog::OnPlayerNetStatusUpdated);
 }
 

@@ -1,6 +1,7 @@
 #include "Anekra/Player/ANKPlayerState.h"
 
 #include "Hero.h"
+#include "Anekra/Log.h"
 #include "Anekra/Player/Attribute/Basic.h"
 #include "Anekra/Game/ANKGameMode.h"
 #include "Anekra/Game/ANKGameState.h"
@@ -80,6 +81,13 @@ void AANKPlayerState::BeginPlay()
     Super::BeginPlay();
 
     OnHealthUpdateDelegate = GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(AttributeBasic->GetHealthAttribute()).AddUObject(this, &AANKPlayerState::OnHealthUpdated);
+}
+
+void AANKPlayerState::OnRep_PlayerName()
+{
+    Super::OnRep_PlayerName();
+    auto GS = Cast<AANKGameState>(GetWorld()->GetGameState());
+    if (IsValid(GS)) GS->OnPlayerNetStatusUpdateDelegate.Broadcast(this, EPlayerNetStatus::Update);
 }
 
 // server

@@ -69,15 +69,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Anekra")
     TArray<class AANKPlayerState*> GetPlayersAlive() const;
 
+    UFUNCTION(Client, Reliable, NetMulticast, BlueprintCallable, Category = "Anekra")
+    void ClientUpdatePlayers(AANKPlayerState* S);
+
     FOnPlayerNetStatusUpdateDelegate OnPlayerNetStatusUpdateDelegate;
 
 protected:
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaSeconds) override;
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
-
-    virtual void AddPlayerState(APlayerState* PlayerState);
-    virtual void RemovePlayerState(APlayerState* PlayerState);
 
 private:
     void OnUpdateIndexLocation();

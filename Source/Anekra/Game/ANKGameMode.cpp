@@ -37,6 +37,7 @@ void AANKGameMode::PostLogin(APlayerController* PlayerController)
     const auto PlayerPawn = GetWorld()->SpawnActor<AHero>(BP_Hero, SpawnLocation, FRotator{ 0, 0, 0 }, Params);
 
     PlayerController->Possess(PlayerPawn);
+    GetGameState<AANKGameState>()->ClientUpdatePlayers(Cast<AANKPlayerState>(PlayerController->PlayerState));
 
     // if players.count == gamestate.players_count, start_game
 }

@@ -14,6 +14,8 @@ class ANEKRA_API AANKPlayerState : public APlayerState, public IAbilitySystemInt
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnCastingDelegate, float);
     DECLARE_MULTICAST_DELEGATE(FOnCastingCancelDelegate);
 
+    DECLARE_MULTICAST_DELEGATE(FOnDataUpdateDelegate);
+
 public:
     AANKPlayerState();
 
@@ -43,9 +45,11 @@ public:
     class UAttributeBasic* AttributeBasic;
 
     //
+    FOnDataUpdateDelegate OnDataUpdateDelegate;
 
 protected:
     virtual void BeginPlay() override;
+    virtual void OnRep_PlayerName() override;
 
 private:
     FIntVector CellPosition;

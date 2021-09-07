@@ -15,7 +15,7 @@ UANKAbility::UANKAbility()
 void UANKAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-    if (bAutoRemove && IsValid(GetAvatarActorFromActorInfo())) GetANKPlayerController()->RemoveAbility(Handle);
+    if (bAutoRemove && !GetWorld()->bIsTearingDown) GetANKPlayerController()->RemoveAbility(Handle);
     Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 

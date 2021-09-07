@@ -1,5 +1,6 @@
 #include "Anekra/UI/WGameStats.h"
 
+#include "Anekra/Log.h"
 #include "Anekra/Game/ANKGameState.h"
 #include "Anekra/UI/WGameStatsEntry.h"
 #include "Components/Border.h"
