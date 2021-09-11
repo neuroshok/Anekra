@@ -39,6 +39,14 @@
 		{
 			"Name": "HairStrands",
 			"Enabled": true
+		},
+		{
+			"Name": "OnlineSubsystemSteam",
+			"Enabled": true
+		},
+		{
+			"Name": "OnlineSubsystemTwitch",
+			"Enabled": true
 		}
 	]
 }
