@@ -11,7 +11,7 @@ public class Anekra : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
-			"Core", "CoreUObject", "Engine", "InputCore", "UMG",
+			"Core", "CoreUObject", "Engine", "InputCore", "UMG", "SlateCore",
 			"OnlineSubsystem", "Steamworks", "OnlineSubsystemSteam", "OnlineSubsystemUtils",
 			"Niagara",
 			"GameplayAbilities", "GameplayTags", "GameplayTasks"
