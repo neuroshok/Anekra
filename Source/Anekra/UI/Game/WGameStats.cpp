@@ -1,8 +1,8 @@
-#include "Anekra/UI/WGameStats.h"
+#include "Anekra/UI/Game/WGameStats.h"
 
 #include "Anekra/Log.h"
 #include "Anekra/Game/ANKGameState.h"
-#include "Anekra/UI/WGameStatsEntry.h"
+#include "Anekra/UI/Game/WGameStatsEntry.h"
 #include "Components/Border.h"
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"

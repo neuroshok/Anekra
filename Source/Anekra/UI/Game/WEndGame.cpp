@@ -23,9 +23,4 @@ void UWEndGame::Update()
 void UWEndGame::NativeConstruct()
 {
     Super::NativeConstruct();
-    if (GetWorld()->GetFirstPlayerController()->HasAuthority())
-    {
-        WPlayAgain->SetVisibility(ESlateVisibility::Visible);
-    }
-    else WPlayAgain->SetVisibility(ESlateVisibility::Hidden);
 }

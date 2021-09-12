@@ -56,7 +56,7 @@ FVector ULaserBurst::ComputeTargetLocation()
     ObjectParams.ObjectTypesToQuery = FCollisionObjectQueryParams::AllDynamicObjects;
     FCollisionQueryParams Params;
     Params.TraceTag = "trace";
-    GetWorld()->DebugDrawTraceTag = "trace";
-    GetWorld()->LineTraceSingleByObjectType(Result, SourceLocation, AimLocation, ObjectParams, Params);
+    //GetWorld()->DebugDrawTraceTag = "trace";
+    //GetWorld()->LineTraceSingleByObjectType(Result, SourceLocation, AimLocation, ObjectParams, Params);
     return Result.Location;
 }

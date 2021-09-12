@@ -14,8 +14,6 @@ public:
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
     class UTextBlock* WStatusText;
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
-    class UButton* WPlayAgain;
 
 protected:
     virtual void NativeConstruct() override;

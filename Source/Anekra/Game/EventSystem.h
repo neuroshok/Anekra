@@ -7,7 +7,7 @@
 #include "UObject/Object.h"
 #include "EventSystem.generated.h"
 
-UCLASS(Blueprintable, BlueprintType)
+UCLASS(BlueprintType, Blueprintable)
 class ANEKRA_API UEventSystem : public UObject
 {
     GENERATED_BODY()

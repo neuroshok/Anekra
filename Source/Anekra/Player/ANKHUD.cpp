@@ -8,9 +8,9 @@
 #include "Anekra/Player/ANKPlayerController.h"
 #include "Anekra/Game/ANKGameState.h"
 #include "Anekra/Player/ANKPlayerState.h"
-#include "Anekra/UI/WEndGame.h"
-#include "Anekra/UI/WMain.h"
-#include "Anekra/UI/WGameStats.h"
+#include "Anekra/UI/Game/WEndGame.h"
+#include "Anekra/UI/Game/WMain.h"
+#include "Anekra/UI/Game/WGameStats.h"
 
 
 void AANKHUD::Initialize()
