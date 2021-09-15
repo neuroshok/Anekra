@@ -1,48 +1,36 @@
 #include "WFriendRow.h"
 
+#include "Anekra/Subsystem/ANKOnlineFriend.h"
+
 #include "OnlineSubsystemTypes.h"
 #include "Anekra/Subsystem/OnlineSubsystem.h"
 #include "Components/TextBlock.h"
 #include "Interfaces/OnlinePresenceInterface.h"
 
-void UWFriendRow::SetFriend(TSharedRef<FOnlineFriend> Friend)
+void UWFriendRow::SetFriend(TSharedRef<FOnlineFriend> FriendRef)
 {
-    FText StatusText = EOnlinePresenceState::ToLocText(Friend->GetPresence().Status.State);
+    FriendPtr = FriendRef;
 
-    WUserName->SetText(FText::AsCultureInvariant(Friend->GetDisplayName()));
-    WUserStatus->SetText(StatusText);
+    FANKOnlineFriend Friend;
+    Friend.Name = FriendPtr->GetDisplayName();
+    Friend.bIsPlayingThisGame = FriendPtr->GetPresence().bIsPlayingThisGame;
+    Friend.bIsPlaying = FriendPtr->GetPresence().bIsPlaying;
+    Friend.State = (EANKOnlinePresenceState)(uint8)FriendPtr->GetPresence().Status.State;
+    OnFriendUpdated(Friend);
 
-    FANKOnlineFriend BPFriend;
-    BPFriend.Name = Friend->GetDisplayName();
-    BPFriend.bIsPlayingThisGame = Friend->GetPresence().bIsPlayingThisGame;
-    BPFriend.bIsOnline = Friend->GetPresence().bIsOnline;
-    OnUpdateDelegate.Broadcast(BPFriend);
+    GetWorld()->GetGameInstance()->GetSubsystem<UOnlineSubsystem>()->OnPresenceUpdateDelegate.AddDynamic(this, &UWFriendRow::OnPresenceUpdated);
+}
 
-    switch(Friend->GetPresence().Status.State)
-    {
-    case EOnlinePresenceState::Away:
-        WUserStatus->SetColorAndOpacity(FLinearColor{ 1, 1, 0, 1 });
-        break;
-    case EOnlinePresenceState::DoNotDisturb:
-        WUserStatus->SetColorAndOpacity(FLinearColor{ 1, 0, 0, 1 });
-        break;
-    case EOnlinePresenceState::Online:
-            WUserStatus->SetColorAndOpacity(FLinearColor{ 0, 1, 0, 1 });
-        break;
-    case EOnlinePresenceState::Offline:
-            WUserStatus->SetColorAndOpacity(FLinearColor{ 0.2, 0.2, 0.2, 1 });
-        break;
-    default:;
-    }
+void UWFriendRow::OnFriendUpdated_Implementation(const FANKOnlineFriend& Friend)
+{
+}
 
-    if (Friend->GetPresence().bIsPlaying)
-    {
-        WUserStatus->SetColorAndOpacity(FLinearColor{ 0, 0, 1, 1 });
-        WUserStatus->SetText(NSLOCTEXT("OnlineSystem", "Playing", "Playing"));
-    }
-    else if (Friend->GetPresence().bIsPlayingThisGame)
-    {
-        WUserStatus->SetColorAndOpacity(FLinearColor{ 1, 0, 1, 1 });
-        WUserStatus->SetText(NSLOCTEXT("OnlineSystem", "PlayingThis", "Anekra"));
-    }
+void UWFriendRow::Invite()
+{
+    GetWorld()->GetGameInstance()->GetSubsystem<UOnlineSubsystem>()->Invite(*FriendPtr->GetUserId());
+}
+
+void UWFriendRow::OnPresenceUpdated(const FANKOnlineFriend& Friend)
+{
+    OnFriendUpdated(Friend);
 }

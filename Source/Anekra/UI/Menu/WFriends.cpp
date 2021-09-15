@@ -10,13 +10,11 @@ void UWFriends::NativeConstruct()
 {
     Super::NativeConstruct();
     GetWorld()->GetGameInstance()->GetSubsystem<UOnlineSubsystem>()->OnFriendListCompleteDelegate.AddUObject(this, &UWFriends::OnFriendListUpdated);
-    GetWorld()->GetTimerManager().SetTimer(RefreshTimer, this, &UWFriends::OnRefresh, 5, true);
 }
 
 void UWFriends::NativeDestruct()
 {
-    GetWorld()->GetTimerManager().ClearTimer(RefreshTimer);
-    Super::NativeDestruct();
+    GetWorld()->GetGameInstance()->GetSubsystem<UOnlineSubsystem>()->OnFriendListCompleteDelegate.RemoveAll(this);
 }
 
 void UWFriends::OnFriendListUpdated(const TArray<TSharedRef<FOnlineFriend>>& Friends)
