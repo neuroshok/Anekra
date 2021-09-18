@@ -9,7 +9,8 @@ void UOnlineSubsystem::CreateSession()
     OSS->GetSessionInterface()->AddOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegate);
 
     Settings = MakeShareable(new FOnlineSessionSettings);
-    Settings->NumPrivateConnections = 0;
+    Settings->bUseLobbiesIfAvailable = true;
+    Settings->NumPrivateConnections = 3;
     Settings->NumPublicConnections = 3;
     Settings->bShouldAdvertise = true;
     Settings->bAllowJoinInProgress = true;
@@ -22,11 +23,11 @@ void UOnlineSubsystem::CreateSession()
     Settings->bAllowJoinViaPresenceFriendsOnly = true;
     Settings->bAntiCheatProtected = false;
     Settings->BuildUniqueId = true;
-    Settings->Set(SETTING_MAPNAME, FString("Your Level Name"), EOnlineDataAdvertisementType::ViaOnlineService);
+    Settings->Set(SETTING_MAPNAME, FString("Your Level Name"), EOnlineDataAdvertisementType::DontAdvertise);
 
     OnCreateSessionCompleteDelegateHandle = OSS->GetSessionInterface()->AddOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegate);
-    ANK_LOG("creating session created")
-    bool Status = OSS->GetSessionInterface()->CreateSession(0, "test", *Settings);
+    ANK_LOG("creating session")
+    bool Status = OSS->GetSessionInterface()->CreateSession(0, "ANK TEST", *Settings);
     if (!Status)
     {
         ANK_ERROR("CreateSession failed")
@@ -37,7 +38,7 @@ void UOnlineSubsystem::CreateSession()
 void UOnlineSubsystem::Invite(const FUniqueNetId& FriendId)
 {
     ANK_LOG("invite friend")
-    OSS->GetSessionInterface()->SendSessionInviteToFriend(0, "test", FriendId);
+    OSS->GetSessionInterface()->SendSessionInviteToFriend(0, "ANK TEST", FriendId);
 }
 
 FString UOnlineSubsystem::GetLocalUserName(int LocalPlayer) const
