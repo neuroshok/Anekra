@@ -1,4 +1,6 @@
-﻿Binaries/*
+﻿# hidden folders
+.*/
+Binaries/*
 Build/
 Intermediate/
 Plugins/
