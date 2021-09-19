@@ -21,6 +21,7 @@ public:
     void Invite();
 
 protected:
+    UFUNCTION()
     void OnPresenceUpdated(const FANKOnlineFriend& Friend);
 
 private:
