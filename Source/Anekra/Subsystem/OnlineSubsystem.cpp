@@ -157,12 +157,14 @@ void UOnlineSubsystem::OnSessionParticipantsUpdated(FName SessionName, const FUn
 void UOnlineSubsystem::OnSessionUserInviteAccepted(const bool bWasSuccessful, const int32 ControllerId, TSharedPtr<const FUniqueNetId> UserId,
                                                    const FOnlineSessionSearchResult& InviteResult)
 {
-    ANK_LOG("OnSessionUserInviteAccepted")
+    ANK_LOG("OnSessionUserInviteAccepted %d", bWasSuccessful)
+    OSS->GetSessionInterface()->JoinSession(ControllerId, "ANK TEST", InviteResult);
 }
 
 void UOnlineSubsystem::OnFriendsChanged()
 {
     ANK_LOG("friends update")
+    //OSS->GetSessionInterface()->GetNamedSession("ANK TEST")->RegisteredPlayers
 }
 
 void UOnlineSubsystem::OnReadFriendsListCompleted(int32 LocalUserNum, bool bWasSuccessful, const FString& ListName, const FString& ErrorStr)
