@@ -6,8 +6,6 @@
 
 void UOnlineSubsystem::CreateSession()
 {
-    OSS->GetSessionInterface()->AddOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegate);
-
     Settings = MakeShareable(new FOnlineSessionSettings);
     Settings->bUseLobbiesIfAvailable = true;
     Settings->NumPrivateConnections = 3;
@@ -26,18 +24,26 @@ void UOnlineSubsystem::CreateSession()
     Settings->Set(SETTING_MAPNAME, FString("Your Level Name"), EOnlineDataAdvertisementType::DontAdvertise);
 
     OnCreateSessionCompleteDelegateHandle = OSS->GetSessionInterface()->AddOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegate);
-    ANK_LOG("creating session")
+
     bool Status = OSS->GetSessionInterface()->CreateSession(0, "ANK TEST", *Settings);
     if (!Status)
     {
         ANK_ERROR("CreateSession failed")
         OSS->GetSessionInterface()->ClearOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegateHandle);
+        OnSessionCreated.Broadcast("ANK TEST", false);
     }
+}
+
+void UOnlineSubsystem::StartSession()
+{
+    ANK_LOG("Start session")
+    OSS->GetSessionInterface()->AddOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegate);
+    OSS->GetSessionInterface()->StartSession("ANK TEST");
 }
 
 void UOnlineSubsystem::Invite(const FUniqueNetId& FriendId)
 {
-    ANK_LOG("invite friend")
+    ANK_LOG("invite friend %s", *FriendId.ToDebugString())
     OSS->GetSessionInterface()->SendSessionInviteToFriend(0, "ANK TEST", FriendId);
 }
 
@@ -139,7 +145,7 @@ void UOnlineSubsystem::OnJoinSessionCompleted(FName SessionName, EOnJoinSessionC
 
 void UOnlineSubsystem::OnRegisterPlayersCompleted(FName SessionName, const TArray<TSharedRef<const FUniqueNetId>>& Players, bool bWasSuccessful)
 {
-    ANK_LOG("OnJoinSessionCompleted %s %d", *SessionName.ToString(), bWasSuccessful)
+    ANK_LOG("OnRegisterPlayersCompleted %s %d", *SessionName.ToString(), bWasSuccessful)
 }
 
 void UOnlineSubsystem::OnSessionInviteReceived(const FUniqueNetId& UserId, const FUniqueNetId& FromId, const FString& AppId,
@@ -150,15 +156,21 @@ void UOnlineSubsystem::OnSessionInviteReceived(const FUniqueNetId& UserId, const
 
 void UOnlineSubsystem::OnSessionParticipantsUpdated(FName SessionName, const FUniqueNetId& UserId, bool JoinLeave)
 {
-    ANK_LOG("OnSessionParticipantsUpdated received %s %s %d", *SessionName.ToString(), *UserId.ToString(), JoinLeave)
-    OnSessionParticipantsUpdateDelegate.Broadcast();
+    ANK_LOG("OnSessionParticipantsUpdated received %s %s %d", *SessionName.ToString(), *UserId.ToDebugString(), JoinLeave)
+    OnSessionParticipantsUpdateDelegate.Broadcast(UserId.ToString(), JoinLeave);
 }
 
 void UOnlineSubsystem::OnSessionUserInviteAccepted(const bool bWasSuccessful, const int32 ControllerId, TSharedPtr<const FUniqueNetId> UserId,
                                                    const FOnlineSessionSearchResult& InviteResult)
 {
     ANK_LOG("OnSessionUserInviteAccepted %d", bWasSuccessful)
+    OSS->GetSessionInterface()->AddOnJoinSessionCompleteDelegate_Handle(OnJoinSessionCompleteDelegate);
     OSS->GetSessionInterface()->JoinSession(ControllerId, "ANK TEST", InviteResult);
+}
+
+void UOnlineSubsystem::OnStartSessionCompleted(FName SessionName, bool bWasSuccessful)
+{
+    BP_OnStartSessionCompleteDelegate.Broadcast(SessionName, bWasSuccessful);
 }
 
 void UOnlineSubsystem::OnFriendsChanged()

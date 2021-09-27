@@ -32,11 +32,14 @@ class ANEKRA_API UOnlineSubsystem : public UGameInstanceSubsystem
 
     // Session
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSessionCreateDelegate, FName, SessionName, bool, Success);
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSessionParticipantsUpdateDelegate);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSessionParticipantsUpdateDelegate, const FString&, User, bool, JoinLeave);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBP_OnStartSessionCompleteDelegate, FName, SessionName, bool, Success);
 
 public:
     UFUNCTION(BlueprintCallable, Category = "Anekra|Online|Session")
     void CreateSession();
+    UFUNCTION(BlueprintCallable, Category = "Anekra|Online|Session")
+    void StartSession();
 
     void Invite(const FUniqueNetId& FriendId);
 
@@ -54,6 +57,8 @@ public:
     FOnSessionCreateDelegate OnSessionCreated;
     UPROPERTY(BlueprintAssignable)
     FOnSessionParticipantsUpdateDelegate OnSessionParticipantsUpdateDelegate;
+    UPROPERTY(BlueprintAssignable)
+    FBP_OnStartSessionCompleteDelegate BP_OnStartSessionCompleteDelegate;
     UPROPERTY(BlueprintAssignable)
     FOnPresenceUpdateDelegate OnPresenceUpdateDelegate;
 
@@ -82,12 +87,14 @@ protected:
     void OnSessionInviteReceived(const FUniqueNetId& UserId, const FUniqueNetId& FromId, const FString& AppId, const FOnlineSessionSearchResult& InviteResult);
     void OnSessionParticipantsUpdated(FName SessionName, const FUniqueNetId& UserId, bool JoinLeave);
     void OnSessionUserInviteAccepted(const bool bWasSuccessful, const int32 ControllerId, TSharedPtr<const FUniqueNetId> UserId, const FOnlineSessionSearchResult& InviteResult);
+    void OnStartSessionCompleted(FName SessionName, bool bWasSuccessful);
     FOnCreateSessionCompleteDelegate OnCreateSessionCompleteDelegate;
     FOnJoinSessionCompleteDelegate OnJoinSessionCompleteDelegate;
     FOnRegisterPlayersCompleteDelegate OnRegisterPlayersCompleteDelegate;
     FOnSessionInviteReceivedDelegate OnSessionInviteReceivedDelegate;
     FOnSessionParticipantsChangeDelegate OnSessionParticipantsChangeDelegate;
     FOnSessionUserInviteAcceptedDelegate OnSessionUserInviteAcceptedDelegate;
+    FOnStartSessionCompleteDelegate OnStartSessionCompleteDelegate;
 
 private:
     FDelegateHandle OnCreateSessionCompleteDelegateHandle;
