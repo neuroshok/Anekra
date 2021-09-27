@@ -33,6 +33,7 @@ class ANEKRA_API UOnlineSubsystem : public UGameInstanceSubsystem
     // Session
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSessionCreateDelegate, FName, SessionName, bool, Success);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSessionParticipantsUpdateDelegate, const FString&, User, bool, JoinLeave);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBP_OnJoinSessionCompleteDelegate, FName, SessionName/*, EOnJoinSessionCompleteResult::Type, JoinResult*/);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBP_OnStartSessionCompleteDelegate, FName, SessionName, bool, Success);
 
 public:
@@ -57,6 +58,8 @@ public:
     FOnSessionCreateDelegate OnSessionCreated;
     UPROPERTY(BlueprintAssignable)
     FOnSessionParticipantsUpdateDelegate OnSessionParticipantsUpdateDelegate;
+    UPROPERTY(BlueprintAssignable)
+    FBP_OnJoinSessionCompleteDelegate BP_OnJoinSessionCompleteDelegate;
     UPROPERTY(BlueprintAssignable)
     FBP_OnStartSessionCompleteDelegate BP_OnStartSessionCompleteDelegate;
     UPROPERTY(BlueprintAssignable)

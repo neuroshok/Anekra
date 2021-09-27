@@ -82,6 +82,7 @@ UOnlineSubsystem::UOnlineSubsystem()
     , OnSessionInviteReceivedDelegate(FOnSessionInviteReceivedDelegate::CreateUObject(this, &UOnlineSubsystem::OnSessionInviteReceived))
     , OnSessionParticipantsChangeDelegate(FOnSessionParticipantsChangeDelegate::CreateUObject(this, &UOnlineSubsystem::OnSessionParticipantsUpdated))
     , OnSessionUserInviteAcceptedDelegate(FOnSessionUserInviteAcceptedDelegate::CreateUObject(this, &UOnlineSubsystem::OnSessionUserInviteAccepted))
+    , OnStartSessionCompleteDelegate(FOnStartSessionCompleteDelegate::CreateUObject(this, &UOnlineSubsystem::OnStartSessionCompleted))
 {
     OSS = IOnlineSubsystem::Get(STEAM_SUBSYSTEM);
     if (!OSS) OSS = IOnlineSubsystem::Get(NULL_SUBSYSTEM);
@@ -141,6 +142,7 @@ void UOnlineSubsystem::OnCreateSessionCompleted(FName SessionName, bool Success)
 void UOnlineSubsystem::OnJoinSessionCompleted(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult)
 {
     ANK_LOG("OnJoinSessionCompleted %s %d", *SessionName.ToString(), JoinResult)
+    BP_OnJoinSessionCompleteDelegate.Broadcast(SessionName);
 }
 
 void UOnlineSubsystem::OnRegisterPlayersCompleted(FName SessionName, const TArray<TSharedRef<const FUniqueNetId>>& Players, bool bWasSuccessful)
