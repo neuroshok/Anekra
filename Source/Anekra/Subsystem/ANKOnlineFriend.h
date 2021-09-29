@@ -20,6 +20,8 @@ struct FANKOnlineFriend
     GENERATED_BODY()
 
     UPROPERTY(BlueprintReadOnly, Category = "Anekra|Online|Friend")
+    FString Id;
+    UPROPERTY(BlueprintReadOnly, Category = "Anekra|Online|Friend")
     FString Name;
     UPROPERTY(BlueprintReadOnly, Category = "Anekra|Online|Friend")
     bool bIsPlaying;

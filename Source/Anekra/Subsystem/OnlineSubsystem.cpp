@@ -2,6 +2,7 @@
 
 #include "OnlineSubsystemUtils.h"
 #include "Anekra/Log.h"
+#include "GameFramework/GameModeBase.h"
 #include "GameFramework/GameUserSettings.h"
 
 void UOnlineSubsystem::CreateSession()
@@ -30,13 +31,19 @@ void UOnlineSubsystem::CreateSession()
     {
         ANK_ERROR("CreateSession failed")
         OSS->GetSessionInterface()->ClearOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegateHandle);
-        OnSessionCreated.Broadcast("ANK TEST", false);
+        BP_OnCreateSessionDelegate.Broadcast("ANK TEST", false);
     }
+}
+
+void UOnlineSubsystem::DestroySession()
+{
+    OSS->GetSessionInterface()->DestroySession("ANK TEST", OnDestroySessionCompleteDelegate);
 }
 
 void UOnlineSubsystem::StartSession()
 {
     ANK_LOG("Start session")
+
     OSS->GetSessionInterface()->AddOnStartSessionCompleteDelegate_Handle(OnStartSessionCompleteDelegate);
     OSS->GetSessionInterface()->StartSession("ANK TEST");
 }
@@ -77,6 +84,7 @@ UOnlineSubsystem::UOnlineSubsystem()
     , OnPresenceReceivedDelegate(FOnPresenceReceivedDelegate::CreateUObject(this, &UOnlineSubsystem::OnPresenceReceived))
     // Session
     , OnCreateSessionCompleteDelegate(FOnCreateSessionCompleteDelegate::CreateUObject(this, &UOnlineSubsystem::OnCreateSessionCompleted))
+    , OnDestroySessionCompleteDelegate(FOnDestroySessionCompleteDelegate::CreateUObject(this, &UOnlineSubsystem::OnDestroySessionCompleted))
     , OnJoinSessionCompleteDelegate(FOnJoinSessionCompleteDelegate::CreateUObject(this, &UOnlineSubsystem::OnJoinSessionCompleted))
     , OnRegisterPlayersCompleteDelegate(FOnRegisterPlayersCompleteDelegate::CreateUObject(this, &UOnlineSubsystem::OnRegisterPlayersCompleted))
     , OnSessionInviteReceivedDelegate(FOnSessionInviteReceivedDelegate::CreateUObject(this, &UOnlineSubsystem::OnSessionInviteReceived))
@@ -126,23 +134,45 @@ void UOnlineSubsystem::OnPresenceReceived(const FUniqueNetId& UserId, const TSha
 {
     ANK_LOG("OnPresenceReceived")
     FANKOnlineFriend User;
+    User.Id = UserId.ToString();
+    User.Name = OSS->GetFriendsInterface()->GetFriend(0, UserId, "")->GetDisplayName();
     User.bIsPlaying = Presence->bIsPlaying;
     User.bIsPlayingThisGame = Presence->bIsPlayingThisGame;
     User.State = (decltype(User.State))(int)Presence->Status.State;
-    OnPresenceUpdateDelegate.Broadcast(User);
+    BP_OnPresenceUpdateDelegate.Broadcast(User);
 }
 
-void UOnlineSubsystem::OnCreateSessionCompleted(FName SessionName, bool Success)
+void UOnlineSubsystem::OnCreateSessionCompleted(FName SessionName, bool bWasSuccessful)
 {
     OSS->GetSessionInterface()->ClearOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegateHandle);
     ANK_LOG("session created")
-    OnSessionCreated.Broadcast(SessionName, Success);
+    BP_OnCreateSessionDelegate.Broadcast(SessionName, bWasSuccessful);
+}
+
+void UOnlineSubsystem::OnDestroySessionCompleted(FName SessionName, bool bWasSuccessful)
+{
+    BP_OnDestroySessionCompleteDelegate.Broadcast(SessionName, bWasSuccessful);
 }
 
 void UOnlineSubsystem::OnJoinSessionCompleted(FName SessionName, EOnJoinSessionCompleteResult::Type JoinResult)
 {
+    if (JoinResult != EOnJoinSessionCompleteResult::Type::Success)
+    {
+        ANK_ERROR("OnJoinSessionCompleted error %s %d", *SessionName.ToString(), JoinResult)
+    }
     ANK_LOG("OnJoinSessionCompleted %s %d", *SessionName.ToString(), JoinResult)
     BP_OnJoinSessionCompleteDelegate.Broadcast(SessionName);
+
+    FString URL;
+    IOnlineSessionPtr Session = OSS->GetSessionInterface();
+    if (Session.IsValid() && Session->GetResolvedConnectString(SessionName, URL))
+    {
+        APlayerController* PC = GetWorld()->GetFirstPlayerController();
+        if (PC)
+        {
+            PC->ClientTravel(URL, TRAVEL_Absolute);
+        }
+    }
 }
 
 void UOnlineSubsystem::OnRegisterPlayersCompleted(FName SessionName, const TArray<TSharedRef<const FUniqueNetId>>& Players, bool bWasSuccessful)
@@ -159,7 +189,9 @@ void UOnlineSubsystem::OnSessionInviteReceived(const FUniqueNetId& UserId, const
 void UOnlineSubsystem::OnSessionParticipantsUpdated(FName SessionName, const FUniqueNetId& UserId, bool JoinLeave)
 {
     ANK_LOG("OnSessionParticipantsUpdated received %s %s %d", *SessionName.ToString(), *UserId.ToDebugString(), JoinLeave)
-    OnSessionParticipantsUpdateDelegate.Broadcast(UserId.ToString(), JoinLeave);
+    auto UserName = OSS->GetFriendsInterface()->GetFriend(0, UserId, "")->GetDisplayName();
+    BP_OnSessionParticipantsUpdateDelegate.Broadcast(UserId.ToString(), UserName, JoinLeave);
+    //OSS->GetSessionInterface()->GetNamedSession("ANK TEST")->RegisteredPlayers
 }
 
 void UOnlineSubsystem::OnSessionUserInviteAccepted(const bool bWasSuccessful, const int32 ControllerId, TSharedPtr<const FUniqueNetId> UserId,
@@ -173,6 +205,7 @@ void UOnlineSubsystem::OnSessionUserInviteAccepted(const bool bWasSuccessful, co
 void UOnlineSubsystem::OnStartSessionCompleted(FName SessionName, bool bWasSuccessful)
 {
     BP_OnStartSessionCompleteDelegate.Broadcast(SessionName, bWasSuccessful);
+    auto PlayersCount = GetWorld()->GetNumPlayerControllers();
 }
 
 void UOnlineSubsystem::OnFriendsChanged()

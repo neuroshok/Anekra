@@ -13,16 +13,13 @@ class ANEKRA_API UWFriendRow : public UUserWidget
 
 public:
     void SetFriend(TSharedRef<class FOnlineFriend> Friend);
+    TSharedPtr<FOnlineFriend> GetFriend() const;
 
     UFUNCTION(BlueprintNativeEvent, Category = "Anekra|Online|Friend")
     void OnFriendUpdated(const FANKOnlineFriend& Friend);
 
     UFUNCTION(BlueprintCallable, Category = "Anekra|Online|Friend")
     void Invite();
-
-protected:
-    UFUNCTION()
-    void OnPresenceUpdated(const FANKOnlineFriend& Friend);
 
 private:
     TSharedPtr<FOnlineFriend> FriendPtr;

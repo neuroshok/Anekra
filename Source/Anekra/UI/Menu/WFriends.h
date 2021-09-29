@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Anekra/Subsystem/ANKOnlineFriend.h"
 #include "Blueprint/UserWidget.h"
 #include "WFriends.generated.h"
 
@@ -28,5 +29,7 @@ protected:
 private:
     void OnFriendListUpdated(const TArray<TSharedRef<class FOnlineFriend>>&);
     void OnRefresh();
+    UFUNCTION()
+    void OnPresenceUpdated(const FANKOnlineFriend& Friend);
     FTimerHandle RefreshTimer;
 };
