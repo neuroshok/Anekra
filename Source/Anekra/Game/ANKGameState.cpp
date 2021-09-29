@@ -32,7 +32,7 @@ void AANKGameState::OnUpdateIndexLocation()
     for (const auto& Player : PlayerArray)
     {
         auto ANKPlayer = Cast<AANKPlayerState>(Player);
-        if (ANKPlayer->IsDead() || !IsValid(ANKPlayer->GetPawn())) continue;
+        if (!IsValid(ANKPlayer) || ANKPlayer->IsDead() || !IsValid(ANKPlayer->GetPawn())) continue;
 
         auto PreviousCellPosition = ANKPlayer->GetCellPosition();
         ANKPlayer->ComputeCellPosition();
