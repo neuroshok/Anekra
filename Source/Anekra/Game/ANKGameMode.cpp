@@ -12,6 +12,34 @@
 void AANKGameMode::BeginPlay()
 {
     Super::BeginPlay();
+    GetGameState<AANKGameState>()->MakeMap();
+}
+
+void AANKGameMode::HandleStartingNewPlayer_Implementation(APlayerController* PlayerController)
+{
+    Super::HandleStartingNewPlayer_Implementation(PlayerController);
+    ANK_LOG("HandleStartingNewPlayer");
+
+    if (HasAuthority())
+    {
+        //GetGameState<AANKGameState>()->MakeMap();
+
+        EventSystem = NewObject<UEventSystem>(this, BP_EventSystem, "Event System");
+        check(EventSystem);
+        EventSystem->Initialize();
+        //EventSystem->Start();
+    }
+
+    FVector SpawnLocation;
+    SpawnLocation.X = 0;
+    SpawnLocation.Y = 0;
+    SpawnLocation.Z = 1000;
+    FActorSpawnParameters Params;
+    Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+    const auto PlayerPawn = GetWorld()->SpawnActor<AHero>(BP_Hero, SpawnLocation, FRotator{ 0, 0, 0 }, Params);
+
+    PlayerController->Possess(PlayerPawn);
+    GetGameState<AANKGameState>()->ClientUpdatePlayers(Cast<AANKPlayerState>(PlayerController->PlayerState));
 }
 
 void AANKGameMode::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
@@ -28,16 +56,7 @@ void AANKGameMode::PostLogin(APlayerController* PlayerController)
 
     //const int32 CellIndex = FMath::RandRange(0, CellsView.Num() - 1);
     //FVector SpawnLocation =  CellsView[CellIndex]->GetActorLocation();
-    FVector SpawnLocation;
-    SpawnLocation.X = 0;
-    SpawnLocation.Y = 0;
-    SpawnLocation.Z = 1000;
-    FActorSpawnParameters Params;
-    Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-    const auto PlayerPawn = GetWorld()->SpawnActor<AHero>(BP_Hero, SpawnLocation, FRotator{ 0, 0, 0 }, Params);
 
-    PlayerController->Possess(PlayerPawn);
-    GetGameState<AANKGameState>()->ClientUpdatePlayers(Cast<AANKPlayerState>(PlayerController->PlayerState));
 
     // if players.count == gamestate.players_count, start_game
 }
@@ -45,19 +64,7 @@ void AANKGameMode::PostLogin(APlayerController* PlayerController)
 FString AANKGameMode::InitNewPlayer(APlayerController* PlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)
 {
     FString init = Super::InitNewPlayer(PlayerController, UniqueId, Options, Portal);
-    check(BP_Hero);
 
-    //todo find a better place for init
-    // make map when host join the game
-    if (PlayerController->IsLocalPlayerController())
-    {
-        GetGameState<AANKGameState>()->MakeMap();
-
-        EventSystem = NewObject<UEventSystem>(this, BP_EventSystem, "Event System");
-        check(EventSystem);
-        EventSystem->Initialize();
-        //EventSystem->Start();
-    }
 
     return init;
 }

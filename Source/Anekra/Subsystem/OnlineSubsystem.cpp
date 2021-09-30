@@ -204,8 +204,8 @@ void UOnlineSubsystem::OnSessionUserInviteAccepted(const bool bWasSuccessful, co
 
 void UOnlineSubsystem::OnStartSessionCompleted(FName SessionName, bool bWasSuccessful)
 {
+    ANK_LOG("OnStartSessionCompleted %d", bWasSuccessful)
     BP_OnStartSessionCompleteDelegate.Broadcast(SessionName, bWasSuccessful);
-    auto PlayersCount = GetWorld()->GetNumPlayerControllers();
 }
 
 void UOnlineSubsystem::OnFriendsChanged()
