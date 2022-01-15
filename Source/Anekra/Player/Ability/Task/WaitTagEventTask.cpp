@@ -19,8 +19,8 @@ void UWaitTagEventTask::OnUpdated(FGameplayTag Tag, int32 Count)
 {
     if (Count == 0)
     {
-        EndTask();
         OnCompleteDelegate.Broadcast();
+        EndTask();
     }
 }
 
