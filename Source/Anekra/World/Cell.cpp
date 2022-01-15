@@ -4,6 +4,7 @@
 
 #include "Net/UnrealNetwork.h"
 #include "NiagaraComponent.h"
+#include "Anekra/Log.h"
 #include "Anekra/Player/Hero.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Anekra/Game/EventSystem.h"
@@ -25,11 +26,11 @@ void ACell::AddState(EEventType PEventType)
 
 void ACell::BeginPlay()
 {
+    Super::BeginPlay();
     check(BP_Mesh);
     MeshComponent->SetStaticMesh(BP_Mesh);
 
     MaterialInstanceDynamic = MeshComponent->CreateAndSetMaterialInstanceDynamicFromMaterial(0, BP_Material);
-    Super::BeginPlay();
 
     Color = { 0.2, 0.2, 0.8 };
     OnTypeUpdated();
@@ -54,7 +55,11 @@ void ACell::SetColor(FLinearColor NewColor)
 {
     if (Color == NewColor) return;
     Color = NewColor;
-    if (!MaterialInstanceDynamic) return;
+    if (!IsValid(MaterialInstanceDynamic))
+    {
+        ANK_WARNING("MaterialInstanceDynamic is null")
+        return;
+    }
     MaterialInstanceDynamic->SetVectorParameterValue("Color", Color);
 }
 

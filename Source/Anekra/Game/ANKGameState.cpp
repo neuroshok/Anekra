@@ -70,6 +70,7 @@ void AANKGameState::MakeMap()
             {
                 Position.X = x * MapCellSize;
                 Position.Y = y * MapCellSize;
+                Position.Z = 0;
                 FActorSpawnParameters params;
                 params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
                 auto Cell = GetWorld()->SpawnActor<ACell>(BP_Cell, Position, FRotator{0, 0, 0}, params);

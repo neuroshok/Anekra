@@ -12,7 +12,7 @@
 void AANKGameMode::BeginPlay()
 {
     Super::BeginPlay();
-    GetGameState<AANKGameState>()->MakeMap();
+    //GetGameState<AANKGameState>()->MakeMap();
 }
 
 void AANKGameMode::HandleStartingNewPlayer_Implementation(APlayerController* PlayerController)
@@ -22,7 +22,7 @@ void AANKGameMode::HandleStartingNewPlayer_Implementation(APlayerController* Pla
 
     if (HasAuthority())
     {
-        //GetGameState<AANKGameState>()->MakeMap();
+        GetGameState<AANKGameState>()->MakeMap();
 
         EventSystem = NewObject<UEventSystem>(this, BP_EventSystem, "Event System");
         check(EventSystem);
