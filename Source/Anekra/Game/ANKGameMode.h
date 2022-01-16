@@ -3,11 +3,11 @@
 #include "Anekra/EventType.h"
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameModeBase.h"
+#include "GameFramework/GameMode.h"
 #include "ANKGameMode.generated.h"
 
 UCLASS()
-class ANEKRA_API AANKGameMode final : public AGameModeBase
+class ANEKRA_API AANKGameMode final : public AGameMode
 {
     GENERATED_BODY()
 
@@ -25,6 +25,10 @@ protected:
     virtual void PostLogin(APlayerController*) override;
     virtual FString InitNewPlayer(APlayerController* PlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal) override;
     virtual void Logout(AController*) override;
+
+    // match
+    virtual bool ReadyToStartMatch_Implementation() override;
+    virtual void StartMatch() override;
 
 private:
     UPROPERTY()
