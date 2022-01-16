@@ -7,6 +7,8 @@
 
 void UOnlineSubsystem::CreateSession()
 {
+    DestroySession();
+
     Settings = MakeShareable(new FOnlineSessionSettings);
     Settings->bUseLobbiesIfAvailable = true;
     Settings->NumPrivateConnections = 3;
@@ -62,6 +64,13 @@ FString UOnlineSubsystem::GetLocalUserName(int LocalPlayer) const
 FString UOnlineSubsystem::GetUserName(const FUniqueNetId& UniqueNetId) const
 {
     return *OSS->GetIdentityInterface()->GetPlayerNickname(UniqueNetId);
+}
+
+FNamedOnlineSession* UOnlineSubsystem::GetCurrentSession() const
+{
+    check(OSS);
+    const auto Session = OSS->GetSessionInterface()->GetNamedSession("ANK TEST");
+    return Session;
 }
 
 bool UOnlineSubsystem::GetFriends()
@@ -132,6 +141,7 @@ void UOnlineSubsystem::OnConnectionStatusChanged(const FString& ServiceName, EOn
 
 void UOnlineSubsystem::OnPresenceReceived(const FUniqueNetId& UserId, const TSharedRef<FOnlineUserPresence>& Presence)
 {
+    // session id null (shared_ptr)
     ANK_LOG("OnPresenceReceived")
     FANKOnlineFriend User;
     User.Id = UserId.ToString();

@@ -51,6 +51,7 @@ public:
     FString GetLocalUserName(int32 LocalPlayer = 0) const;
     //UFUNCTION(BlueprintCallable, Category = "Anekra|Online")
     FString GetUserName(const FUniqueNetId& UniqueNetId) const;
+    class FNamedOnlineSession* GetCurrentSession() const;
 
     UFUNCTION(BlueprintCallable, Category = "Anekra|Online|Friends")
     UPARAM(DisplayName="Success") bool GetFriends();
