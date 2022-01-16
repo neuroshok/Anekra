@@ -145,7 +145,9 @@ void UOnlineSubsystem::OnPresenceReceived(const FUniqueNetId& UserId, const TSha
     ANK_LOG("OnPresenceReceived")
     FANKOnlineFriend User;
     User.Id = UserId.ToString();
-    User.Name = OSS->GetFriendsInterface()->GetFriend(0, UserId, "")->GetDisplayName();
+    User.Name = "?";
+    auto Friend = OSS->GetFriendsInterface()->GetFriend(0, UserId, "");
+    if (Friend.IsValid()) User.Name = Friend->GetDisplayName();
     User.bIsPlaying = Presence->bIsPlaying;
     User.bIsPlayingThisGame = Presence->bIsPlayingThisGame;
     User.State = (decltype(User.State))(int)Presence->Status.State;
