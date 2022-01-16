@@ -64,7 +64,7 @@ bool AANKGameMode::ReadyToStartMatch_Implementation()
     const auto Session = GetWorld()->GetGameInstance()->GetSubsystem<UOnlineSubsystem>()->GetCurrentSession();
     // start game if player started without sessions or alone
     if (!Session) return true;
-    else return GetNumPlayers() == Session->RegisteredPlayers.Num();
+    else return (GetNumPlayers() == Session->RegisteredPlayers.Num() || Session->RegisteredPlayers.Num() <= 1);
 
     return false;
 }
