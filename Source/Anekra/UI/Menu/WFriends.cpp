@@ -42,7 +42,7 @@ void UWFriends::OnPresenceUpdated(const FANKOnlineFriend& Friend)
 {
     for (auto WFriendRow : WFriendsBox->GetAllChildren())
     {
-        if (Cast<UWFriendRow>(WFriendRow)->GetFriend()->GetUserId()->ToString() == Friend.Id)
+        if (Cast<UWFriendRow>(WFriendRow)->GetFriend().IsValid() && Cast<UWFriendRow>(WFriendRow)->GetFriend()->GetUserId()->ToString() == Friend.Id)
         {
             Cast<UWFriendRow>(WFriendRow)->OnFriendUpdated(Friend);
             break;

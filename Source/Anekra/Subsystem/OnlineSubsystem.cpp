@@ -141,7 +141,6 @@ void UOnlineSubsystem::OnConnectionStatusChanged(const FString& ServiceName, EOn
 
 void UOnlineSubsystem::OnPresenceReceived(const FUniqueNetId& UserId, const TSharedRef<FOnlineUserPresence>& Presence)
 {
-    // session id null (shared_ptr)
     ANK_LOG("OnPresenceReceived")
     FANKOnlineFriend User;
     User.Id = UserId.ToString();

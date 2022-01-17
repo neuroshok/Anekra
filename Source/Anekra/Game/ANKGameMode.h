@@ -7,7 +7,7 @@
 #include "ANKGameMode.generated.h"
 
 UCLASS()
-class ANEKRA_API AANKGameMode final : public AGameMode
+class ANEKRA_API AANKGameMode final : public AGameModeBase
 {
     GENERATED_BODY()
 
@@ -27,8 +27,9 @@ protected:
     virtual void Logout(AController*) override;
 
     // match
+    /*
     virtual bool ReadyToStartMatch_Implementation() override;
-    virtual void StartMatch() override;
+    virtual void StartMatch() override;*/
 
 private:
     UPROPERTY()
