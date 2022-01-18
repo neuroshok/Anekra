@@ -18,10 +18,9 @@ void AANKPlayerController::SetupInputComponent()
 
 void AANKPlayerController::InitializeHUD()
 {
-    /*
     if (GetHUD() || !IsLocalPlayerController()) return;
     SpawnDefaultHUD();
-    Cast<AANKHUD>(GetHUD())->Initialize();*/
+    Cast<AANKHUD>(GetHUD())->Initialize();
 }
 
 // server

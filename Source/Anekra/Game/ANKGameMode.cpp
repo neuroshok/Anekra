@@ -43,6 +43,7 @@ void AANKGameMode::HandleStartingNewPlayer_Implementation(APlayerController* Pla
         Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
         const auto PlayerPawn = GetWorld()->SpawnActor<AHero>(BP_Hero, SpawnLocation, FRotator{ 0, 0, 0 }, Params);
 
+        Cast<AANKPlayerController>(PlayerController)->InitializeHUD();
         PlayerController->Possess(PlayerPawn);
     }
 
