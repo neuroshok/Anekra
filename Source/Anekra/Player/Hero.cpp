@@ -76,7 +76,7 @@ void AHero::BeginPlay()
 void AHero::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-    DOREPLIFETIME(AHero, bVisible);
+    //DOREPLIFETIME(AHero, bVisible);
 }
 
 void AHero::AddMovementInput(FVector WorldDirection, float ScaleValue, bool bForce)
@@ -137,12 +137,6 @@ void AHero::MovePitch(float Value)
     Controller->SetControlRotation(Rotation);
 }
 
-void AHero::OnVisibilityUpdated()
-{
-    if (!bVisible) GetAbilitySystemComponent()->AddLocalCue(ANKTag.Ability.StealthCue, this);
-    else GetAbilitySystemComponent()->RemoveLocalCue(ANKTag.Ability.StealthCue, this);
-}
-
 void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -186,10 +180,11 @@ void AHero::UpdateMovingTag()
     }
 }
 
-void AHero::SetStealth(bool bIsStealth)
+void AHero::ServerSetStealth_Implementation(bool bIsStealth)
 {
     bVisible = !bIsStealth;
-    OnVisibilityUpdated();
+    if (!bVisible) GetAbilitySystemComponent()->AddLocalCue(ANKTag.Ability.StealthCue, this);
+    else GetAbilitySystemComponent()->RemoveLocalCue(ANKTag.Ability.StealthCue, this);
 }
 
 UCameraComponent* AHero::GetCamera() const

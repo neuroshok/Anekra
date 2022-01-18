@@ -24,7 +24,9 @@ public:
     virtual class UANKAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
     void UpdateMovingTag();
-    void SetStealth(bool bIsStealth = true);
+
+    UFUNCTION(NetMulticast, Reliable)
+    void ServerSetStealth(bool bIsStealth = true);
 
     class UCameraComponent* GetCamera() const;
 
@@ -40,10 +42,6 @@ protected:
     void MoveYaw(float);
     void MovePitch(float);
 
-    UFUNCTION()
-    void OnVisibilityUpdated();
-
-    UPROPERTY(Replicated, ReplicatedUsing = "OnVisibilityUpdated")
     bool bVisible = true;
 
 private:
