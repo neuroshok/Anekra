@@ -25,12 +25,10 @@ void AANKGameMode::HandleStartingNewPlayer_Implementation(APlayerController* Pla
 
     if (HasAuthority())
     {
-        GetGameState<AANKGameState>()->MakeMap();
-
         EventSystem = NewObject<UEventSystem>(this, BP_EventSystem, "Event System");
         check(EventSystem);
         EventSystem->Initialize();
-        //EventSystem->Start();
+        EventSystem->Start();
 
         const auto CellSize = static_cast<int>(GetGameState<AANKGameState>()->GetMapCellSize());
         const auto MapWidth = static_cast<int>(GetGameState<AANKGameState>()->GetMapWidth());
@@ -43,17 +41,18 @@ void AANKGameMode::HandleStartingNewPlayer_Implementation(APlayerController* Pla
         Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
         const auto PlayerPawn = GetWorld()->SpawnActor<AHero>(BP_Hero, SpawnLocation, FRotator{ 0, 0, 0 }, Params);
 
-        Cast<AANKPlayerController>(PlayerController)->InitializeHUD();
-        PlayerController->Possess(PlayerPawn);
+        PlayerControllers.Add(Cast<AANKPlayerController>(PlayerController));
+
+        const auto Session = GetWorld()->GetGameInstance()->GetSubsystem<UOnlineSubsystem>()->GetCurrentSession();
+        // start game if player started without sessions or alone
+        if (GetNumPlayers() == Session->RegisteredPlayers.Num() || Session->RegisteredPlayers.Num() <= 1)
+        {
+            StartGame();
+        }
     }
 
-    /*
-    const auto Session = GetWorld()->GetGameInstance()->GetSubsystem<UOnlineSubsystem>()->GetCurrentSession();
-    // start game if player started without sessions or alone
-    if (GetNumPlayers() == Session->RegisteredPlayers.Num() || Session->RegisteredPlayers.Num() <= 1)
-    {
-        StartMatch();
-    }*/
+
+
     GetGameState<AANKGameState>()->ClientUpdatePlayers(Cast<AANKPlayerState>(PlayerController->PlayerState));
 }
 
@@ -83,27 +82,19 @@ void AANKGameMode::Logout(AController* Controller)
     ANK_LOG("Logout")
 }
 
-/*
-bool AANKGameMode::ReadyToStartMatch_Implementation()
+void AANKGameMode::RestartGame()
 {
-
-    const auto Session = GetWorld()->GetGameInstance()->GetSubsystem<UOnlineSubsystem>()->GetCurrentSession();
-    // start game if player started without sessions or alone
-    if (!Session) return true;
-    else return (GetNumPlayers() == Session->RegisteredPlayers.Num() || Session->RegisteredPlayers.Num() <= 1);
-
-
-    return true;
 }
 
-void AANKGameMode::StartMatch()
+void AANKGameMode::StartGame()
 {
-    Super::StartMatch();
+    // map
+    GetGameState<AANKGameState>()->MakeMap();
 
-
+    // players
     const auto CellSize = static_cast<int>(GetGameState<AANKGameState>()->GetMapCellSize());
     const auto MapWidth = static_cast<int>(GetGameState<AANKGameState>()->GetMapWidth());
-    for (const auto Player : GetGameState<AANKGameState>()->GetPlayers())
+    for (const auto PlayerController : PlayerControllers)
     {
         FVector SpawnLocation;
         SpawnLocation.X = FMath::RandRange(CellSize, MapWidth - CellSize);
@@ -113,7 +104,7 @@ void AANKGameMode::StartMatch()
         Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
         const auto PlayerPawn = GetWorld()->SpawnActor<AHero>(BP_Hero, SpawnLocation, FRotator{ 0, 0, 0 }, Params);
 
-        Cast<AANKPlayerController>(Player->GetOwner())->Possess(PlayerPawn);
+        PlayerController->InitializeHUD();
+        PlayerController->Possess(PlayerPawn);
     }
 }
-*/

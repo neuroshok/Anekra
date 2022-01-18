@@ -3,6 +3,7 @@
 #include "Anekra/EventType.h"
 
 #include "CoreMinimal.h"
+#include "Anekra/Player/ANKPlayerController.h"
 #include "GameFramework/GameMode.h"
 #include "ANKGameMode.generated.h"
 
@@ -27,11 +28,12 @@ protected:
     virtual void Logout(AController*) override;
 
     // match
-    /*
-    virtual bool ReadyToStartMatch_Implementation() override;
-    virtual void StartMatch() override;*/
+    void RestartGame();
+    void StartGame();
 
 private:
     UPROPERTY()
     class UEventSystem* EventSystem;
+
+    TArray<class AANKPlayerController*> PlayerControllers;
 };
