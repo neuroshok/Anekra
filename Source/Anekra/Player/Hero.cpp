@@ -60,12 +60,13 @@ void AHero::PossessedBy(AController* PlayerController)
 {
     Super::PossessedBy(PlayerController);
     AANKPlayerState* ANKPlayerState = Cast<AANKPlayerState>(GetPlayerState());
-    check(ANKPlayerState);
+    if (ANKPlayerState)
+    {
+        ANKAbilitySystemComponent = ANKPlayerState->GetAbilitySystemComponent();
+        ANKAbilitySystemComponent->InitAbilityActorInfo(ANKPlayerState, this);
 
-    ANKAbilitySystemComponent = ANKPlayerState->GetAbilitySystemComponent();
-    ANKAbilitySystemComponent->InitAbilityActorInfo(ANKPlayerState, this);
-
-    ANKAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UUnlockAbility::StaticClass(), 1, static_cast<int32>(EBinding::Unlock), this));
+        ANKAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UUnlockAbility::StaticClass(), 1, static_cast<int32>(EBinding::Unlock), this));
+    }
 }
 
 void AHero::BeginPlay()
@@ -76,7 +77,7 @@ void AHero::BeginPlay()
 void AHero::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-    //DOREPLIFETIME(AHero, bVisible);
+    DOREPLIFETIME(AHero, bVisible);
 }
 
 void AHero::AddMovementInput(FVector WorldDirection, float ScaleValue, bool bForce)
@@ -183,6 +184,11 @@ void AHero::UpdateMovingTag()
 void AHero::ServerSetStealth_Implementation(bool bIsStealth)
 {
     bVisible = !bIsStealth;
+    OnStealthUpdated();
+}
+
+void AHero::OnStealthUpdated()
+{
     if (!bVisible) GetAbilitySystemComponent()->AddLocalCue(ANKTag.Ability.StealthCue, this);
     else GetAbilitySystemComponent()->RemoveLocalCue(ANKTag.Ability.StealthCue, this);
 }

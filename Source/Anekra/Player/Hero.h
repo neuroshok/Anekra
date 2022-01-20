@@ -25,8 +25,11 @@ public:
 
     void UpdateMovingTag();
 
-    UFUNCTION(NetMulticast, Reliable)
+    UFUNCTION(Server, Reliable)
     void ServerSetStealth(bool bIsStealth = true);
+
+    UFUNCTION()
+    void OnStealthUpdated();
 
     class UCameraComponent* GetCamera() const;
 
@@ -42,6 +45,7 @@ protected:
     void MoveYaw(float);
     void MovePitch(float);
 
+    UPROPERTY(Replicated, ReplicatedUsing = OnStealthUpdated)
     bool bVisible = true;
 
 private:
