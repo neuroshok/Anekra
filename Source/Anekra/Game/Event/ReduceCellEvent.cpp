@@ -14,10 +14,14 @@ void UReduceCellEvent::Start()
 
     Delay(3, [this]
     {
-        for (auto Cell : Cast<AANKGameState>(GetWorld()->GetGameState())->GetCells())
+        // stop timer in gamemode
+        if (!GetWorld()->bIsTearingDown)
         {
-            Cell->SetActorRelativeScale3D({1, 1, 1});
+            for (auto Cell : Cast<AANKGameState>(GetWorld()->GetGameState())->GetCells())
+            {
+                Cell->SetActorRelativeScale3D({1, 1, 1});
+            }
+            UEvent::Complete();
         }
-        UEvent::Complete();
     });
 }
