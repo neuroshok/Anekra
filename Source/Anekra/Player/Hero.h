@@ -25,8 +25,7 @@ public:
 
     void UpdateMovingTag();
 
-    UFUNCTION(Server, Reliable)
-    void ServerSetStealth(bool bIsStealth = true);
+    void SetStealth(bool bIsStealth = true);
 
     UFUNCTION()
     void OnStealthUpdated();

@@ -181,7 +181,7 @@ void AHero::UpdateMovingTag()
     }
 }
 
-void AHero::ServerSetStealth_Implementation(bool bIsStealth)
+void AHero::SetStealth(bool bIsStealth)
 {
     bVisible = !bIsStealth;
     OnStealthUpdated();

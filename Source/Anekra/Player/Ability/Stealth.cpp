@@ -24,7 +24,7 @@ void UStealthAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
         }
 
         GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->StealthEffect);
-        GetHero()->ServerSetStealth();
+        GetHero()->SetStealth();
 
         auto Task = UWaitTagEventTask::Create(this, ANKTag.Ability.Stealth);
 
@@ -35,7 +35,7 @@ void UStealthAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
 
 void UStealthAbility::OnCompleted()
 {
-    GetHero()->ServerSetStealth(false);
+    GetHero()->SetStealth(false);
 
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
