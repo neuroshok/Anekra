@@ -25,10 +25,10 @@ void UFreezeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
 
         auto Hero = GetHero();
 
-        for (auto PlayerState : Cast<AANKGameState>(GetWorld()->GetGameState())->PlayerArray)
+        for (auto PlayerState : Cast<AANKGameState>(GetWorld()->GetGameState())->GetPlayersAlive())
         {
             if (Hero->GetPlayerState()->GetPlayerId() == PlayerState->GetPlayerId()) continue;
-            GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->FreezeEffect);
+            PlayerState->GetAbilitySystemComponent()->ApplyEffect(GetAbilitySystemComponent()->Effects->FreezeEffect);
         }
     }
 
