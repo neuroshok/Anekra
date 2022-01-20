@@ -15,7 +15,6 @@
 void AANKGameMode::BeginPlay()
 {
     Super::BeginPlay();
-    //GetGameState<AANKGameState>()->MakeMap();
 }
 
 void AANKGameMode::HandleStartingNewPlayer_Implementation(APlayerController* PlayerController)
@@ -30,28 +29,16 @@ void AANKGameMode::HandleStartingNewPlayer_Implementation(APlayerController* Pla
         EventSystem->Initialize();
         EventSystem->Start();
 
-        const auto CellSize = static_cast<int>(GetGameState<AANKGameState>()->GetMapCellSize());
-        const auto MapWidth = static_cast<int>(GetGameState<AANKGameState>()->GetMapWidth());
-
-        FVector SpawnLocation;
-        SpawnLocation.X = FMath::RandRange(CellSize, MapWidth - CellSize);
-        SpawnLocation.Y = FMath::RandRange(CellSize, MapWidth - CellSize);
-        SpawnLocation.Z = 1000;
-        FActorSpawnParameters Params;
-        Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-        const auto PlayerPawn = GetWorld()->SpawnActor<AHero>(BP_Hero, SpawnLocation, FRotator{ 0, 0, 0 }, Params);
-
         PlayerControllers.Add(Cast<AANKPlayerController>(PlayerController));
 
         const auto Session = GetWorld()->GetGameInstance()->GetSubsystem<UOnlineSubsystem>()->GetCurrentSession();
         // start game if player started without sessions or alone
-        if (GetNumPlayers() == Session->RegisteredPlayers.Num() || Session->RegisteredPlayers.Num() <= 1)
+        if (!Session || GameStatus == EGameStatus::WaitingPlayers && GetNumPlayers() == Session->RegisteredPlayers.Num() || Session->RegisteredPlayers.Num() <= 1)
         {
+            GetGameState<AANKGameState>()->MakeMap();
             StartGame();
         }
     }
-
-
 
     GetGameState<AANKGameState>()->ClientUpdatePlayers(Cast<AANKPlayerState>(PlayerController->PlayerState));
 }
@@ -84,13 +71,11 @@ void AANKGameMode::Logout(AController* Controller)
 
 void AANKGameMode::RestartGame()
 {
+    StartGame();
 }
 
 void AANKGameMode::StartGame()
 {
-    // map
-    GetGameState<AANKGameState>()->MakeMap();
-
     // players
     const auto CellSize = static_cast<int>(GetGameState<AANKGameState>()->GetMapCellSize());
     const auto MapWidth = static_cast<int>(GetGameState<AANKGameState>()->GetMapWidth());

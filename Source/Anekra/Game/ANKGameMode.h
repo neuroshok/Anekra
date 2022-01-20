@@ -3,6 +3,7 @@
 #include "Anekra/EventType.h"
 
 #include "CoreMinimal.h"
+#include "Anekra/GameStatus.h"
 #include "Anekra/Player/ANKPlayerController.h"
 #include "GameFramework/GameMode.h"
 #include "ANKGameMode.generated.h"
@@ -28,6 +29,7 @@ protected:
     virtual void Logout(AController*) override;
 
     // match
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     void RestartGame();
     void StartGame();
 
@@ -35,5 +37,8 @@ private:
     UPROPERTY()
     class UEventSystem* EventSystem;
 
+    UPROPERTY()
     TArray<class AANKPlayerController*> PlayerControllers;
+
+    EGameStatus GameStatus = EGameStatus::WaitingPlayers;
 };

@@ -4,5 +4,6 @@ UENUM()
 enum class EGameStatus : uint8
 {
     Started,
-    Finished
+    Finished,
+    WaitingPlayers
 };
