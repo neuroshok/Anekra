@@ -56,6 +56,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Anekra|Online|Friends")
     UPARAM(DisplayName="Success") bool GetFriends();
 
+    UFUNCTION(BlueprintCallable, Category = "Anekra|Online|Session")
+    TArray<FString> GetSessionPlayers();
+
     FOnFriendListCompleteDelegate OnFriendListCompleteDelegate;
 
     // friend

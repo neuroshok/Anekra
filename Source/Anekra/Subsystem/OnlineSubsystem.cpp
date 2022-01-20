@@ -84,6 +84,16 @@ bool UOnlineSubsystem::GetFriends()
     return Success;
 }
 
+TArray<FString> UOnlineSubsystem::GetSessionPlayers()
+{
+    TArray<FString> Players;
+    for (const auto& Player : GetCurrentSession()->RegisteredPlayers)
+    {
+        Players.Add(Player->ToString());
+    }
+    return Players;
+}
+
 UOnlineSubsystem::UOnlineSubsystem()
     : OnConnectionStatusChangedDelegate(FOnConnectionStatusChangedDelegate::CreateUObject(this, &UOnlineSubsystem::OnConnectionStatusChanged))
     // Friends
@@ -155,9 +165,13 @@ void UOnlineSubsystem::OnPresenceReceived(const FUniqueNetId& UserId, const TSha
 
 void UOnlineSubsystem::OnCreateSessionCompleted(FName SessionName, bool bWasSuccessful)
 {
+    check(OSS->GetSessionInterface())
     OSS->GetSessionInterface()->ClearOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegateHandle);
     ANK_LOG("session created")
     BP_OnCreateSessionDelegate.Broadcast(SessionName, bWasSuccessful);
+
+    // register host player after session creation
+    OSS->GetSessionInterface()->TriggerOnSessionParticipantsChangeDelegates(SessionName, *OSS->GetIdentityInterface()->GetUniquePlayerId(0), true);
 }
 
 void UOnlineSubsystem::OnDestroySessionCompleted(FName SessionName, bool bWasSuccessful)
@@ -200,9 +214,21 @@ void UOnlineSubsystem::OnSessionInviteReceived(const FUniqueNetId& UserId, const
 void UOnlineSubsystem::OnSessionParticipantsUpdated(FName SessionName, const FUniqueNetId& UserId, bool JoinLeave)
 {
     ANK_LOG("OnSessionParticipantsUpdated received %s %s %d", *SessionName.ToString(), *UserId.ToDebugString(), JoinLeave)
-    auto UserName = OSS->GetFriendsInterface()->GetFriend(0, UserId, "")->GetDisplayName();
+    if (!OSS->GetFriendsInterface())
+    {
+        ANK_WARNING("FriendsInterface not found")
+        return;
+    }
+    auto Friend = OSS->GetFriendsInterface()->GetFriend(0, UserId, "");
+    auto UserName = UserId.ToDebugString();
+    if (Friend.IsValid()) UserName = Friend->GetDisplayName();
+
+    if (UserId == *OSS->GetIdentityInterface()->GetUniquePlayerId(0)) UserName = OSS->GetIdentityInterface()->GetPlayerNickname(0);
+
     BP_OnSessionParticipantsUpdateDelegate.Broadcast(UserId.ToString(), UserName, JoinLeave);
-    //OSS->GetSessionInterface()->GetNamedSession("ANK TEST")->RegisteredPlayers
+
+    if (JoinLeave) OSS->GetSessionInterface()->RegisterPlayer(SessionName, UserId, true);
+    else OSS->GetSessionInterface()->UnregisterPlayer(SessionName, UserId);
 }
 
 void UOnlineSubsystem::OnSessionUserInviteAccepted(const bool bWasSuccessful, const int32 ControllerId, TSharedPtr<const FUniqueNetId> UserId,
