@@ -16,6 +16,7 @@ public:
     UEvent();
 
     virtual void Start();
+    virtual void Stop();
     void Complete();
 
     virtual EEventType GetType() { return EEventType::None; }

@@ -63,6 +63,9 @@ void AANKHUD::OnGameStatusUpdated(EGameStatus Status)
     case EGameStatus::Started:
         WMain->SetVisibility(ESlateVisibility::Visible);
         WEndGame->SetVisibility(ESlateVisibility::Hidden);
+        HideStats();
+        GetOwningPlayerController()->SetInputMode(FInputModeGameOnly{});
+        GetOwningPlayerController()->SetShowMouseCursor(false);
         break;
     case EGameStatus::Finished:
         WMain->SetVisibility(ESlateVisibility::Hidden);

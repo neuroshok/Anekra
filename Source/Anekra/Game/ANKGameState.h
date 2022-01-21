@@ -25,6 +25,8 @@ public:
     void CheckEndGame();
     UFUNCTION(Client, NetMulticast, Reliable)
     void ClientEndGame();
+    UFUNCTION(Client, NetMulticast, Reliable)
+    void ClientStartGame();
 
     FOnGameStatusUpdateDelegate OnGameStatusUpdateDelegate;
 

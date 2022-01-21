@@ -19,6 +19,14 @@ public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     TSubclassOf<class UEventSystem> BP_EventSystem;
 
+    // match
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
+    void EndGame();
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
+    void RestartGame();
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
+    void StartGame();
+
 protected:
     virtual void BeginPlay() override;
 
@@ -27,11 +35,6 @@ protected:
     virtual void PostLogin(APlayerController*) override;
     virtual FString InitNewPlayer(APlayerController* PlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal) override;
     virtual void Logout(AController*) override;
-
-    // match
-    UFUNCTION(BlueprintCallable, Category = "Anekra")
-    void RestartGame();
-    void StartGame();
 
 private:
     UPROPERTY()

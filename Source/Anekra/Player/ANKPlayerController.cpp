@@ -16,8 +16,17 @@ void AANKPlayerController::SetupInputComponent()
     InputComponent->BindAction("Tab", IE_Released, this, &AANKPlayerController::OnTabReleased);
 }
 
-void AANKPlayerController::InitializeHUD()
+void AANKPlayerController::Initialize()
 {
+    GetPlayerState<AANKPlayerState>()->Initialize();
+
+    Abilities.Empty();
+    Abilities.SetNum(AbilitiesCountMax);
+    for (auto& Ability : Abilities) Ability = -1;
+    AbilitiesCount = 0;
+    OnAbilitiesUpdated();
+
+    // HUD
     if (GetHUD() || !IsLocalPlayerController()) return;
     SpawnDefaultHUD();
     Cast<AANKHUD>(GetHUD())->Initialize();
@@ -77,10 +86,7 @@ void AANKPlayerController::NotifyError(FString Message)
 void AANKPlayerController::BeginPlay()
 {
     Super::BeginPlay();
-    Abilities.SetNum(AbilitiesCountMax);
-    for (auto& Ability : Abilities) Ability = -1;
-    AbilitiesCount = 0;
-    OnAbilitiesUpdated();
+    Initialize();
 }
 
 void AANKPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

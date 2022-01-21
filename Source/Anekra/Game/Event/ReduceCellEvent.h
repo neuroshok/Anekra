@@ -12,5 +12,6 @@ class ANEKRA_API UReduceCellEvent : public UEvent
 
 public:
     void Start() override;
+    void Stop() override;
     EEventType GetType() override { return EEventType::ReduceCell; }
 };

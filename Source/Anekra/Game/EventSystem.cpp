@@ -32,7 +32,7 @@ void UEventSystem::Start()
 
 void UEventSystem::Stop()
 {
-
+    for (auto Event : Events) Event->Stop();
 }
 
 void UEventSystem::StartEvent()

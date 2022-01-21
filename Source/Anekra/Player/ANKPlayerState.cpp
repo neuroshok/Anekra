@@ -27,6 +27,11 @@ UANKAbilitySystemComponent* AANKPlayerState::GetAbilitySystemComponent() const
     return ANKAbilitySystemComponent;
 }
 
+void AANKPlayerState::Initialize()
+{
+    bIsDead = false;
+}
+
 void AANKPlayerState::ComputeCellPosition()
 {
     check(GetPawn());
@@ -100,10 +105,14 @@ void AANKPlayerState::Die()
 
     auto Hero = Cast<AHero>(GetPawn());
 
+    Hero->Destroy();
+
+
+    /*
     Hero->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     Hero->GetCharacterMovement()->GravityScale = 0;
     Hero->GetCharacterMovement()->Velocity = {0};
-    Hero->SetActorLocation({4000, 4000, 2000});
+    Hero->SetActorLocation({4000, 4000, 2000});*/
 
     auto ANKGameState = Cast<AANKGameState>(GetWorld()->GetGameState());
     ANKGameState->CheckEndGame();

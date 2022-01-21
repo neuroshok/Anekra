@@ -21,6 +21,7 @@ public:
 
     virtual UANKAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+    void Initialize();
     void Die();
 
     void ComputeCellPosition();

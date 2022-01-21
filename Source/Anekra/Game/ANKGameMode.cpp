@@ -69,9 +69,17 @@ void AANKGameMode::Logout(AController* Controller)
     ANK_LOG("Logout")
 }
 
+void AANKGameMode::EndGame()
+{
+    EventSystem->Stop();
+    GetGameState<AANKGameState>()->ClientEndGame();
+}
+
 void AANKGameMode::RestartGame()
 {
     StartGame();
+    EventSystem->Stop();
+    EventSystem->Start();
 }
 
 void AANKGameMode::StartGame()
@@ -89,7 +97,9 @@ void AANKGameMode::StartGame()
         Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
         const auto PlayerPawn = GetWorld()->SpawnActor<AHero>(BP_Hero, SpawnLocation, FRotator{ 0, 0, 0 }, Params);
 
-        PlayerController->InitializeHUD();
+        PlayerController->Initialize();
         PlayerController->Possess(PlayerPawn);
     }
+
+    GetGameState<AANKGameState>()->ClientStartGame();
 }

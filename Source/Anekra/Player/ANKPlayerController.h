@@ -16,12 +16,13 @@ class ANEKRA_API AANKPlayerController : public APlayerController
 public:
     virtual void SetupInputComponent() override;
 
-    void InitializeHUD();
+    void Initialize();
 
     UFUNCTION(BlueprintCallable, Category = "Anekra")
     void AddAbility(int AbilityID);
     UFUNCTION(BlueprintCallable, Category = "Anekra")
     void RemoveAbility(FGameplayAbilitySpecHandle Handle);
+
     UFUNCTION(BlueprintCallable, Category = "Anekra")
     void NotifyError(FString Message);
 

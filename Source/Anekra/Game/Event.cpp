@@ -13,6 +13,12 @@ void UEvent::Start()
     GetWorld()->GetGameState<AANKGameState>()->ClientUpdateEvent(GetType(), EEventPhase::Start);
 }
 
+void UEvent::Stop()
+{
+    GetWorld()->GetTimerManager().ClearTimer(EventTimer);
+    GetWorld()->GetGameState<AANKGameState>()->ClientUpdateEvent(GetType(), EEventPhase::Stop);
+}
+
 void UEvent::Complete()
 {
     if (OnCompleted.IsBound()) OnCompleted.Execute();

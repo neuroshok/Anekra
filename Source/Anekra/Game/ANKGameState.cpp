@@ -14,16 +14,24 @@ AANKGameState::AANKGameState()
 
 void AANKGameState::CheckEndGame()
 {
-    int PlayersAlive = 0;
-    for (auto Player : PlayerArray)
-        PlayersAlive += Cast<AANKPlayerState>(Player)->IsAlive();
+    if (HasAuthority())
+    {
+        int PlayersAlive = 0;
+        for (auto Player : PlayerArray)
+            PlayersAlive += Cast<AANKPlayerState>(Player)->IsAlive();
 
-    if (PlayersAlive <= 1) ClientEndGame();
+        if (PlayersAlive <= 1) Cast<AANKGameMode>(GetWorld()->GetAuthGameMode())->EndGame();
+    }
 }
 
 void AANKGameState::ClientEndGame_Implementation()
 {
     OnGameStatusUpdateDelegate.Broadcast(EGameStatus::Finished);
+}
+
+void AANKGameState::ClientStartGame_Implementation()
+{
+    OnGameStatusUpdateDelegate.Broadcast(EGameStatus::Started);
 }
 
 // server
