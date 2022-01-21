@@ -25,8 +25,6 @@ protected:
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     float CastingTime = 1.f;
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    class UAnimMontage* Montage;
 
 private:
     UFUNCTION()

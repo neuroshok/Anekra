@@ -1,5 +1,6 @@
 #include "CrossFire.h"
 
+#include "Anekra/Game/ANKGameInstance.h"
 #include "Anekra/Player/ANKPlayerController.h"
 #include "Anekra/Player/ANKPlayerState.h"
 #include "Anekra/Player/Hero.h"
@@ -34,7 +35,7 @@ void UCrossFireAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
         }
     }
 
-    GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, Montage, 1);
+    GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, GetAbilities()->CrossFire.Montage, 1);
 
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
 }

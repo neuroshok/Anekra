@@ -41,9 +41,8 @@ void UUnlockAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
             return;
         }
 
-        GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, Montage, 1);
+        GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, GetAbilities()->Unlock.Montage, 1);
 
-        //auto EffectHandle = GetAbilitySystemComponent()->ApplyEffectSpec(GetEffects()->CastingEffect);
         auto Task = UCasting::Create(this, CastingTime);
 
         Task->OnCompleteDelegate.AddUObject(this, &UUnlockAbility::OnCastingCompleted);

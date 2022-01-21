@@ -20,6 +20,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Anekra")
     class UEffectAsset* GetEffects();
     UFUNCTION(BlueprintCallable, Category = "Anekra")
+    class UAbilityAsset* GetAbilities();
+    UFUNCTION(BlueprintCallable, Category = "Anekra")
     class AHero* GetHero() const;
     UFUNCTION(BlueprintCallable, Category = "Anekra")
     class AANKPlayerState* GetANKPlayerState() const;

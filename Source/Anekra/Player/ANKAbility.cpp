@@ -24,6 +24,11 @@ UEffectAsset* UANKAbility::GetEffects()
     return Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetEffectAsset();
 }
 
+UAbilityAsset* UANKAbility::GetAbilities()
+{
+    return Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetAbilityAsset();
+}
+
 AHero* UANKAbility::GetHero() const
 {
     check(GetAvatarActorFromActorInfo());

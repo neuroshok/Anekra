@@ -23,6 +23,9 @@ struct FAbilityData
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
     class UTexture2D* Image = nullptr;
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
+    class UAnimMontage* Montage = nullptr;
 };
 
 UCLASS(BlueprintType, Blueprintable)

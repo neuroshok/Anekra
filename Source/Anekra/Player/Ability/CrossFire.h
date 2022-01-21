@@ -12,7 +12,4 @@ class ANEKRA_API UCrossFireAbility : public UANKAbility
 public:
     UCrossFireAbility();
     virtual void ActivateAbility(const FGameplayAbilitySpecHandle, const FGameplayAbilityActorInfo*, const FGameplayAbilityActivationInfo, const FGameplayEventData*) override;
-
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    class UAnimMontage* Montage;
 };
