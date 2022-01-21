@@ -30,9 +30,8 @@ void UANKAbilitySystemComponent::BeginPlay()
 
 void UANKAbilitySystemComponent::BindAbilityActivationToInputComponent(UInputComponent* InputComponent, FGameplayAbilityInputBinds BindInfo)
 {
-    if (!InputComponent || BoundAbilities) return;
+    if (!InputComponent) return;
     Super::BindAbilityActivationToInputComponent(InputComponent, BindInfo);
-    BoundAbilities = true;
 }
 
 void UANKAbilitySystemComponent::ApplyEffect(TSubclassOf<UGameplayEffect> Effect)

@@ -48,6 +48,8 @@ void AHero::OnRep_PlayerState()
 
     ANKAbilitySystemComponent = ANKPlayerState->GetAbilitySystemComponent();
     ANKAbilitySystemComponent->InitAbilityActorInfo(ANKPlayerState, this);
+    ANKAbilitySystemComponent->ClearAllAbilities();
+    ANKAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UUnlockAbility::StaticClass(), 1, static_cast<int32>(EBinding::Unlock), this));
     TryBindAbilities();
 
     auto ANKPlayerController = Cast<AANKPlayerController>(GetOwner());
@@ -59,12 +61,12 @@ void AHero::OnRep_PlayerState()
 void AHero::PossessedBy(AController* PlayerController)
 {
     Super::PossessedBy(PlayerController);
-    AANKPlayerState* ANKPlayerState = Cast<AANKPlayerState>(GetPlayerState());
+    auto ANKPlayerState = Cast<AANKPlayerController>(PlayerController)->GetPlayerState<AANKPlayerState>();
     if (ANKPlayerState)
     {
         ANKAbilitySystemComponent = ANKPlayerState->GetAbilitySystemComponent();
         ANKAbilitySystemComponent->InitAbilityActorInfo(ANKPlayerState, this);
-
+        ANKAbilitySystemComponent->ClearAllAbilities();
         ANKAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UUnlockAbility::StaticClass(), 1, static_cast<int32>(EBinding::Unlock), this));
     }
 }
