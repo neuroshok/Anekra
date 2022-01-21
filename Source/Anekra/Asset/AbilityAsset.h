@@ -22,7 +22,7 @@ struct FAbilityData
     FText Description;
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Anekra")
-    class UTexture2D* Image;
+    class UTexture2D* Image = nullptr;
 };
 
 UCLASS(BlueprintType, Blueprintable)
