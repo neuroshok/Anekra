@@ -16,7 +16,7 @@ void UANKAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGam
 const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
     Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-    if (bAutoRemove && IsValid(GetANKPlayerController())) GetANKPlayerController()->RemoveAbility(Handle);
+    if (bAutoRemove && IsValid(GetHero()) && IsValid(GetANKPlayerController())) GetANKPlayerController()->RemoveAbility(Handle);
 }
 
 UEffectAsset* UANKAbility::GetEffects()
