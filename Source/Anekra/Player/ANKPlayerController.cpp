@@ -18,7 +18,7 @@ void AANKPlayerController::SetupInputComponent()
 
 void AANKPlayerController::Initialize()
 {
-    GetPlayerState<AANKPlayerState>()->Initialize();
+    if (GetPlayerState<AANKPlayerState>()) GetPlayerState<AANKPlayerState>()->Initialize();
 
     Abilities.Empty();
     Abilities.SetNum(AbilitiesCountMax);

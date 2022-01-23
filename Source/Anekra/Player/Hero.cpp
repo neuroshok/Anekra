@@ -46,10 +46,9 @@ void AHero::OnRep_PlayerState()
     AANKPlayerState* ANKPlayerState = Cast<AANKPlayerState>(GetPlayerState());
     if (!ANKPlayerState) return;
 
+    ANKPlayerState->Initialize();
     ANKAbilitySystemComponent = ANKPlayerState->GetAbilitySystemComponent();
     ANKAbilitySystemComponent->InitAbilityActorInfo(ANKPlayerState, this);
-    ANKAbilitySystemComponent->ClearAllAbilities();
-    ANKAbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UUnlockAbility::StaticClass(), 1, static_cast<int32>(EBinding::Unlock), this));
     TryBindAbilities();
 
     auto ANKPlayerController = Cast<AANKPlayerController>(GetOwner());
