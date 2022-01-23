@@ -5,6 +5,7 @@
 #include "Net/UnrealNetwork.h"
 #include "NiagaraComponent.h"
 #include "Anekra/Log.h"
+#include "Anekra/Game/ANKGameInstance.h"
 #include "Anekra/Player/Hero.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Anekra/Game/EventSystem.h"
@@ -13,6 +14,8 @@ ACell::ACell()
 {
     MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("MeshComponent");
     RootComponent = MeshComponent;
+
+    MeshComponent->SetIsReplicated(true);
 
     PrimaryActorTick.bCanEverTick = true;
     bReplicates = true;
@@ -76,9 +79,9 @@ void ACell::Enter(AANKPlayerState* ANKPlayerState)
 
     switch (Type)
     {
-        case ECellType::Slow:break;
-        //case ECellType::Heal:ApplyEffect(ANKPlayerState, HealEffect); break;
-        //case ECellType::Burn:ApplyEffect(ANKPlayerState, BurnEffect); break;
+        case ECellType::Slow:ApplyEffect(ANKPlayerState, Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetEffectAsset()->StealthEffect); break;
+        case ECellType::Heal:ApplyEffect(ANKPlayerState, Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetEffectAsset()->HealEffect); break;
+        case ECellType::Burn:ApplyEffect(ANKPlayerState, Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetEffectAsset()->BurnEffect); break;
     }
 }
 
@@ -97,9 +100,9 @@ void ACell::Leave(AANKPlayerState* ANKPlayerState)
     {
         switch (Type)
         {
-        case ECellType::Slow:break;
-        //case ECellType::Heal:RemoveEffect(ANKPlayerState, HealEffect); break;
-        //case ECellType::Burn:RemoveEffect(ANKPlayerState, BurnEffect); break;
+        case ECellType::Slow:RemoveEffect(ANKPlayerState, Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetEffectAsset()->StealthEffect); break;
+        case ECellType::Heal:RemoveEffect(ANKPlayerState, Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetEffectAsset()->HealEffect); break;
+        case ECellType::Burn:RemoveEffect(ANKPlayerState, Cast<UANKGameInstance>(GetWorld()->GetGameInstance())->GetEffectAsset()->BurnEffect); break;
         }
     }
 }
