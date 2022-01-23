@@ -30,6 +30,9 @@ UANKAbilitySystemComponent* AANKPlayerState::GetAbilitySystemComponent() const
 void AANKPlayerState::Initialize()
 {
     bIsDead = false;
+    AttributeBasic->SetHealth(100);
+    AttributeBasic->SetMoveSpeed(1);
+    ANKAbilitySystemComponent->RemoveActiveEffects(FGameplayEffectQuery{});
 }
 
 void AANKPlayerState::ComputeCellPosition()
@@ -104,9 +107,6 @@ void AANKPlayerState::Die()
     bIsDead = true;
 
     auto Hero = Cast<AHero>(GetPawn());
-
-    Hero->Destroy();
-
 
     /*
     Hero->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
