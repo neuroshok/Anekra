@@ -76,6 +76,7 @@ void ACell::SetType(ECellType CellType)
 void ACell::Enter(AANKPlayerState* ANKPlayerState)
 {
     auto Hero = Cast<AHero>(ANKPlayerState->GetPawn());
+    if (!Hero) return;
 
     switch (Type)
     {
@@ -88,6 +89,8 @@ void ACell::Enter(AANKPlayerState* ANKPlayerState)
 void ACell::Leave(AANKPlayerState* ANKPlayerState)
 {
     auto Hero = Cast<AHero>(ANKPlayerState->GetPawn());
+    if (!Hero) return;
+
     FGameplayTagContainer EventTags;
     Hero->GetAbilitySystemComponent()->GetOwnedGameplayTags(EventTags);
 
