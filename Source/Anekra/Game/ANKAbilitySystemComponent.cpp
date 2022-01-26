@@ -15,6 +15,8 @@ UANKAbilitySystemComponent::UANKAbilitySystemComponent()
 void UANKAbilitySystemComponent::AddTag(const FGameplayTag& GameplayTag)
 {
     AddLooseGameplayTag(GameplayTag);
+    // avoid stacks
+    SetTagMapCount(GameplayTag, 1);
 }
 
 void UANKAbilitySystemComponent::RemoveTag(const FGameplayTag& GameplayTag)
